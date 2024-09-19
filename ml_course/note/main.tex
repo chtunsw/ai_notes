@@ -5,9 +5,10 @@
 \usepackage{amssymb}
 \usepackage{xcolor}
 \usepackage{graphicx}
+\usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
 
 \title{Machine Learning Notes}
-\author{Haotian Chen}
+\author{chtunsw@gmail.com}
 \date{}
 
 \makeatletter
@@ -1639,6 +1640,58 @@ y^{(j)} =
 \bigskip
 
 \noindent \hspace{1cm} Start a new episode if \(s_{t+1}\) terminates, else continue.
+
+\subsection{Monte Carlo tree search (MCTS)}
+
+\noindent The focus of MCTS is on the analysis of the most promising moves, expanding the search tree based on random sampling of the search space. The application of Monte Carlo tree search in games is based on many playouts, also called roll-outs. In each playout, the game is played out to the very end by selecting moves at random. The final game result of each playout is then used to weight the nodes in the game tree so that better nodes are more likely to be chosen in future playouts.
+
+\bigskip
+
+\noindent The most basic way to use playouts is to apply the same number of playouts after each legal move of the current player, then choose the move which led to the most victories. The efficiency of this method—called Pure Monte Carlo Game Search—often increases with time as more playouts are assigned to the moves that have frequently resulted in the current player's victory according to previous playouts. Each round of Monte Carlo tree search consists of four steps:
+
+\begin{itemize}
+    \item Selection: Start from root \(R\) and select successive child nodes until a leaf node \(L\) is reached. The root is the current game state and a leaf is any node that has a potential child from which no simulation (playout) has yet been initiated. The section below says more about a way of biasing choice of child nodes that lets the game tree expand towards the most promising moves, which is the essence of Monte Carlo tree search.
+    \item Expansion: Unless \(L\) ends the game decisively (e.g. win/loss/draw) for either player, create one (or more) child nodes and choose node \(C\) from one of them. Child nodes are any valid moves from the game position defined by \(L\).
+    \item Simulation: Complete one random playout from node \(C\). This step is sometimes also called playout or rollout. A playout may be as simple as choosing uniform random moves until the game is decided (for example in chess, the game is won, lost, or drawn).
+    \item Backpropagation: Use the result of the playout to update information in the nodes on the path from \(C\) to \(R\).
+\end{itemize}
+
+\begin{center}
+\includegraphics[scale=0.1]{./images/mcts_steps.png}
+\end{center}
+
+\noindent This graph shows the steps involved in one decision, with each node showing the ratio of wins to total playouts from that point in the game tree for the player that the node represents. In the Selection diagram, black is about to move. The root node shows there are 11 wins out of 21 playouts for white from this position so far. It complements the total of 10/21 black wins shown along the three black nodes under it, each of which represents a possible black move. Note that this graph does not follow the UCT algorithm described below.
+
+\bigskip
+
+\noindent If white loses the simulation, all nodes along the selection incremented their simulation count (the denominator), but among them only the black nodes were credited with wins (the numerator). If instead white wins, all nodes along the selection would still increment their simulation count, but among them only the white nodes would be credited with wins. In games where draws are possible, a draw causes the numerator for both black and white to be incremented by 0.5 and the denominator by 1. This ensures that during selection, each player's choices expand towards the most promising moves for that player, which mirrors the goal of each player to maximize the value of their move.
+
+\bigskip
+
+\noindent Rounds of search are repeated as long as the time allotted to a move remains. Then the move with the most simulations made (i.e. the highest denominator) is chosen as the final answer.
+
+\bigskip
+
+\noindent DeepMind's AlphaZero replaces the simulation step with an evaluation based on a neural network.
+
+\bigskip
+
+\noindent \textbf{UCT (Upper Confidence Bound):}
+
+\bigskip
+
+\noindent The main difficulty in selecting child nodes is maintaining some balance between the exploitation of deep variants after moves with high average win rate and the exploration of moves with few simulations. The first formula for balancing exploitation and exploration in games is called UCT (Upper Confidence Bound). UCT recommends to choose in each node of the game tree the move for which the following expression has the highest value:
+
+\[\frac{w_{i}}{n_{i}} + c \sqrt{\frac{ln N_{i}}{n_i}}\]
+
+\begin{itemize}
+    \item \(w_{i}\) stands for the number of wins for the node considered after the i-th move
+    \item \(n_{i}\) stands for the number of simulations for the node considered after the i-th move
+    \item \(N_{i}\) stands for the total number of simulations after the i-th move run by the parent node of the one considered
+    \item \(c\) is the exploration parameter—theoretically equal to \(\sqrt{2}\); in practice usually chosen empirically
+\end{itemize}
+
+\noindent The first component of the formula above corresponds to exploitation; it is high for moves with high average win ratio. The second component corresponds to exploration; it is high for moves with few simulations.
 
 \printindex
 
