@@ -1,0 +1,70 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36" version="24.7.16">
+  <diagram name="Page-1" id="FK1A2tI5eq45OYOoH38p">
+    <mxGraphModel dx="917" dy="653" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="1" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="7cxG4EcdiXSCPni5Fn79-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="7cxG4EcdiXSCPni5Fn79-1" target="7cxG4EcdiXSCPni5Fn79-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="7cxG4EcdiXSCPni5Fn79-1" value="Start state root \(R\)" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="261" y="40" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="7cxG4EcdiXSCPni5Fn79-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="7cxG4EcdiXSCPni5Fn79-2" target="7cxG4EcdiXSCPni5Fn79-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="7cxG4EcdiXSCPni5Fn79-2" value="Current state \(S_{0} = R\)" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="236.5" y="140" width="169" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="7cxG4EcdiXSCPni5Fn79-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="7cxG4EcdiXSCPni5Fn79-5" target="7cxG4EcdiXSCPni5Fn79-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="7cxG4EcdiXSCPni5Fn79-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="7cxG4EcdiXSCPni5Fn79-5" target="7cxG4EcdiXSCPni5Fn79-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="7cxG4EcdiXSCPni5Fn79-5" value="Is \(S_{i}\) a leaf node?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="235.5" y="240" width="170" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="7cxG4EcdiXSCPni5Fn79-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="7cxG4EcdiXSCPni5Fn79-7" target="7cxG4EcdiXSCPni5Fn79-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="7cxG4EcdiXSCPni5Fn79-7" value="Chose child node that maximize \(UCT(S_{i + 1})\)&lt;div&gt;Then \(S_{i} = S_{i + 1}\)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="160.5" y="350" width="320" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="7cxG4EcdiXSCPni5Fn79-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="7cxG4EcdiXSCPni5Fn79-10" target="7cxG4EcdiXSCPni5Fn79-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="7cxG4EcdiXSCPni5Fn79-10" value="Create one (or more) random child nodes" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="250" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="7cxG4EcdiXSCPni5Fn79-12" value="No" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="320" y="320" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="7cxG4EcdiXSCPni5Fn79-13" value="Yes" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="430" y="250" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="7cxG4EcdiXSCPni5Fn79-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="7cxG4EcdiXSCPni5Fn79-15" target="7cxG4EcdiXSCPni5Fn79-18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="7cxG4EcdiXSCPni5Fn79-15" value="For each child node \(C\), do a random playout" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="350" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="7cxG4EcdiXSCPni5Fn79-18" value="Use the the playout result&amp;nbsp;to update information in the nodes on the path from \(C\) to \(R\)" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="450" width="120" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="7cxG4EcdiXSCPni5Fn79-21" value="&lt;h1&gt;Expansion&lt;/h1&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="640" y="250" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="7cxG4EcdiXSCPni5Fn79-22" value="&lt;h1&gt;Simulation&lt;/h1&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="635" y="345" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="7cxG4EcdiXSCPni5Fn79-23" value="&lt;h1&gt;Backpropagation&lt;br&gt;&lt;/h1&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="635" y="460" width="220" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="7cxG4EcdiXSCPni5Fn79-24" value="&lt;h1 style=&quot;text-wrap: wrap;&quot;&gt;Selection&lt;/h1&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="106.5" y="200" width="130" height="70" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
