@@ -392,10 +392,10 @@ h_{\theta}(x)
 
 \[
 h_{\theta} (x) 
-= P(y = 1 | x ; \theta)
-= 1 - P(y = 0 | x ; \theta)
+= P(y = 1 \mid x ; \theta)
+= 1 - P(y = 0 \mid x ; \theta)
 \]
-\[P(y = 1 | x ; \theta) + P(y = 0 | x ; \theta) = 1\]
+\[P(y = 1 \mid x ; \theta) + P(y = 0 \mid x ; \theta) = 1\]
 
 \noindent \textbf{decision boundary:}
 
@@ -495,10 +495,10 @@ h_{\theta}(x) \rightarrow 0
 \noindent Train a logistic regression classifier \(h_{\theta}^{(i)}(x)\) for each class to predict the probability that \(y = i\). On a new input \(x\), to make a prediction, pick the class \(i\) that maximizes \(h_{\theta} ^{(i)}(x)\).
 
 \[y \in \{0, 1 ... n\}\] 
-\[h_{\theta}^{(0)}(x) = P(y = 0 | x ; \theta)\]
-\[h_{\theta}^{(1)}(x) = P(y = 1 | x ; \theta)\]
+\[h_{\theta}^{(0)}(x) = P(y = 0 \mid x ; \theta)\]
+\[h_{\theta}^{(1)}(x) = P(y = 1 \mid x ; \theta)\]
 \[\cdots\]
-\[h_{\theta}^{(n)}(x) = P(y = n | x ; \theta)\] 
+\[h_{\theta}^{(n)}(x) = P(y = n \mid x ; \theta)\] 
 \[\text{prediction} = \max_i(h_{\theta}^{(i)}(x))\]
 
 \subsection{Overfitting Problem}
@@ -1524,6 +1524,28 @@ a large set of items?}
 
 \noindent A Markov chain is a mathematical system that experiences transitions from one state to another according to certain probabilistic rules. The defining characteristic of a Markov chain is that no matter how the process arrived at its present state, the possible future states are fixed. In other words, the probability of transitioning to any particular state is dependent solely on the current state and time elapsed.
 
+\subsection{Markov decision process}
+
+\begin{center}
+\includegraphics[scale=0.3]{./images/markov_decision_process.png}
+\end{center}
+
+\noindent A Markov decision process is a 4-tuple \((S,A,P_{a},R_{a})\), where:
+
+\bigskip
+
+\noindent \(S\): a set of states called the state space. The state space may be discrete or continuous, like the set of real numbers.
+
+\noindent \(A\): a set of actions called the action space (alternatively, \(A_{s}\) is the set of actions available from state \(s\)). As for state, this set may be discrete or continuous.
+
+\noindent \(P_{a}(s,s')\): on an intuitive level, the probability that action \(a\) in state \(s\) at time \(t\) will lead to state \(s'\) at time \(t+1\). In general, this probability transition is defined to satisfy: \(Pr(s_{t+1} \in S' \mid s_{t}=s, a_{t}=a) = \int_{S'} P_{a}(s,s') ds', S' \subseteq S\). In case the state space is discrete, the integral is intended with respect to the counting measure, so that the latter simplifies as \(P_{a}(s,s') = Pr(s_{t+1}=s' \mid s_{t}=s, a_{t}=a)\).
+
+\noindent \(R_{a}(s,s')\): the immediate reward (or expected immediate reward) received after transitioning from state \(s\) to state \(s'\), due to action \(a\).
+
+\bigskip
+
+\noindent A policy function \(\pi\) is a (potentially probabilistic) mapping from state space \(S\) to action space \(A\).
+
 \subsection{Q-learning}
 
 \noindent For any finite Markov decision process (FMDP), Q-learning finds an optimal policy in the sense of maximizing the expected value of the total reward over any and all successive steps, starting from the current state. Q-learning can identify an optimal action-selection policy for any given FMDP, given infinite exploration time and a partly-random policy.
@@ -1640,6 +1662,30 @@ y^{(j)} =
 \bigskip
 
 \noindent \hspace{1cm} Start a new episode if \(s_{t+1}\) terminates, else continue.
+
+\subsection{Policy Gradient}
+
+\noindent \textbf{On-policy vs Off-policy learning}:
+
+\noindent The key difference lies in how these methods approach learning:
+
+\begin{itemize}
+    \item On-policy:
+    \begin{itemize}
+        \item Training data is only generated from the exact same policy. e.g. Policy Gradient
+        \item Learn from your own current strategy (even if it's not the best one yet).
+    \end{itemize}
+    \item Off-policy:
+    \begin{itemize}
+        \item Training data can originate from other sources that are not from the exact same policy. e.g. Q-learning, with greedy policy \(\epsilon\) in training, without \(\epsilon\) in prediction
+        \item Learn from a different strategy (potentially better or more informed) than what you're currently using.
+    \end{itemize}
+    \item The primary distinction lies in how they approach exploration and exploitation, which affects their convergence properties and practical performance in different types of environments.
+\end{itemize}
+
+\noindent \textbf{Policy Gradient Algorithms}:
+
+\noindent TBD: https://lilianweng.github.io/posts/2018-04-08-policy-gradient/
 
 \subsection{Monte Carlo tree search (MCTS)}
 
