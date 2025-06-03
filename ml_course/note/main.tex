@@ -1516,6 +1516,24 @@ a large set of items?}
 
 \noindent Reinforcement learning (RL) is an area of machine learning concerned with how intelligent agents ought to take actions in an environment in order to maximize the notion of cumulative reward.
 
+\begin{itemize}
+    \item It is a mathematical formalism for learning-based decision making. Approach for learning decision making and control from experience.
+    \item Reinforcement learning does not assume the data is independently identity distributed. Previous outputs influence future inputs.
+    \item Ground truth answer is not known, only know if we succeeded or failed. More generally, we know the reward.
+\end{itemize}
+
+\begin{center}
+    \includegraphics[scale=0.6]{./images/rl.png}
+\end{center}
+
+\noindent \(s_t\): state at time step \(t\).
+
+\noindent \(a_t\): action at time step \(t\).
+
+\noindent \(r_t\): reward at time step \(t\).
+
+\noindent \(\pi_{\theta}\): policy that gives optimal \(a_t\) for given \(s_t\), to maximize cumulative reward \(\sum_{t = 1}^{T}r_t\).
+
 \subsection{Markov Chain}
 
 \begin{center}
