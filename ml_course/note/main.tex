@@ -1549,15 +1549,31 @@ a large set of items?}
 
 \noindent \(a_t\): action at time step \(t\).
 
-\noindent \(r_t\): reward at time step \(t\).
+\noindent \(r(a_t, s_t)\): reward at state \(s_t\) with action \(a_t\).
 
-\noindent \(c_t\): cost at time step \(t\). often the opposite of \(r_t\).
+\noindent \(c(a_t, s_t)\): cost at state \(s_t\) with action \(a_t\). often the opposite of \(r\).
 
 \noindent \(\pi^*_{\theta}\): optimal policy that gives \(a_t\) for given \(s_t\). Sometimes we assume expert data to be the optimal policy.
 
 \noindent \(\pi_{\theta}\): policy that gives probability of \(a_t\) for given \(s_t\), to maximize cumulative reward \(\sum_{t = 1}^{T}r_t\).
 
 \noindent \(p(s_{t+1} \mid s_t, a_t)\): transition probability from state \(s_t\) to \(s_{t + 1}\) given action \(a_t\).
+
+\noindent \(\tau\): a trajectory of states and actions \((s_1, a_1), (s_2, a_2), \dots, (s_T, a_T)\).
+
+\noindent Trajectory probability distribution for \(\tau\):
+
+\[p_{\theta}(\tau) = p(s_1) \prod_{t = 1}^T \pi_{\theta} (a_t \mid s_t) p(s_{t + 1} \mid s_t, a_t) \]
+
+\noindent Objective for reinforcement learning:
+
+\begin{equation*}
+\begin{split}
+\theta^*
+& = arg \underset{\theta}{max} E_{\tau \sim p_{\theta}(\tau)}[\sum_{t} r(s_t, a_t)] \\
+& = arg \underset{\theta}{max} \sum_{t = 1}^{T} E_{(s_t, a_t) \sim p_{\theta}(s_t, a_t)}[r(s_t, a_t)]
+\end{split}
+\end{equation*}
 
 \subsection{Markov Chain}
 
