@@ -929,6 +929,14 @@ a_1 & \dots & a_d
 \[\text{test error} = \frac{1}{m_{test}} \sum_{i = 1}^{m_{test}} err(h_{\Theta}(x_{test}^{(i)}), y_{test}^{(i)})\]
 \end{enumerate}
 
+\noindent \textbf{Distributional shift:}
+
+\noindent Distributional shift happens when training data and test data has a different distribution. This mismatch can lead to a decline in the model's accuracy and reliability.
+
+\begin{center}
+    \includegraphics[scale=0.4]{./images/distributional_shift.png}
+\end{center}
+
 \noindent \textbf{Bias and Variance:}
 
 \noindent The training error will tend to decrease as we increase the degree \(d\) of the polynomial. At the same time, the cross validation error will tend to decrease as we increase \(d\) up to a point, and then it will increase as \(d\) is increased, forming a convex curve.
@@ -1533,13 +1541,23 @@ a large set of items?}
     \includegraphics[scale=0.6]{./images/rl.png}
 \end{center}
 
-\noindent \(s_t\): state at time step \(t\).
+\noindent \(g\): the goal state for the model to reach.
+
+\noindent \(o_t\): observation at time step \(t\). (not fully observed)
+
+\noindent \(s_t\): state at time step \(t\). (fully observed)
 
 \noindent \(a_t\): action at time step \(t\).
 
 \noindent \(r_t\): reward at time step \(t\).
 
-\noindent \(\pi_{\theta}\): policy that gives optimal \(a_t\) for given \(s_t\), to maximize cumulative reward \(\sum_{t = 1}^{T}r_t\).
+\noindent \(c_t\): cost at time step \(t\). often the opposite of \(r_t\).
+
+\noindent \(\pi^*_{\theta}\): optimal policy that gives \(a_t\) for given \(s_t\). Sometimes we assume expert data to be the optimal policy.
+
+\noindent \(\pi_{\theta}\): policy that gives probability of \(a_t\) for given \(s_t\), to maximize cumulative reward \(\sum_{t = 1}^{T}r_t\).
+
+\noindent \(p(s_{t+1} \mid s_t, a_t)\): transition probability from state \(s_t\) to \(s_{t + 1}\) given action \(a_t\).
 
 \subsection{Markov Chain}
 
@@ -1570,6 +1588,74 @@ a large set of items?}
 \bigskip
 
 \noindent A policy function \(\pi\) is a (potentially probabilistic) mapping from state space \(S\) to action space \(A\).
+
+\subsection{Imitation Learning}
+
+\noindent Imitation learning, also known as learning from demonstration, is a process where an agent learns a new skill or behavior by observing and replicating the actions of others, often an expert. Training data are from expert inputs observations and actions. It assumes data is independently identity distributed, which is different from reinforcement learning. It is supervised learning.
+
+\bigskip
+
+\noindent \(p_{data}(o_t)\): Distribution of training data. The probability of taking action \(a_t\) at observation \(o_t\).
+
+\noindent \(p_{\pi_{\theta}}(o_t)\): Distribution of validation data. The probability of taking correct action \(a_t\) at observation \(o_t\).
+
+\noindent A standard training objective. Choose the optimal \(\theta\) that maxmizes the expectation of log probability of taking correct action \(a_t\) at observation \(o_t\), where \(o_t\) is sample from \(p_{data}(o_t)\):
+
+\[\underset{\theta}{max} E_{o_t \sim p_{data}(o_t)}[log \pi_{\theta}(a_t \mid o_t)]\]
+\[\underset{\theta}{max} \sum_{t = 1}^{m} log \pi_{\theta}(a_t \mid o_t)\]
+
+\noindent An alternative training objective. We can either maxmize the reward:
+
+\[r(o, a) = log p(a = \pi^*(o) \mid o)\]
+\[\underset{\theta}{max} E_{o_t \sim p_{\pi_{\theta}}(o_t)}[r(o_t, a_t)]\]
+\[\underset{\theta}{max} \sum_{t = 1}^{m} r(o_t, a_t)\]
+
+\noindent Or, minimize the expect cost (number of mistakes) that the policy gonna make:
+
+\[c(o_t, a_t) = 
+\begin{cases}
+0, & \text{if } a_t = \pi^*(o_t)\\
+1, & \text{otherwise}
+\end{cases}
+\]
+\[\underset{\theta}{min} E_{o_t \sim p_{\pi_{\theta}}(o_t)}[c(o_t, a_t)]\]
+\[\underset{\theta}{min} \sum_{t = 1}^{m} c(o_t, a_t)\]
+
+\noindent Imitation learning only learn from exsisting human behaviour, doesn't search for new approach. 
+Sometimes the expert data is lacks of mistakes, after training the model can be trapped in an unfamiliar state and cannot recover from that it. 
+Humans need to provide data, which is typically finite. Deep learning works best when data is plentiful, while humans are not good at providing some kinds of actions. 
+So the result can hardly outperform humans'. Some approaches to improve performance:
+
+\begin{itemize}
+    \item Be smart about how we collect (and augment) our data.
+    \begin{itemize}
+        \item Intentionally add mistakes and corrections to training data. The mistakes hurt, but the corrections help, often more than the mistakes hurt.
+        \item Use data augmentation. Add some "fake" data that illustrates corrections.
+    \end{itemize}
+    \item Use very powerful models that make very few mistakes.
+    \begin{itemize}
+        \item Mixture of gaussians.
+        \item Latent variable models.
+        \item Diffusion models.
+    \end{itemize}
+    \item Use multi-task learning. Learn \(\pi_{\theta}(a \mid o, g)\) instead. Add goal state \(g\) to the input. One good strategy is:
+    \begin{itemize}
+        \item Start with a random policy.
+        \item Collect data with random goals.
+        \item Treat this data as "demonstrations" for.
+        \item the goals that were reached.
+        \item Use this to improve the policy.
+        \item Repeat.
+    \end{itemize}
+    \item Change the algorithm. DAgger (Dataset Aggregation) algorithm collects training data from \(p_{\pi_{\theta}}(o_t)\).
+    \begin{itemize}
+        \item Train \(\pi_{\theta}(a_t \mid o_t)\) from data (initially from human) \(D = \{(o_1, a_1), (o_2, a_2), \dots, (o_N, a_N)\}\).
+        \item Run \(\pi_{\theta}(a_t \mid o_t)\) to get observation \(O_{\pi} = \{o_1, o_2, \dots, o_M\}\).
+        \item Human labels them and get \(D_{\pi} = \{(o_1, a_1), (o_2, a_2), \dots, (o_M, a_M)\}\).
+        \item Aggregate \(D = D \cup D_{\pi}\)
+        \item Repeat.
+    \end{itemize}
+\end{itemize}
 
 \subsection{Q-learning}
 
