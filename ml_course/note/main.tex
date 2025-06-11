@@ -1557,6 +1557,10 @@ a large set of items?}
 
 \noindent \(\pi_{\theta}\): policy that gives probability of \(a_t\) for given \(s_t\), to maximize cumulative reward \(\sum_{t = 1}^{T}r_t\).
 
+\noindent \(p_{\theta} (s_t, a_t)\): The probability distribution of \(s_t\), \(a_t\) for policy \(\pi_{\theta}\).
+
+\noindent \((s_t, a_t) \sim p_{\theta} (s_t, a_t)\): state and action \((s_t, a_t)\) sampled from distribution \(p_{\theta} (s_t, a_t)\).
+
 \noindent \(p(s_{t+1} \mid s_t, a_t)\): transition probability from state \(s_t\) to \(s_{t + 1}\) given action \(a_t\).
 
 \noindent \(\tau\): a trajectory of states and actions \((s_1, a_1), (s_2, a_2), \dots, (s_T, a_T)\).
@@ -1565,7 +1569,7 @@ a large set of items?}
 
 \[p_{\theta}(\tau) = p(s_1) \prod_{t = 1}^T \pi_{\theta} (a_t \mid s_t) p(s_{t + 1} \mid s_t, a_t) \]
 
-\noindent Objective for reinforcement learning:
+\noindent Objective for reinforcement learning, finite horizon case:
 
 \begin{equation*}
 \begin{split}
@@ -1574,6 +1578,10 @@ a large set of items?}
 & = arg \underset{\theta}{max} \sum_{t = 1}^{T} E_{(s_t, a_t) \sim p_{\theta}(s_t, a_t)}[r(s_t, a_t)]
 \end{split}
 \end{equation*}
+
+\noindent Infinite horizon case:
+
+\[\theta^* = arg \underset{\theta}{max} E_{(s, a) \sim p_{\theta}(s, a)}[r(s, a)]\]
 
 \subsection{Markov Chain}
 
