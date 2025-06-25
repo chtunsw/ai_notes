@@ -1573,7 +1573,7 @@ or recurrent neural network \(S_t^a = \sigma(S_{t - 1}^a W_s + O_t W_o)\).
 It is a compact summary of the history, which is as useful for predicting the future as the whole history. \(S_t = f(H_t)\). 
 A state \(S_t\) is Markov if and only if: \(P[S_{t + 1} \mid S_t] = P[S_{t + 1} \mid S_1, \dots, S_t]\).
 
-\noindent \(H_t\): a trajectory that contains a sequence of observations and actions up to \(t\). \(H_t = A_0, O_1, \dots, A_{t - 1}, O_{t}\).
+\noindent \(H_t\): history, a trajectory that contains a sequence of observations and actions up to time step \(t\). \(H_t = A_0, O_1, \dots, A_{t - 1}, O_{t}\).
 
 \noindent \(\pi\): a policy decides agent's behaviour. It maps state to action. 
 Deterministic policy: \(a = \pi(s)\). 
