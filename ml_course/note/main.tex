@@ -1531,16 +1531,6 @@ a large set of items?}
     \item Agent’s actions affect the subsequent data it receives
 \end{itemize}
 
-\noindent Reward:
-
-\begin{itemize}
-    \item A reward \(R_t\) is a scalar feedback signal
-    \item Indicates how well agent is doing at step \(t\)
-    \item The agent’s job is to maximise cumulative reward
-\end{itemize}
-
-\bigskip
-
 \noindent Reinforcement learning is based on the reward hypothesis: 
 All goals can be described by the maximisation of expected cumulative reward. 
 The goal is select actions to maximise total future reward. 
@@ -1562,17 +1552,46 @@ It may be better to sacrifice immediate reward to gain more long-term reward.
     \includegraphics[scale=0.6]{./images/rl.png}
 \end{center}
 
-\noindent \(O_t\): observation at time step \(t\). (not fully observed)
-
-\noindent \(S_t\): state at time step \(t\). (fully observed)
+\noindent \(O_t\): (not fully observed) observation of environment at time step \(t\).
 
 \noindent \(A_t\): action at time step \(t\).
+
+\noindent \(S_t\): (fully observed) state of environment at time step \(t\).
+
+\noindent \(S_t^e\): environment state, the environment's private representation. 
+Used by environment to pick the next observation/reward. 
+The environment state is not usually visible to the agent, and may contain irrelevant information.
+
+\noindent \(S_t^a\): agent state, the agent's internal representation of the environment. 
+Used by agent to pick the next action. 
+It is the state that used in RL algorithms. It can be a function of history: \(S_t^a = f(H_t)\). 
+For example, it can be a complete history \(S_t^a = H_t\), 
+or beliefs of environment state \(S_t^a = (P[S_t^e = s^1], \dots, P[S_t^e = s^n])\), 
+or recurrent neural network \(S_t^a = \sigma(S_{t - 1}^a W_s + O_t W_o)\).
+
+\noindent \textbf{Information state (Markov state)}: \(S_t\) that contains all useful information from the history. 
+It is a compact summary of the history, which is as useful for predicting the future as the whole history. \(S_t = f(H_t)\). 
+A state \(S_t\) is Markov if and only if: \(P[S_{t + 1} \mid S_t] = P[S_{t + 1} \mid S_1, \dots, S_t]\).
+
+\noindent \(H_t\): a trajectory that contains a sequence of observations and actions up to \(t\). \(H_t = A_0, O_1, \dots, A_{t - 1}, O_{t}\).
+
+\noindent \(\pi\): a policy decides agent's behaviour. It maps state to action. 
+Deterministic policy: \(a = \pi(s)\). 
+Stochastic policy: \(\pi(a \mid s) = P[A_t = a \mid S_t = s]\).
+
+\noindent \(v_{\pi}(s)\): value function estimates the expected cumulative future reward. Used to evaluate the goodness or badness of states, 
+and select actions based on that. 
+For example, for discrete models it can be \(v_{\pi}(s) = E_{\pi}[R_{t + 1} + \gamma R_{t + 2} + \gamma^2 R_{t + 3} + \dots \mid S_t = s]\).
+
+\noindent \(\mathcal{P}, \mathcal{R}\): a model predicts what the environment will do next. 
+\(\mathcal{P}\) predicts next state: \(\mathcal{P}_{s s'}^a = P[S_{t + 1} = s' \mid S_t = s, A_t = a]\). 
+\(\mathcal{R}\) predicts next reward: \(\mathcal{R}_{s}^a = E[R_{t + 1} \mid S_t = s, A_t = a]\).
+
+\noindent \(\gamma\): discount factor.
 
 \noindent \(r(a_t, s_t)\): reward at state \(s_t\) with action \(a_t\).
 
 \noindent \(c(a_t, s_t)\): cost at state \(s_t\) with action \(a_t\). often the opposite of \(r\).
-
-\noindent \(H_t\): a trajectory that contains a sequence of observations and actions up to \(t\). \(H_t = A_0, O_1, \dots, A_{t - 1}, O_{t}\).
 
 \noindent \(\pi^*_{\theta}\): optimal policy that gives \(a_t\) for given \(s_t\). Sometimes we assume expert data to be the optimal policy.
 
@@ -1603,6 +1622,85 @@ It may be better to sacrifice immediate reward to gain more long-term reward.
 \noindent Infinite horizon case:
 
 \[\theta^* = arg \underset{\theta}{max} E_{(s, a) \sim p_{\theta}(s, a)}[r(s, a)]\]
+
+\noindent \textbf{RL algorithm categories}:
+
+\begin{itemize}
+    \item Value Based
+    \begin{itemize}
+        \item No Policy (Implicit)
+        \item Have Value Function
+    \end{itemize}
+    \item Policy Based
+    \begin{itemize}
+        \item Have Policy
+        \item No Value Function
+    \end{itemize}
+    \item Actor Critic
+    \begin{itemize}
+        \item Have Policy
+        \item Have Value Function
+    \end{itemize}
+    \item Model Free
+    \begin{itemize}
+        \item Have Policy and/or Value Function
+        \item No Model
+    \end{itemize}
+    \item Model Based
+    \begin{itemize}
+        \item Have Policy and/or Value Function
+        \item Have Model
+    \end{itemize}
+\end{itemize}
+
+\noindent \textbf{Learning vs Planning}:
+
+\noindent There are two fundamental approaches in sequential decision making:
+
+\begin{itemize}
+    \item Reinforcement Learning
+    \begin{itemize}
+        \item The environment is initially unknown
+        \item The agent interacts with the environment
+        \item The agent improves its policy
+    \end{itemize}
+    \item Planning
+    \begin{itemize}
+        \item A model of the environment is known
+        \item The agent performs computations with its model (without any external interaction)
+        \item The agent improves its policy
+        \item a.k.a. deliberation, reasoning, introspection, pondering, thought, search
+    \end{itemize}
+\end{itemize}
+
+\noindent \textbf{Exploration vs Exploitation}:
+
+\noindent Reinforcement learning is like trial-and-error learning. The agent should discover a good policy from its experiences of the environment, without losing too much reward along the way. 
+It is usually important to explore as well as exploit.
+
+\begin{itemize}
+    \item Exploration
+    \begin{itemize}
+        \item finds more information about the environment
+    \end{itemize}
+    \item Exploitation
+    \begin{itemize}
+        \item exploits known information to maximise reward
+    \end{itemize}
+\end{itemize}
+
+\noindent \textbf{Prediction vs Control}:
+
+\begin{itemize}
+    \item Prediction
+    \begin{itemize}
+        \item Given a policy, evaluate the future
+    \end{itemize}
+    \item Control
+    \begin{itemize}
+        \item Find the best policy, optimise the future
+    \end{itemize}
+\end{itemize}
 
 \subsection{Markov Chain}
 
