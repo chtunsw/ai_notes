@@ -1525,17 +1525,29 @@ a large set of items?}
 \noindent Reinforcement learning (RL) is an area of machine learning concerned with how intelligent agents ought to take actions in an environment in order to maximize the notion of cumulative reward.
 
 \begin{itemize}
-    \item It is a mathematical formalism for learning-based decision making. Approach for learning decision making and control from experience.
-    \item Reinforcement learning does not assume the data is independently identity distributed. Previous outputs influence future inputs.
-    \item Ground truth answer is not known, only know if we succeeded or failed. More generally, we know the reward.
+    \item There is no supervisor, only a reward signal
+    \item Feedback is delayed, not instantaneous
+    \item Time really matters (sequential, non independently identity distributed data)
+    \item Agent’s actions affect the subsequent data it receives
 \end{itemize}
 
-\noindent RL optimization:
+\noindent Reward:
 
 \begin{itemize}
-    \item search: find new patterns that haven't been found before.
-    \item learning: use data to extract patterns.
+    \item A reward \(R_t\) is a scalar feedback signal
+    \item Indicates how well agent is doing at step \(t\)
+    \item The agent’s job is to maximise cumulative reward
 \end{itemize}
+
+\bigskip
+
+\noindent Reinforcement learning is based on the reward hypothesis: 
+All goals can be described by the maximisation of expected cumulative reward. 
+The goal is select actions to maximise total future reward. 
+Actions may have long term consequencesn, and reward may be delayed. 
+It may be better to sacrifice immediate reward to gain more long-term reward.
+
+\bigskip
 
 \noindent RL process:
 
@@ -1550,17 +1562,17 @@ a large set of items?}
     \includegraphics[scale=0.6]{./images/rl.png}
 \end{center}
 
-\noindent \(g\): the goal state for the model to reach.
+\noindent \(O_t\): observation at time step \(t\). (not fully observed)
 
-\noindent \(o_t\): observation at time step \(t\). (not fully observed)
+\noindent \(S_t\): state at time step \(t\). (fully observed)
 
-\noindent \(s_t\): state at time step \(t\). (fully observed)
-
-\noindent \(a_t\): action at time step \(t\).
+\noindent \(A_t\): action at time step \(t\).
 
 \noindent \(r(a_t, s_t)\): reward at state \(s_t\) with action \(a_t\).
 
 \noindent \(c(a_t, s_t)\): cost at state \(s_t\) with action \(a_t\). often the opposite of \(r\).
+
+\noindent \(H_t\): a trajectory that contains a sequence of observations and actions up to \(t\). \(H_t = A_0, O_1, \dots, A_{t - 1}, O_{t}\).
 
 \noindent \(\pi^*_{\theta}\): optimal policy that gives \(a_t\) for given \(s_t\). Sometimes we assume expert data to be the optimal policy.
 
