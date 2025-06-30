@@ -43,6 +43,35 @@
 
 \section{Statistics}
 
+\subsection{Probability Space}
+
+\noindent In probability theory, a probability space or a probability triple \((\Omega, \mathcal{F}, P)\) is a mathematical construct that provides a formal model of a random process or "experiment".
+
+\bigskip
+
+\noindent \(\Omega\): A sample space, which is the set of all possible outcomes of a random process under consideration.
+
+\noindent \(\mathcal{F}\): An event space, which is a set of events, where an event is a subset of outcomes in the sample space. The \(\sigma\)-algebra 
+\(\mathcal{F}\) is a collection of all the events we would like to consider.
+
+\noindent \(P\): A probability function, which assigns, to each event in the event space, a probability, which is a number between 0 and 1 (inclusive).
+
+\bigskip
+
+\noindent In the example of the throw of a standard die:
+
+\bigskip
+
+\noindent The sample space  \(\Omega\) is typically the set \(\{1, 2, 3, 4, 5, 6\}\). 
+
+\noindent The event space \(\mathcal{F}\) could be the set of all subsets of the sample space, 
+which would then contain simple events such as \(\{5\}\) ("the die lands on 5"),
+as well as complex events such as \(\{2, 4, 6\}\) ("the die lands on an even number"). 
+So \(\mathcal{F} = \{\{5\}, \{2, 4, 6\}, \dots\}\)
+
+\noindent The probability function \(P\) would then map each event to the number of outcomes in that event divided by 6. 
+So for example: \(P(\{5\}) = \frac{1}{6}\), \(P(\{2, 4, 6\}) = \frac{3}{6}\), ...
+
 \subsection{Discrete Probability Distribution}
 
 \noindent Let \(X\) be a random variable with a finite number of finite outcomes \( x_{1},  x_{2}, \ldots, x_{n}\) occurring with probabilities \(p_{1}, p_{2}, \ldots, p_{n}\) respectively. The expectation of \(X\) is defined as
@@ -57,6 +86,18 @@
 
 \[\mu = \frac {1}{n} \sum_{i=1}^{n} x_{i}\]
 \[\sigma^{2} = \frac {1}{n} \sum_{i=1}^{n} (x_{i} - \mu)^{2}\]
+
+\noindent \textbf{Expectation}:
+
+\noindent If \(X\) is independent of \(\mathcal{H}\), then \(E(X \mid \mathcal{H}) = E(X)\).
+
+\noindent Tower property: for sub-\(\sigma\)-algebras \(\mathcal{H}_1 \subseteq \mathcal{H}_2 \subseteq \mathcal{F}\), then \(E(E(X \mid \mathcal{H}_2) \mid \mathcal{H}_1) = E(X \mid \mathcal{H}_1)\).
+
+\noindent Law of total expectation: \(E(E(X \mid \mathcal{H})) = E(X)\). A special case of tower property when \(\mathcal{H}_1 = \{\emptyset, \Omega\}\).
+
+\noindent Linearity:
+\(E(X_{1}+X_{2}\mid {\mathcal {H}})=E(X_{1}\mid {\mathcal {H}})+E(X_{2}\mid {\mathcal {H}})\) and, 
+\(E(aX \mid {\mathcal {H}}) = a E(X \mid {\mathcal {H}})\) when \(a \in \mathbb {R}\).
 
 \subsection{Continuous Probability Distribution}
 
