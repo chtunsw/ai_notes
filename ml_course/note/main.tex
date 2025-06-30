@@ -1716,21 +1716,81 @@ It is usually important to explore as well as exploit.
 \includegraphics[scale=0.3]{./images/markov_decision_process.png}
 \end{center}
 
-\noindent A Markov decision process is a 4-tuple \((S,A,P_{a},R_{a})\), where:
+\noindent Markov decision processes formally describe an environment for reinforcement learning. Where the environment is fully observable. 
+The current state \(S_t\) completely characterises the process. "The future is independent of the past given the present". Almost all RL problems can be formalised as MDPs, e.g.
+
+\begin{itemize}
+    \item Optimal control primarily deals with continuous MDPs
+    \item Partially observable problems can be converted into MDPs
+    \item Bandits are MDPs with one state
+\end{itemize}
+
+\noindent A state \(S_t\) is Markov if and only if:
+
+\[P[S_{t + 1} \mid S_t] = P[S_{t + 1} \mid S_1, \dots, S_t]\]
+
+\noindent The state transition probability is defined by:
+
+\[\mathcal{P}_{ss'} = P[S_{t + 1} = s' \mid S_t = s]\]
+
+\noindent The state transition matrix, where each row of the matrix sums to 1:
+
+\[\mathcal{P} = 
+\begin{bmatrix}
+    \mathcal{P}_{1 1} & \dots & \mathcal{P}_{1 n}\\
+    \vdots & \ddots & \vdots\\
+    \mathcal{P}_{n 1} & \dots & \mathcal{P}_{n n}
+\end{bmatrix}
+\]
+
+\noindent A Markov decision process (MDP) is a Markov reward process with decisions. It is an environment in which all states are Markov. 
+A Markov decision process is a tuple \(\langle \mathcal{S}, \mathcal{A}, \mathcal{P}, \mathcal{R}, \gamma \rangle\), where:
 
 \bigskip
 
-\noindent \(S\): a set of states called the state space. The state space may be discrete or continuous, like the set of real numbers.
+\noindent \(\mathcal{S}\): a set of states called the state space
 
-\noindent \(A\): a set of actions called the action space (alternatively, \(A_{s}\) is the set of actions available from state \(s\)). As for state, this set may be discrete or continuous.
+\noindent \(\mathcal{A}\): a set of actions called the action space
 
-\noindent \(P_{a}(s,s')\): on an intuitive level, the probability that action \(a\) in state \(s\) at time \(t\) will lead to state \(s'\) at time \(t+1\). In general, this probability transition is defined to satisfy: \(Pr(s_{t+1} \in S' \mid s_{t}=s, a_{t}=a) = \int_{S'} P_{a}(s,s') ds', S' \subseteq S\). In case the state space is discrete, the integral is intended with respect to the counting measure, so that the latter simplifies as \(P_{a}(s,s') = Pr(s_{t+1}=s' \mid s_{t}=s, a_{t}=a)\).
+\noindent \(\mathcal{P}\): a state transition probability matrix, 
+\(\mathcal{P}_{ss'}^a = P[S_{t + 1} = s' \mid S_t = s, A_t = a]\)
 
-\noindent \(R_{a}(s,s')\): the immediate reward (or expected immediate reward) received after transitioning from state \(s\) to state \(s'\), due to action \(a\).
+\noindent \(\mathcal{R}\): the expected immediate reward received after transitioning from state \(S_t\) due to action \(A_t\), 
+\(R_s^a = E[R_{t + 1} \mid S_t = s, A_t = a]\)
+
+\noindent \(\gamma\): a discount factor, \(\gamma \in [0, 1]\). 
+The discount factor handles the uncertainty of the future reward. Avoids infinite returns in cyclic Markov processes, and brings convenience to mathematical calculations. 
+Sometimes immediate rewards may earn more interest than delayed rewards. 
 
 \bigskip
 
-\noindent A policy function \(\pi\) is a (potentially probabilistic) mapping from state space \(S\) to action space \(A\).
+\noindent \(G_t\): the return \(G_t\) is the total discounted reward from time-step \(t\)
+
+\begin{equation*}
+\begin{split}
+G_t
+& = R_{t + 1} + \gamma R_{t + 2} + \gamma^2 R_{t + 3} + \dots \\
+& = \sum_{k = 0}^{\inf} \gamma^{k} R_{t + k +1} \\
+& = R_{t + 1} + \gamma G_{t + 1}
+\end{split}
+\end{equation*}
+
+\noindent \(v(s)\): the value function \(v(s)\) gives the expected return starting from state \(s\). 
+Assume \(s\) is the state on time step \(t\), and \(s'\) is the state on time step \(t + 1\).
+
+\begin{equation*}
+\begin{split}
+v(s)
+& = E[G_t \mid S_t = s] \\
+& = E[R_{t + 1} + \gamma R_{t + 2} + \gamma^2 R_{t + 3} + \dots \mid S_t = s] \\
+& = E[R_{t + 1} + \gamma (R_{t + 2} + \gamma R_{t + 3} + \dots) \mid S_t = s] \\
+& = E[R_{t + 1} + \gamma G_{t + 1} \mid S_t = s] \\
+& = E[R_{t + 1} \mid S_t = s] + \gamma E[G_{t + 1} \mid S_t = s] \\
+& = E[R_{t + 1} \mid S_t = s] + \gamma E[E[G_{t + 1} \mid S_{t + 1} = s'] \mid S_t = s] \\
+& = E[R_{t + 1} \mid S_t = s] + \gamma E[v(s') \mid S_t = s] \\
+& = E[R_{t + 1} + \gamma v(s') \mid S_t = s]
+\end{split}
+\end{equation*}
 
 \subsection{Imitation Learning}
 
