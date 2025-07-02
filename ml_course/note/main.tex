@@ -1775,15 +1775,27 @@ G_t
 \end{split}
 \end{equation*}
 
-\noindent \(v(s)\): the value function \(v(s)\) gives the expected return starting from state \(s\). 
-Assume \(s\) is the state on time step \(t\), and \(s'\) is the state on time step \(t + 1\).
+\noindent \(v(s)\): the value function \(v(s)\) gives the expected return starting from state \(s\).
 
 \begin{equation*}
 \begin{split}
 v(s)
 & = E[G_t \mid S_t = s] \\
-& = E[R_{t + 1} + \gamma R_{t + 2} + \gamma^2 R_{t + 3} + \dots \mid S_t = s] \\
-& = E[R_{t + 1} + \gamma (R_{t + 2} + \gamma R_{t + 3} + \dots) \mid S_t = s] \\
+& = E[R_{t + 1} + \gamma G_{t + 1} \mid S_t = s] \\
+\end{split}
+\end{equation*}
+
+\noindent Here is another derivation (from David Silver's course) of the above formula for \(v(s)\). 
+Assume \(s\) is the state on time step \(t\), and \(s'\) is the state on time step \(t + 1\). 
+Under condition \(S_t = s\), \(G_{t + 1}\) can be seen as an expectation under condition \(S_{t + 1} = s'\). 
+We know that the distribution of \(S_{t + 1}\) is decided by \(S_t\), 
+which means \( E[G_{t + 1} \mid S_t = s] = E[E[G_{t + 1} \mid S_{t + 1} = s'] \mid S_t = s]\). 
+In this case we get:
+
+\begin{equation*}
+\begin{split}
+v(s)
+& = E[G_t \mid S_t = s] \\
 & = E[R_{t + 1} + \gamma G_{t + 1} \mid S_t = s] \\
 & = E[R_{t + 1} \mid S_t = s] + \gamma E[G_{t + 1} \mid S_t = s] \\
 & = E[R_{t + 1} \mid S_t = s] + \gamma E[E[G_{t + 1} \mid S_{t + 1} = s'] \mid S_t = s] \\
