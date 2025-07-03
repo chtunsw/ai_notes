@@ -1583,9 +1583,11 @@ Stochastic policy: \(\pi(a \mid s) = P[A_t = a \mid S_t = s]\).
 and select actions based on that. 
 For example, for discrete models it can be \(v_{\pi}(s) = E_{\pi}[R_{t + 1} + \gamma R_{t + 2} + \gamma^2 R_{t + 3} + \dots \mid S_t = s]\).
 
-\noindent \(\mathcal{P}, \mathcal{R}\): a model predicts what the environment will do next. 
-\(\mathcal{P}\) predicts next state: \(\mathcal{P}_{s s'}^a = P[S_{t + 1} = s' \mid S_t = s, A_t = a]\). 
-\(\mathcal{R}\) predicts next reward: \(\mathcal{R}_{s}^a = E[R_{t + 1} \mid S_t = s, A_t = a]\).
+\noindent \(\mathcal{S}\): set of all nonterminal states. \(\mathcal{S^+}\) represents set of all states including the terminal state.
+
+\noindent \(\mathcal{A}\): set of all actions. \(\mathcal{A}(s)\) represents set of all actions available in state \(s\).
+
+\noindent \(\mathcal{R}\): set of all possible rewards.
 
 \noindent \(\gamma\): discount factor.
 
@@ -1711,6 +1713,12 @@ It is usually important to explore as well as exploit.
 \noindent A Markov chain is a mathematical system that experiences transitions from one state to another according to certain probabilistic rules. The defining characteristic of a Markov chain is that no matter how the process arrived at its present state, the possible future states are fixed. In other words, the probability of transitioning to any particular state is dependent solely on the current state and time elapsed.
 
 \subsection{Markov decision process}
+
+\noindent MDPs are meant to be a straightforward framing of the problem of learning from interaction to achieve a goal. 
+The learner and decision maker is called the agent. The thing it interacts with, comprising everything outside the agent, 
+is called the environment. These interact continually, the agent selecting actions and the environment responding to these actions and presenting new situations to the agent. 
+The environment also gives rise to rewards, special numerical values that the agent seeks to maximize over time through its choice of actions. 
+The MDP and agent together thereby give rise to a sequence or trajectory that begins like this: \(S_0, A_0, R_1, S_1, A_1, R_2, \dots\)
 
 \begin{center}
 \includegraphics[scale=0.3]{./images/markov_decision_process.png}
