@@ -1772,13 +1772,13 @@ G_t
 \end{split}
 \end{equation*}
 
-\noindent \(v(s)\): the value function \(v(s)\) gives the expected return starting from state \(s\).
+\noindent \(v_{\pi}(s)\): the expected return when starting in \(s\) and following \(\pi\) thereafter
 
 \begin{equation*}
 \begin{split}
-v(s)
-& = E[G_t \mid S_t = s] \\
-& = E[R_{t + 1} + \gamma G_{t + 1} \mid S_t = s] \\
+v_{\pi}(s)
+& = E_{\pi}[G_t \mid S_t = s] \\
+& = E_{\pi}[R_{t + 1} + \gamma G_{t + 1} \mid S_t = s] \\
 \end{split}
 \end{equation*}
 
