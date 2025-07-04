@@ -1740,7 +1740,8 @@ We use \(R_{t + 1}\) instead of \(R_t\) to denote the reward due to \(A_t\) beca
 \bigskip
 
 \noindent For episodic tasks, there is a finite time step \(T\) when a terminal state is reached. 
-While for continuing tasks, there is not a terminal state and in this case \(T = \infty\).
+While for continuing tasks, there is not a terminal state and in this case \(T = \infty\). 
+These two can be unified by considering episode termination to be the entering of a special absorbing state that transitions only to itself and that generates only rewards of zero.
 
 \begin{center}
 \includegraphics[scale=0.3]{./images/markov_decision_process.png}
@@ -1772,13 +1773,23 @@ G_t
 \end{split}
 \end{equation*}
 
-\noindent \(v_{\pi}(s)\): the expected return when starting in \(s\) and following \(\pi\) thereafter
+\noindent \(v_{\pi}(s)\): state-value function for policy \(\pi\), the expected return when starting in \(s\) and following \(\pi\) thereafter
 
 \begin{equation*}
 \begin{split}
 v_{\pi}(s)
 & = E_{\pi}[G_t \mid S_t = s] \\
 & = E_{\pi}[R_{t + 1} + \gamma G_{t + 1} \mid S_t = s] \\
+\end{split}
+\end{equation*}
+
+\noindent \(q_{\pi}(s, a)\): action-value function for policy \(\pi\), the expected return starting from \(s\), taking the action \(a\), and following \(\pi\) thereafter
+
+\begin{equation*}
+\begin{split}
+q_{\pi}(s, a)
+& = E_{\pi}[G_t \mid S_t = s, A_t = a] \\
+& = E_{\pi}[R_{t + 1} + \gamma G_{t + 1} \mid S_t = s, A_t = a] \\
 \end{split}
 \end{equation*}
 
