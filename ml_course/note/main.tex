@@ -1539,6 +1539,15 @@ It may be better to sacrifice immediate reward to gain more long-term reward.
 
 \bigskip
 
+\noindent The agent always learns to maximize its reward. 
+If we want it to do something for us, we must provide rewards to it in such a way that in maximizing them the agent will also achieve our goals. 
+It is thus critical that the rewards we set up truly indicate what we want accomplished. 
+In particular, the reward signal is not the place to impart to the agent prior knowledge about how to achieve what we want it to do. 
+If achieving subgoals were rewarded, then the agent might find a way to achieve them without achieving the real goal. 
+The reward signal is your way of communicating to the agent what you want it to achieve, not how you want it achieved. 
+
+\bigskip
+
 \noindent RL process:
 
 \begin{itemize}
