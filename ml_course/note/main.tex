@@ -1562,9 +1562,9 @@ It may be better to sacrifice immediate reward to gain more long-term reward.
 
 \noindent \(O_t\): (not fully observed) observation of environment at time step \(t\).
 
-\noindent \(A_t\): action at time step \(t\).
+\noindent \(A_t\): action at time step \(t\). \(A_t \in \mathcal{A}\).
 
-\noindent \(S_t\): (fully observed) state of environment at time step \(t\).
+\noindent \(S_t\): (fully observed) state of environment at time step \(t\). \(S_t \in \mathcal{S}\).
 
 \noindent \(S_t^e\): environment state, the environment's private representation. 
 Used by environment to pick the next observation/reward. 
@@ -1581,7 +1581,7 @@ or recurrent neural network \(S_t^a = \sigma(S_{t - 1}^a W_s + O_t W_o)\).
 It is a compact summary of the history, which is as useful for predicting the future as the whole history. \(S_t = f(H_t)\). 
 A state \(S_t\) is Markov if and only if: \(P[S_{t + 1} \mid S_t] = P[S_{t + 1} \mid S_1, \dots, S_t]\).
 
-\noindent \(R_t\): reward at time step \(t\), typically due, stochastically, to \(S_{t - 1}\) and \(A_{t - 1}\).
+\noindent \(R_t\): reward at time step \(t\), typically due, stochastically, to \(S_{t - 1}\) and \(A_{t - 1}\). \(R_t \in \mathcal{R}\).
 
 \noindent \(H_t\): history, a trajectory that contains a sequence of observations and actions up to time step \(t\). \(H_t = A_0, O_1, \dots, A_{t - 1}, O_{t}\).
 
