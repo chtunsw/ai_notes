@@ -1596,9 +1596,15 @@ A state \(S_t\) is Markov if and only if: \(P[S_{t + 1} \mid S_t] = P[S_{t + 1} 
 
 \noindent \(p(s' \mid s, a)\): probability of transition to state \(s'\), from state \(s\) and action \(a\).
 
+\[p(s' \mid s, a) = Pr\{S_t = s' | S_{t - 1} = s , A_{t - 1} = a \} = \sum_{r \in \mathcal{R}} p(s', r \mid s, a)\]
+
 \noindent \(r(s, a)\): expected immediate reward from state \(s\) after action \(a\).
 
+\[r(s, a) = E[R_t \mid S_{t - 1} = s , A_{t - 1} = a] = \sum_{r \in \mathcal{R}} r \sum_{s' \in \mathcal{S}} p(s', r \mid s, a)\]
+
 \noindent \(r(s, a, s')\): expected immediate reward on transition from \(s\) to \(s'\) under action \(a\).
+
+\[r(s, a, s') = E[R_t \mid S_{t - 1} = s , A_{t - 1} = a, S_t = s'] = \sum_{r \in \mathcal{R}} r \frac{p(s', r \mid s, a)}{p(s' \mid s, a)}\]
 
 \noindent \(\pi\): a policy decides agent's behaviour. It maps state to action. 
 Deterministic policy: \(a = \pi(s)\). 
