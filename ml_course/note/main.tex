@@ -1780,6 +1780,8 @@ G_t
 v_{\pi}(s)
 & = E_{\pi}[G_t \mid S_t = s] \\
 & = E_{\pi}[R_{t + 1} + \gamma G_{t + 1} \mid S_t = s] \\
+& = \sum_a \pi(a \mid s) \sum_{s'} \sum_{r} p(s', r \mid s, a) [r + \gamma E_{\pi}[G_{t + 1} \mid S_{t + 1} = s']] \\
+& = \sum_a \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) [r + \gamma v_{\pi}(s')]
 \end{split}
 \end{equation*}
 
