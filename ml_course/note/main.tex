@@ -1759,48 +1759,15 @@ The current state \(S_t\) completely characterises the process. "The future is i
 
 \[P[S_{t + 1} \mid S_t] = P[S_{t + 1} \mid S_1, \dots, S_t]\]
 
-\noindent The state transition probability is defined by:
-
-\[\mathcal{P}_{ss'} = P[S_{t + 1} = s' \mid S_t = s]\]
-
-\noindent The state transition matrix, where each row of the matrix sums to 1:
-
-\[\mathcal{P} = 
-\begin{bmatrix}
-    \mathcal{P}_{1 1} & \dots & \mathcal{P}_{1 n}\\
-    \vdots & \ddots & \vdots\\
-    \mathcal{P}_{n 1} & \dots & \mathcal{P}_{n n}
-\end{bmatrix}
-\]
-
-\noindent A Markov decision process (MDP) is a Markov reward process with decisions. It is an environment in which all states are Markov. 
-A Markov decision process is a tuple \(\langle \mathcal{S}, \mathcal{A}, \mathcal{P}, \mathcal{R}, \gamma \rangle\), where:
-
 \bigskip
 
-\noindent \(\mathcal{S}\): a set of states called the state space
-
-\noindent \(\mathcal{A}\): a set of actions called the action space
-
-\noindent \(\mathcal{P}\): a state transition probability matrix, 
-\(\mathcal{P}_{ss'}^a = P[S_{t + 1} = s' \mid S_t = s, A_t = a]\)
-
-\noindent \(\mathcal{R}\): the expected immediate reward received after transitioning from state \(S_t\) due to action \(A_t\), 
-\(R_s^a = E[R_{t + 1} \mid S_t = s, A_t = a]\)
-
-\noindent \(\gamma\): a discount factor, \(\gamma \in [0, 1]\). 
-The discount factor handles the uncertainty of the future reward. Avoids infinite returns in cyclic Markov processes, and brings convenience to mathematical calculations. 
-Sometimes immediate rewards may earn more interest than delayed rewards. 
-
-\bigskip
-
-\noindent \(G_t\): the return \(G_t\) is the total discounted reward from time-step \(t\)
+\noindent \(G_t\): the return \(G_t\) is the total discounted reward from time-step \(t\). Note here \(T = \infty\) or \(\gamma = 1\) is possible (but not both, otherwise return would be infinite).
 
 \begin{equation*}
 \begin{split}
 G_t
 & = R_{t + 1} + \gamma R_{t + 2} + \gamma^2 R_{t + 3} + \dots \\
-& = \sum_{k = 0}^{\infty} \gamma^{k} R_{t + k +1} \\
+& = \sum_{k = 0}^{T} \gamma^{k} R_{t + k + 1} \\
 & = R_{t + 1} + \gamma G_{t + 1}
 \end{split}
 \end{equation*}
