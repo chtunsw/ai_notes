@@ -1552,6 +1552,14 @@ It may be better to sacrifice immediate reward to gain more long-term reward.
     \includegraphics[scale=0.6]{./images/rl.png}
 \end{center}
 
+\noindent \(\mathcal{S}\): set of all nonterminal states. \(\mathcal{S^+}\) represents set of all states including the terminal state.
+
+\noindent \(\mathcal{A}\): set of all actions. \(\mathcal{A}(s)\) represents set of all actions available in state \(s\).
+
+\noindent \(\mathcal{R}\): set of all possible rewards.
+
+\noindent \(t\): discrete time step. \(t = 0, 1, 2, 3, \dots\).
+
 \noindent \(O_t\): (not fully observed) observation of environment at time step \(t\).
 
 \noindent \(A_t\): action at time step \(t\).
@@ -1573,57 +1581,49 @@ or recurrent neural network \(S_t^a = \sigma(S_{t - 1}^a W_s + O_t W_o)\).
 It is a compact summary of the history, which is as useful for predicting the future as the whole history. \(S_t = f(H_t)\). 
 A state \(S_t\) is Markov if and only if: \(P[S_{t + 1} \mid S_t] = P[S_{t + 1} \mid S_1, \dots, S_t]\).
 
+\noindent \(R_t\): reward at time step \(t\), typically due, stochastically, to \(S_{t - 1}\) and \(A_{t - 1}\).
+
 \noindent \(H_t\): history, a trajectory that contains a sequence of observations and actions up to time step \(t\). \(H_t = A_0, O_1, \dots, A_{t - 1}, O_{t}\).
+
+\noindent \(\gamma\): discount factor.
+
+\noindent \(G_t\): return following time \(t\), the cumulative future reward. \(G_t = R_{t + 1} + \gamma R_{t + 2} + \gamma^2 R_{t + 3} + \dots\)
+
+\noindent \(p(s', r \mid s, a)\): probability of transition to state \(s'\) with reward \(r\), from state \(s\) and action \(a\). It completely characterizes the environment's dynamics.
+
+\[p(s', r \mid s, a) = Pr\{S_t = s', R_t = r | S_{t - 1} = s , A_{t - 1} = a \}\]
+\[\sum_{s' \in \mathcal{S}} \sum_{r \in \mathcal{R}} p(s', r \mid s, a) = 1, \text{ for all \(s \in \mathcal{S}, a \in \mathcal{A}(s)\)}\]
+
+\noindent \(p(s' \mid s, a)\): probability of transition to state \(s'\), from state \(s\) and action \(a\).
+
+\noindent \(r(s, a)\): expected immediate reward from state \(s\) after action \(a\).
+
+\noindent \(r(s, a, s')\): expected immediate reward on transition from \(s\) to \(s'\) under action \(a\).
 
 \noindent \(\pi\): a policy decides agent's behaviour. It maps state to action. 
 Deterministic policy: \(a = \pi(s)\). 
 Stochastic policy: \(\pi(a \mid s) = P[A_t = a \mid S_t = s]\).
 
-\noindent \(v_{\pi}(s)\): value function estimates the expected cumulative future reward. Used to evaluate the goodness or badness of states, 
-and select actions based on that. 
-For example, for discrete models it can be \(v_{\pi}(s) = E_{\pi}[R_{t + 1} + \gamma R_{t + 2} + \gamma^2 R_{t + 3} + \dots \mid S_t = s]\).
+\noindent \(\pi_*\): optimal policy that gives best \(a\) for given \(s\).
 
-\noindent \(\mathcal{S}\): set of all nonterminal states. \(\mathcal{S^+}\) represents set of all states including the terminal state.
+\noindent \(v_{\pi}(s)\): value of state \(s\) under policy \(\pi\), estimates the expected return following state \(s\). 
+For example, for discrete models it can be \(v_{\pi}(s) = E_{\pi}[G_t \mid S_t = s] = E_{\pi}[R_{t + 1} + \gamma R_{t + 2} + \gamma^2 R_{t + 3} + \dots \mid S_t = s]\).
 
-\noindent \(\mathcal{A}\): set of all actions. \(\mathcal{A}(s)\) represents set of all actions available in state \(s\).
+\noindent \(v_{*}(s)\): value of state \(s\) under the optimal policy \(\pi_*\).
 
-\noindent \(\mathcal{R}\): set of all possible rewards.
+\noindent \(q_{\pi}(s, a)\): value of taking action a in state s under policy \(\pi\).
 
-\noindent \(\gamma\): discount factor.
+\noindent \(q_{*}(s, a)\): value of taking action \(a\) in state \(s\) under the optimal policy \(\pi_*\). Finding \(q_{*}(s, a)\) is the goal of RL tasks.
 
-\noindent \(r(a_t, s_t)\): reward at state \(s_t\) with action \(a_t\).
+\noindent \(V\), \(V_t\): array estimates of state-value function \(v_{\pi}\) or \(v_{*}\).
 
-\noindent \(c(a_t, s_t)\): cost at state \(s_t\) with action \(a_t\). often the opposite of \(r\).
+\noindent \(Q\), \(Q_t\): array estimates of action-value function \(q_{\pi}\) or \(q_{*}\).
 
-\noindent \(\pi^*_{\theta}\): optimal policy that gives \(a_t\) for given \(s_t\). Sometimes we assume expert data to be the optimal policy.
+\noindent \(\bar{V}_{t}(s)\): expected approximate action value, e.g. \(\bar{V}_{t}(s) = \sum_a \pi(a \mid s) Q_t(s, a)\)
 
-\noindent \(\pi_{\theta}\): policy that gives probability of \(a_t\) for given \(s_t\), to maximize cumulative reward \(\sum_{t = 1}^{T}r_t\).
+\noindent \(U_t\): target for estimate at time \(t\).
 
-\noindent \(p_{\theta} (s_t, a_t)\): The probability distribution of \(s_t\), \(a_t\) for policy \(\pi_{\theta}\).
-
-\noindent \((s_t, a_t) \sim p_{\theta} (s_t, a_t)\): state and action \((s_t, a_t)\) sampled from distribution \(p_{\theta} (s_t, a_t)\).
-
-\noindent \(p(s_{t+1} \mid s_t, a_t)\): transition probability from state \(s_t\) to \(s_{t + 1}\) given action \(a_t\).
-
-\noindent \(\tau\): a trajectory of states and actions \((s_1, a_1), (s_2, a_2), \dots, (s_T, a_T)\).
-
-\noindent Trajectory probability distribution for \(\tau\):
-
-\[p_{\theta}(\tau) = p(s_1) \prod_{t = 1}^T \pi_{\theta} (a_t \mid s_t) p(s_{t + 1} \mid s_t, a_t) \]
-
-\noindent Objective for reinforcement learning, finite horizon case:
-
-\begin{equation*}
-\begin{split}
-\theta^*
-& = arg \underset{\theta}{max} E_{\tau \sim p_{\theta}(\tau)}[\sum_{t} r(s_t, a_t)] \\
-& = arg \underset{\theta}{max} \sum_{t = 1}^{T} E_{(s_t, a_t) \sim p_{\theta}(s_t, a_t)}[r(s_t, a_t)]
-\end{split}
-\end{equation*}
-
-\noindent Infinite horizon case:
-
-\[\theta^* = arg \underset{\theta}{max} E_{(s, a) \sim p_{\theta}(s, a)}[r(s, a)]\]
+\bigskip
 
 \noindent \textbf{RL algorithm categories}:
 
@@ -1712,13 +1712,14 @@ It is usually important to explore as well as exploit.
 
 \noindent A Markov chain is a mathematical system that experiences transitions from one state to another according to certain probabilistic rules. The defining characteristic of a Markov chain is that no matter how the process arrived at its present state, the possible future states are fixed. In other words, the probability of transitioning to any particular state is dependent solely on the current state and time elapsed.
 
-\subsection{Markov decision process}
+\subsection{Finite Markov Decision Process}
 
 \noindent MDPs are meant to be a straightforward framing of the problem of learning from interaction to achieve a goal. 
 The learner and decision maker is called the agent. The thing it interacts with, comprising everything outside the agent, 
 is called the environment. These interact continually, the agent selecting actions and the environment responding to these actions and presenting new situations to the agent. 
 The environment also gives rise to rewards, special numerical values that the agent seeks to maximize over time through its choice of actions. 
-The MDP and agent together thereby give rise to a sequence or trajectory that begins like this: \(S_0, A_0, R_1, S_1, A_1, R_2, \dots\)
+The MDP and agent together thereby give rise to a sequence or trajectory that begins like this: \(S_0, A_0, R_1, S_1, A_1, R_2, \dots\). 
+We use \(R_{t + 1}\) instead of \(R_t\) to denote the reward due to \(A_t\) because it emphasizes that the next reward and next state, \(R_{t + 1}\) and \(S_{t + 1}\), are jointly determined.
 
 \begin{center}
 \includegraphics[scale=0.3]{./images/markov_decision_process.png}
