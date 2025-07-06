@@ -1780,7 +1780,11 @@ G_t
 v_{\pi}(s)
 & = E_{\pi}[G_t \mid S_t = s] \\
 & = E_{\pi}[R_{t + 1} + \gamma G_{t + 1} \mid S_t = s] \\
-& = \sum_a \pi(a \mid s) \sum_{s'} \sum_{r} p(s', r \mid s, a) [r + \gamma E_{\pi}[G_{t + 1} \mid S_{t + 1} = s']] \\
+& = E_{\pi}[R_{t + 1} \mid S_t = s] + \gamma E_{\pi}[G_{t + 1} \mid S_t = s] \\
+& = \sum_{a} \pi(a \mid s) E_{\pi}[R_{t + 1} \mid S_t = s, A_t = a] + \gamma \sum_{s'} p(s' \mid s) E_{\pi}[G_{t + 1} \mid S_{t + 1} = s'] \\
+& = \sum_{a} \pi(a \mid s) r(s, a) + \gamma \sum_{s'} p(s' \mid s) v_{\pi}(s') \\
+& = \sum_{a} \pi(a \mid s) \sum_r r \sum_{s'} p(s', r \mid s, a) + \gamma \sum_{s'} \sum_{a} \pi(a \mid s) p(s' \mid s, a) v_{\pi}(s') \\
+& = \sum_{a} \pi(a \mid s) \sum_r r \sum_{s'} p(s', r \mid s, a) + \gamma \sum_{s'} \sum_{a} \pi(a \mid s) \sum_{r} p(s', r \mid s, a) v_{\pi}(s') \\
 & = \sum_a \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) [r + \gamma v_{\pi}(s')]
 \end{split}
 \end{equation*}
@@ -1792,6 +1796,22 @@ v_{\pi}(s)
 q_{\pi}(s, a)
 & = E_{\pi}[G_t \mid S_t = s, A_t = a] \\
 & = E_{\pi}[R_{t + 1} + \gamma G_{t + 1} \mid S_t = s, A_t = a] \\
+& = E_{\pi}[R_{t + 1} \mid S_t = s, A_t = a] + \gamma E_{\pi}[G_{t + 1} \mid S_t = s, A_t = a] \\
+& = r(s, a) + \gamma \sum_{s'} p(s' \mid s, a) E_{\pi}[G_{t + 1} \mid S_{t + 1} = s'] \\
+& = \sum_r r \sum_{s'} p(s', r \mid s, a) + \gamma \sum_{s'} \sum_{r} p(s', r \mid s, a) \sum_{a'} \pi(a' \mid s') E_{\pi}[G_{t + 1} \mid S_{t + 1} = s', A_{t + 1} = a'] \\
+& = \sum_r r \sum_{s'} p(s', r \mid s, a) + \gamma \sum_{s'} \sum_{r} p(s', r \mid s, a) \sum_{a'} \pi(a' \mid s') q_{\pi}(s', a') \\
+& = \sum_{s', r} p(s', r \mid s, a) [r + \gamma \sum_{a'} \pi(a' \mid s') q_{\pi}(s', a')]
+\end{split}
+\end{equation*}
+
+\noindent From the above equations, we can get following relationship between \(v_{\pi}(s)\) and \(q_{\pi}(s, a)\):
+
+\begin{equation*}
+\begin{split}
+v_{\pi}(s)
+& = E_{\pi}[G_t \mid S_t = s] \\
+& = \sum_{a} \pi(a \mid s) E_{\pi}[G_t \mid S_t = s, A_t = a] \\
+& = \sum_{a} \pi(a \mid s) q_{\pi}(s, a)
 \end{split}
 \end{equation*}
 
