@@ -1815,6 +1815,18 @@ v_{\pi}(s)
 \end{split}
 \end{equation*}
 
+\begin{equation*}
+\begin{split}
+q_{\pi}(s, a)
+& = E_{\pi}[G_t \mid S_t = s, A_t = a] \\
+& = E_{\pi}[R_{t + 1} + \gamma G_{t + 1} \mid S_t = s, A_t = a] \\
+& = E_{\pi}[R_{t + 1} \mid S_t = s, A_t = a] + \gamma E_{\pi}[G_{t + 1} \mid S_t = s, A_t = a] \\
+& = r(s, a) + \gamma \sum_{s'} p(s' \mid s, a) E_{\pi}[G_{t + 1} \mid S_{t + 1} = s'] \\
+& = \sum_r r \sum_{s'} p(s', r \mid s, a) + \gamma \sum_{s'} \sum_{r} p(s', r \mid s, a) v_{\pi}(s') \\
+& = \sum_{s', r} p(s', r \mid s, a) [r + \gamma v_{\pi}(s')]
+\end{split}
+\end{equation*}
+
 \noindent Here is another derivation (from David Silver's course) of the above formula for \(v(s)\). 
 Assume \(s\) is the state on time step \(t\), and \(s'\) is the state on time step \(t + 1\). 
 Under condition \(S_t = s\), \(G_{t + 1}\) can be seen as an expectation under condition \(S_{t + 1} = s'\). 
