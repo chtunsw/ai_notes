@@ -1789,6 +1789,20 @@ v_{\pi}(s)
 \end{split}
 \end{equation*}
 
+\begin{equation*}
+\begin{split}
+v_{\pi}(s)
+& = E_{\pi}[G_t \mid S_t = s] \\
+& = E_{\pi}[R_{t + 1} + \gamma G_{t + 1} \mid S_t = s] \\
+& = E_{\pi}[R_{t + 1} \mid S_t = s] + \gamma E_{\pi}[G_{t + 1} \mid S_t = s] \\
+& = E_{\pi}[R_{t + 1} \mid S_t = s] + \gamma \sum_{s'} p(s' \mid s) E_{\pi}[G_{t + 1} \mid S_{t + 1} = s'] \\
+& = E_{\pi}[R_{t + 1} \mid S_t = s] + \gamma \sum_{s'} p(s' \mid s) E_{\pi}[E_{\pi}[G_{t + 1} \mid S_{t + 1} = s'] \mid S_{t + 1} = s'] \\
+& = E_{\pi}[R_{t + 1} \mid S_t = s] + \gamma E_{\pi}[E_{\pi}[G_{t + 1} \mid S_{t + 1} = s'] \mid S_t = s] \\
+& = E_{\pi}[R_{t + 1} \mid S_t = s] + \gamma E_{\pi}[v_{\pi}(s') \mid S_t = s] \\
+& = E_{\pi}[R_{t + 1} + \gamma v_{\pi}(s') \mid S_t = s]
+\end{split}
+\end{equation*}
+
 \noindent \(q_{\pi}(s, a)\): action-value function for policy \(\pi\), the expected return starting from \(s\), taking the action \(a\), and following \(\pi\) thereafter
 
 \begin{equation*}
