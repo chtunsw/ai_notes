@@ -1845,6 +1845,20 @@ v_{\pi}(s)
 
 \begin{equation*}
 \begin{split}
+v_{\pi}(s)
+& = E_{\pi}[G_t \mid S_t = s] \\
+& = E_{\pi}[R_{t + 1} + \gamma G_{t + 1} \mid S_t = s] \\
+& = E_{\pi}[R_{t + 1} \mid S_t = s] + \gamma E_{\pi}[G_{t + 1} \mid S_t = s] \\
+& = E_{\pi}[R_{t + 1} \mid S_t = s] + \gamma \sum_{s', a'} p(s', a' \mid s) E_{\pi}[G_{t + 1} \mid S_{t + 1} = s', A_{t + 1} = a'] \\
+& = E_{\pi}[R_{t + 1} \mid S_t = s] + \gamma \sum_{s', a'} p(s', a' \mid s) E_{\pi}[E_{\pi}[G_{t + 1} \mid S_{t + 1} = s', A_{t + 1} = a'] \mid S_{t + 1} = s', A_{t + 1} = a'] \\
+& = E_{\pi}[R_{t + 1} \mid S_t = s] + \gamma E_{\pi}[E_{\pi}[G_{t + 1} \mid S_{t + 1} = s', A_{t + 1} = a'] \mid S_t = s] \\
+& = E_{\pi}[R_{t + 1} \mid S_t = s] + \gamma E_{\pi}[q_{\pi}(s', a') \mid S_t = s] \\
+& = E_{\pi}[R_{t + 1} + \gamma q_{\pi}(s', a') \mid S_t = s]
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
 q_{\pi}(s, a)
 & = E_{\pi}[G_t \mid S_t = s, A_t = a] \\
 & = E_{\pi}[R_{t + 1} + \gamma G_{t + 1} \mid S_t = s, A_t = a] \\
