@@ -1827,6 +1827,18 @@ q_{\pi}(s, a)
 \end{split}
 \end{equation*}
 
+\noindent \(\pi_*\): the optimal policy (at least one, may be more than one). \(\pi \geq \pi'\) if and only if \(v_{\pi}(s) \geq v_{\pi'}(s)\) for all \(s \in \mathcal{S}\). 
+
+\noindent \(v_*(s)\): the optimal state-value function, for all \(s \in \mathcal{S}\)
+
+\[v_*(s) = \max_{\pi} v_{\pi}(s) \]
+
+\noindent \(q_*(s, a)\): the optimal action-value function, for all \(s \in \mathcal{S}\) and \(a \in \mathcal{A}(s)\)
+
+\[q_*(s, a) = \max_{\pi} q_{\pi}(s, a) \]
+
+\[q_*(s, a) = E[R_{t + 1} + \gamma v_*(S_{t + 1}) \mid S_t = s, A_t = a] \]
+
 \subsection{Imitation Learning}
 
 \noindent Imitation learning, also known as learning from demonstration, is a process where an agent learns a new skill or behavior by observing and replicating the actions of others, often an expert. Training data are from expert inputs observations and actions. It assumes data is independently identity distributed, which is different from reinforcement learning. It is supervised learning.
