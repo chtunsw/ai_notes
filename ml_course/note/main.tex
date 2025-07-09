@@ -1827,6 +1827,20 @@ q_{\pi}(s, a)
 \end{split}
 \end{equation*}
 
+\begin{equation*}
+\begin{split}
+q_{\pi}(s, a)
+& = E_{\pi}[G_t \mid S_t = s, A_t = a] \\
+& = E_{\pi}[R_{t + 1} + \gamma G_{t + 1} \mid S_t = s, A_t = a] \\
+& = E_{\pi}[R_{t + 1} \mid S_t = s, A_t = a] + \gamma E_{\pi}[G_{t + 1} \mid S_t = s, A_t = a] \\
+& = E_{\pi}[R_{t + 1} \mid S_t = s, A_t = a] + \gamma \sum_{s'} p(s' \mid s, a) E_{\pi}[G_{t + 1} \mid S_{t + 1} = s'] \\
+& = E_{\pi}[R_{t + 1} \mid S_t = s, A_t = a] + \gamma \sum_{s'} p(s' \mid s, a) E_{\pi}[E_{\pi}[G_{t + 1} \mid S_{t + 1} = s'] \mid S_{t + 1} = s'] \\
+& = E_{\pi}[R_{t + 1} \mid S_t = s, A_t = a] + \gamma E_{\pi}[E_{\pi}[G_{t + 1} \mid S_{t + 1} = s'] \mid S_t = s, A_t = a] \\
+& = E_{\pi}[R_{t + 1} \mid S_t = s, A_t = a] + \gamma E_{\pi}[v_{\pi}(s') \mid S_t = s, A_t = a] \\
+& = E_{\pi}[R_{t + 1} + \gamma v_{\pi}(s') \mid S_t = s, A_t = a]
+\end{split}
+\end{equation*}
+
 \noindent \(\pi_*\): the optimal policy (at least one, may be more than one). \(\pi \geq \pi'\) if and only if \(v_{\pi}(s) \geq v_{\pi'}(s)\) for all \(s \in \mathcal{S}\). 
 
 \noindent \(v_*(s)\): the optimal state-value function, for all \(s \in \mathcal{S}\)
