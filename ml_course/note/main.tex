@@ -1916,6 +1916,18 @@ q_*(s, a)
 \end{split}
 \end{equation*}
 
+\noindent For finite MDPs, the Bellman optimality equation is solvable. Explicitly solving the Bellman optimality equation provides one route to finding an optimal policy, and thus to solving the reinforcement learning problem. 
+However, this solution is rarely directly useful. It is akin to an exhaustive search, looking ahead at all possibilities, computing their probabilities of occurrence and their desirabilities in terms of expected rewards. 
+This solution relies on at least three assumptions that are rarely true in practice: 
+
+\begin{itemize}
+    \item we accurately know the dynamics of the environment
+    \item we have enough computational resources to complete the computation of the solution
+    \item the Markov property
+\end{itemize}
+
+\noindent In reinforcement learning one typically has to settle for approximate solutions.
+
 \subsection{Imitation Learning}
 
 \noindent Imitation learning, also known as learning from demonstration, is a process where an agent learns a new skill or behavior by observing and replicating the actions of others, often an expert. Training data are from expert inputs observations and actions. It assumes data is independently identity distributed, which is different from reinforcement learning. It is supervised learning.
