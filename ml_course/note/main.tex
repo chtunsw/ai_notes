@@ -1893,7 +1893,18 @@ q_{\pi}(s, a)
 
 \[q_*(s, a) = \max_{\pi} q_{\pi}(s, a) \]
 
-\[q_*(s, a) = E[R_{t + 1} + \gamma v_*(S_{t + 1}) \mid S_t = s, A_t = a] \]
+\noindent The Bellman optimality equation for \(v_*\) intuitively expresses the fact that the value of a state under an optimal policy must equal the expected return for the best action from that state:
+
+\begin{equation*}
+\begin{split}
+v_*(s)
+& = \max_{a \in \mathcal{A}(s)} q_{\pi_*}(s, a) \\
+& = \max_a E_{\pi_*}[G_t \mid S_t = s, A_t = a] \\
+& = \max_a E_{\pi_*}[R_{t + 1} + \gamma G_{t + 1} \mid S_t = s, A_t = a] \\
+& = \max_a E[R_{t + 1} + \gamma v_*(s') \mid S_t = s, A_t = a] \\
+& = \max_a \sum_{s', r} p(s', r \mid s, a) [r + \gamma v_*(s')]
+\end{split}
+\end{equation*}
 
 \subsection{Imitation Learning}
 
