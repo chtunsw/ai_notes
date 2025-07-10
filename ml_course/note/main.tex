@@ -1522,7 +1522,14 @@ a large set of items?}
 
 \section{Reinforcement Learning}
 
-\noindent Reinforcement learning (RL) is an area of machine learning concerned with how intelligent agents ought to take actions in an environment in order to maximize the notion of cumulative reward.
+\noindent Reinforcement learning is about learning from interaction how to behave in order to achieve a goal. 
+The reinforcement learning agent and its environment interact over a sequence of discrete time steps. 
+The specification of their interface defines a particular task: the actions are the choices made by the agent; 
+the states are the basis for making the choices; and the rewards are the basis for evaluating the choices. 
+Everything inside the agent is completely known and controllable by the agent; 
+everything outside is incompletely controllable but may or may not be completely known. 
+A policy is a stochastic rule by which the agent selects actions as a function of states. 
+The agent's objective is to maximize the amount of reward it receives over time.
 
 \begin{itemize}
     \item There is no supervisor, only a reward signal
