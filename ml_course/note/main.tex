@@ -1900,6 +1900,12 @@ q_{\pi}(s, a)
 
 \[q_*(s, a) = \max_{\pi} q_{\pi}(s, a) \]
 
+\noindent All optimal policies achieve the optimal state-value function and the optimal action-value function, 
+for all \(s \in \mathcal{S}\) and \(a \in \mathcal{A}(s)\)
+
+\[v_{\pi_*}(s) = v_*(s) \]
+\[q_{\pi_*}(s, a) = q_*(s, a) \]
+
 \noindent The Bellman optimality equation for \(v_*\) intuitively expresses the fact that the value of a state under an optimal policy must equal the expected return for the best action from that state:
 
 \begin{equation*}
@@ -1923,7 +1929,15 @@ q_*(s, a)
 \end{split}
 \end{equation*}
 
-\noindent For finite MDPs, the Bellman optimality equation is solvable. Explicitly solving the Bellman optimality equation provides one route to finding an optimal policy, and thus to solving the reinforcement learning problem. 
+\noindent For finite MDPs, the Bellman optimality equation is solvable. 
+The Bellman optimality equation is actually a system of equations, one for each state, 
+so if there are \(n\) states, then there are \(n\) equations in \(n\) unknowns. 
+If the dynamics \(p\) of the environment are known, then in principle one can solve this system of equations for \(v_*\) using any one of a variety of methods for solving systems of nonlinear equations. 
+One can solve a related set of equations for \(q_*\). 
+
+\bigskip
+
+\noindent Explicitly solving the Bellman optimality equation provides one route to finding an optimal policy, and thus to solving the reinforcement learning problem. 
 However, this solution is rarely directly useful. It is akin to an exhaustive search, looking ahead at all possibilities, computing their probabilities of occurrence and their desirabilities in terms of expected rewards. 
 This solution relies on at least three assumptions that are rarely true in practice: 
 
