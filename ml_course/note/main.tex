@@ -1601,7 +1601,7 @@ A state \(S_t\) is Markov if and only if: \(P[S_{t + 1} \mid S_t] = P[S_{t + 1} 
 
 \noindent \(H_t\): history, a trajectory that contains a sequence of observations and actions up to time step \(t\). \(H_t = A_0, O_1, \dots, A_{t - 1}, O_{t}\).
 
-\noindent \(\gamma\): discount factor.
+\noindent \(\gamma\): discount factor. Determines the importance of future rewards, also to avoid infinite returns.
 
 \noindent \(G_t\): return following time \(t\), the cumulative future reward. \(G_t = R_{t + 1} + \gamma R_{t + 2} + \gamma^2 R_{t + 3} + \dots\)
 
