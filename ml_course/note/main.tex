@@ -1900,6 +1900,16 @@ q_{\pi}(s, a)
 
 \[q_*(s, a) = \max_{\pi} q_{\pi}(s, a) \]
 
+\noindent An optimal policy can be found by maximising over \(q_*(s, a)\):
+
+\[
+\pi_*(a \mid s) = 
+\begin{cases}
+1, & \text{if } a = \underset{a \in \mathcal{A}(s)}{\mathrm{argmax}} q_*(s, a) \\
+0, & \text{otherwise}
+\end{cases}
+\]
+
 \noindent All optimal policies achieve the optimal state-value function and the optimal action-value function, 
 for all \(s \in \mathcal{S}\) and \(a \in \mathcal{A}(s)\)
 
