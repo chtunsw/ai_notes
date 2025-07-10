@@ -1906,6 +1906,16 @@ v_*(s)
 \end{split}
 \end{equation*}
 
+\noindent The Bellman optimality equation for \(q_*\):
+
+\begin{equation*}
+\begin{split}
+q_*(s, a)
+& = E[R_{t + 1} + \gamma \max_{a'} q_*(s', a') \mid S_t = s, A_t = a] \\
+& = \sum_{s', r} p(s', r \mid s, a) [r + \gamma \max_{a'} q_*(s', a')]
+\end{split}
+\end{equation*}
+
 \subsection{Imitation Learning}
 
 \noindent Imitation learning, also known as learning from demonstration, is a process where an agent learns a new skill or behavior by observing and replicating the actions of others, often an expert. Training data are from expert inputs observations and actions. It assumes data is independently identity distributed, which is different from reinforcement learning. It is supervised learning.
