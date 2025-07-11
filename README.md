@@ -12,11 +12,11 @@ Courses taken:
 ## Table of contents
 
 - Machine Learning
-  - Note ([pdf](./ml_course/note/MLNote-2023-02-01.pdf), [latex](./ml_course/note/main.tex))
+  - Note ([pdf](./ml_course/note/MLNote-2025-07-11.pdf), [latex](./ml_course/note/main.tex))
   - [Exercises (old version)](./ml_course/exercises)
   - [Exercises (new version)](./ml_course/labs)
 - Deep Learning
-  - Note ([pdf](./dl_course/note/DLNote-2022-12-11.pdf), [latex](./dl_course/note/main.tex))
+  - Note ([pdf](./dl_course/note/DLNote-2024-09-19.pdf), [latex](./dl_course/note/main.tex))
   - [Exercises](./dl_course/exercises)
 - Math
-  - Note ([pdf](./math/note/MathNote-2021-08-22.pdf), [latex](./math/note/main.tex))
+  - Note ([pdf](./math/note/MathNote-2025-07-11.pdf), [latex](./math/note/main.tex))
