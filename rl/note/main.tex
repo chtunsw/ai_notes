@@ -495,6 +495,65 @@ only with less computation and without assuming a perfect model of the environme
 We can easily obtain optimal policies once we have found the optimal value functions, \(v_*\) or \(q_*\), which satisfy the Bellman optimality equations. 
 As we shall see, DP algorithms are obtained by turning Bellman equations into assignments, that is, into update rules for improving approximations of the desired value functions.
 
+\subsection{Policy Evaluation (Prediction)}
+
+\noindent First we consider how to compute the state-value function \(v_{\pi}\) for an arbitrary policy \(\pi\). 
+This is called policy evaluation in the DP literature. We also refer to it as the prediction problem.
+
+\[v_{\pi}(s) = \sum_a \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) [r + \gamma v_{\pi}(s')]\]
+
+\noindent When \(\pi\) is given, if the environment's dynamics \(p(s', r \mid s, a)\) are completely known, 
+then the equation above is a system of \(\vert S \vert\) simultaneous linear equations in \(\vert S \vert\) unknowns (the \(v_{\pi}(s), s \in \mathcal{S}\)). 
+In principle, it can be solved directly. But in practice, iterative solution methods are most suitable. 
+Consider a sequence of approximate value functions \(v_0 , v_1 , v_2 , \dots\), each mapping \(\mathcal{S}^{+}\) to \(\mathbb{R}\). 
+The initial approximation, \(v_0\), is chosen arbitrarily (except that the terminal state, if any, must be given value 0), 
+and each successive approximation is obtained by using the Bellman equation as an update rule, for all \(s \in \mathcal{S}\):
+
+\[v_{k + 1}(s) = \sum_a \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) [r + \gamma v_{k}(s')]\]
+
+\noindent This algorithm is called iterative policy evaluation. The existence and uniqueness of \(v_{\pi}\) are guaranteed as long as either \(\gamma < 1\) or eventual termination is guaranteed from all states under the policy \(\pi\). 
+The sequence \(\{v_k\}\) can be shown in general to converge to \(v_{\pi}\) (proof see Contraction Mapping Theorem) as \(k \rightarrow \infty\) under the same conditions that guarantee the existence of \(v_{\pi}\).
+
+\bigskip
+
+\noindent To produce each successive approximation, \(v_{k + 1}\) from \(v_{k}\), iterative policy evaluation applies the same operation to each state \(s\): 
+it replaces the old value of \(s\) with a new value obtained from the old values of the successor states of \(s\), and the expected immediate rewards, 
+along all the one-step transitions possible under the policy being evaluated. We call this kind of operation an expected update. 
+All the updates done in DP algorithms are called expected updates because they are based on an expectation over all possible next states rather than on a sample next state. 
+Each iteration of iterative policy evaluation updates the value of every state once to produce the new approximate value function \(v_{k + 1}\).
+
+\bigskip
+
+\noindent To write a sequential computer program to implement iterative policy evaluation you would have to use two arrays, one for the old values, \(v_{k}(s)\), 
+and one for the new values, \(v_{k + 1}(s)\). With two arrays, the new values can be computed one by one from the old values without the old values being changed. 
+Of course it is easier to use one array and update the values "in place", that is, with each new value immediately overwriting the old one. 
+Then, depending on the order in which the states are updated, sometimes new values are used instead of old ones on the right-hand side of the equation. 
+This in-place algorithm also converges to \(v_{\pi}\); in fact, it usually converges faster than the two-array version, as you might expect, because it uses new data as soon as they are available.
+
+\bigskip
+
+\noindent \textbf{Iterative Policy Evaluation (in-place) process}:
+
+\noindent Input \(\pi\), the policy to be evaluated
+
+\noindent Algorithm parameter: a small threshold \(\Theta > 0\) determining accuracy of estimation
+
+\noindent Initialize \(V(s)\), for all \(s \in \mathcal{S}^+\), arbitrarily except that \(V(terminal) = 0\)
+
+\noindent Loop:
+
+\noindent \hspace{.5cm} \(\Delta \leftarrow 0\)
+
+\noindent \hspace{.5cm} Loop for each \(s \in \mathcal{S}\):
+
+\noindent \hspace{1cm} \(v \leftarrow V(s)\)
+
+\noindent \hspace{1cm} \(V(s) \leftarrow \sum_a \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]\)
+
+\noindent \hspace{1cm} \(\Delta \leftarrow \max(\Delta, \vert v -  V(s) \vert)\)
+
+\noindent until \(\Delta < \Theta\)
+
 \section{Imitation Learning}
 
 \noindent Imitation learning, also known as learning from demonstration, is a process where an agent learns a new skill or behavior by observing and replicating the actions of others, often an expert. Training data are from expert inputs observations and actions. It assumes data is independently identity distributed, which is different from reinforcement learning. It is supervised learning.
