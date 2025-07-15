@@ -482,6 +482,19 @@ This solution relies on at least three assumptions that are rarely true in pract
 
 \noindent In reinforcement learning one typically has to settle for approximate solutions.
 
+\section{Dynamic Programming}
+
+\noindent The term dynamic programming (DP) refers to a collection of algorithms that can be used to compute optimal policies given a perfect model of the environment as a Markov decision process (MDP). 
+Classical DP algorithms are of limited utility in reinforcement learning both because of their assumption of a perfect model and because of their great computational expense, but they are still important theoretically. 
+DP provides an essential foundation for the understanding of the methods presented in the rest of this book. In fact, all of these methods can be viewed as attempts to achieve much the same eect as DP, 
+only with less computation and without assuming a perfect model of the environment.
+
+\bigskip
+
+\noindent The key idea of DP, and of reinforcement learning generally, is the use of value functions to organize and structure the search for good policies. 
+We can easily obtain optimal policies once we have found the optimal value functions, \(v_*\) or \(q_*\), which satisfy the Bellman optimality equations. 
+As we shall see, DP algorithms are obtained by turning Bellman equations into assignments, that is, into update rules for improving approximations of the desired value functions.
+
 \section{Imitation Learning}
 
 \noindent Imitation learning, also known as learning from demonstration, is a process where an agent learns a new skill or behavior by observing and replicating the actions of others, often an expert. Training data are from expert inputs observations and actions. It assumes data is independently identity distributed, which is different from reinforcement learning. It is supervised learning.
