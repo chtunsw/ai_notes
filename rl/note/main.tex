@@ -512,7 +512,7 @@ and each successive approximation is obtained by using the Bellman equation as a
 \[v_{k + 1}(s) = \sum_a \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) [r + \gamma v_{k}(s')]\]
 
 \noindent This algorithm is called iterative policy evaluation. The existence and uniqueness of \(v_{\pi}\) are guaranteed as long as either \(\gamma < 1\) or eventual termination is guaranteed from all states under the policy \(\pi\). 
-The sequence \(\{v_k\}\) can be shown in general to converge to \(v_{\pi}\) (proof see Contraction Mapping Theorem) as \(k \rightarrow \infty\) under the same conditions that guarantee the existence of \(v_{\pi}\).
+The sequence \(\{v_k\}\) can be shown in general to converge to \(v_{\pi}\) (TBD: proof see Contraction Mapping Theorem) as \(k \rightarrow \infty\) under the same conditions that guarantee the existence of \(v_{\pi}\).
 
 \bigskip
 
@@ -553,6 +553,91 @@ This in-place algorithm also converges to \(v_{\pi}\); in fact, it usually conve
 \noindent \hspace{1cm} \(\Delta \leftarrow \max(\Delta, \vert v -  V(s) \vert)\)
 
 \noindent until \(\Delta < \Theta\)
+
+\subsection{Policy Improvement}
+
+\noindent Our reason for computing the value function for a policy is to help find better policies. 
+Suppose we have determined the value function \(v_{\pi}\) for an arbitrary deterministic policy \(\pi\). 
+For some state \(s\) we would like to know whether or not we should change the policy to deterministically choose an action \(a \ne \pi(s)\). 
+We know how good it is to follow the current policy from \(s\) - that is \(v_{\pi}(s)\) - but would it be better or worse to change to the new policy? 
+One way to answer this question is to consider selecting \(a\) in \(s\) and thereafter following the existing policy, \(\pi\). 
+The value of this way of behaving is:
+
+\begin{equation*}
+\begin{split}
+q_{\pi}(s, a)
+& = E[R_{t + 1} + \gamma v_{\pi}(S_{t + 1}) \mid S_t = s, A_t = a] \\
+& = \sum_{s', r} p(s', r \mid s, a) [r + \gamma v_{\pi}(s')]
+\end{split}
+\end{equation*}
+
+\noindent The key criterion is whether this is greater than or less than \(v_{\pi}(s)\). 
+If it is greater - that is, if it is better to select \(a\) once in \(s\) and thereafter follow \(\pi\) than it would be to follow \(\pi\) all the time - 
+then one would expect it to be better still to select \(a\) every time \(s\) is encountered, 
+and that the new policy would in fact be a better one overall. That this is true is a special case of a general result called the policy improvement theorem. 
+Let \(\pi\) and \(\pi'\) be any pair of deterministic policies such that, for all \(s \in \mathcal{S}\),
+
+\[q_{\pi}(s, \pi'(s)) \geq v_{\pi}(s)\]
+
+\noindent Then the policy \(\pi'\) must be as good as, or better than, \(\pi\). That is, it must obtain greater or equal expected return from all states \(s \in \mathcal{S}\),
+
+\[v_{\pi'}(s) \geq v_{\pi}(s)\]
+
+\noindent Here is the proof of the policy improvement theorem:
+
+\begin{equation*}
+\begin{split}
+v_{\pi}(s) 
+& \leq q_{\pi}(s, \pi'(s)) \\
+& = E[R_{t + 1} + \gamma v_{\pi}(S_{t + 1}) \mid S_t = s, A_t = \pi'(s)] \\
+& = E_{\pi'}[R_{t + 1} + \gamma v_{\pi}(S_{t + 1}) \mid S_t = s] \\
+& \leq E_{\pi'}[R_{t + 1} + \gamma q_{\pi}(S_{t + 1}, \pi'(S_{t + 1})) \mid S_t = s] \\
+& = E_{\pi'}[R_{t + 1} + \gamma E[R_{t + 2} + \gamma v_{\pi}(S_{t + 2}) \mid S_{t + 1} = s', A_{t + 1} = \pi'(s')] \mid S_t = s] \\
+& = E_{\pi'}[R_{t + 1} + \gamma E_{\pi'}[R_{t + 2} + \gamma v_{\pi}(S_{t + 2}) \mid S_{t + 1} = s'] \mid S_t = s] \\
+& = E_{\pi'}[R_{t + 1} \mid S_t = s] + E_{\pi'}[\gamma E_{\pi'}[R_{t + 2} + \gamma v_{\pi}(S_{t + 2}) \mid S_{t + 1} = s'] \mid S_t = s] \\
+& = E_{\pi'}[R_{t + 1} \mid S_t = s] + \sum_{s'} p(s' \mid s) E_{\pi'}[\gamma E_{\pi'}[R_{t + 2} + \gamma v_{\pi}(S_{t + 2}) \mid S_{t + 1} = s'] \mid S_{t + 1} = s'] \\
+& = E_{\pi'}[R_{t + 1} \mid S_t = s] + \sum_{s'} p(s' \mid s) \gamma E_{\pi'}[R_{t + 2} + \gamma v_{\pi}(S_{t + 2}) \mid S_{t + 1} = s'] \\
+& = E_{\pi'}[R_{t + 1} \mid S_t = s] + \gamma E_{\pi'}[R_{t + 2} + \gamma v_{\pi}(S_{t + 2}) \mid S_t = s] \\
+& = E_{\pi'}[R_{t + 1} + \gamma R_{t + 2} + \gamma^2 v_{\pi}(S_{t + 2}) \mid S_t = s] \\
+& \leq E_{\pi'}[R_{t + 1} + \gamma R_{t + 2} + \gamma^2 R_{t + 3} + \gamma^3 v_{\pi}(S_{t + 3}) \mid S_t = s] \\
+& \dots \\
+& \leq E_{\pi'}[R_{t + 1} + \gamma R_{t + 2} + \gamma^2 R_{t + 3} + \gamma^3 R_{t + 4} + \dots \mid S_t = s] \\
+& = v_{\pi'}(s)
+\end{split}
+\end{equation*}
+
+\noindent Inside the equation, for example, the \(E_{\pi'}[R_{t + 1} + \gamma R_{t + 2} + \gamma^2 v_{\pi}(S_{t + 2}) \mid S_t = s]\) means the expected discounted action-value when starting in state \(s\), 
+choosing actions according to \(\pi'\) for \(A_t = \pi'(S_t)\) and \(A_{t + 1} = \pi'(S_{t + 1})\), and according to \(\pi\) thereafter for \(v_{\pi}(S_{t + 2})\).
+
+\bigskip
+
+\noindent So far we have seen how, given a policy and its value function, we can easily evaluate a change in the policy at a single state to a particular action. 
+It is a natural extension to consider changes at all states and to all possible actions, selecting at each state the action that appears best according to \(q_{\pi}(s,a)\). 
+In other words, to consider the new greedy policy, \(\pi'\), given by
+
+\begin{equation*}
+\begin{split}
+\pi'(s)
+& = \underset{a}{argmax} q_{\pi}(s, a) \\
+& = \underset{a}{argmax} E[R_{t + 1} + \gamma v_{\pi}(S_{t + 1}) \mid S_t = s, A_t = a] \\
+& = \underset{a}{argmax} \sum_{s', r} p(s', r \mid s, a) [r + \gamma v_{\pi}(s')]
+\end{split}
+\end{equation*}
+
+\noindent where \(\underset{a}{argmax}\) denotes the value of \(a\) at which the expression that follows is maximized (with ties broken arbitrarily). 
+The greedy policy takes the action that looks best in the short term - after one step of lookahead - according to \(v_{\pi}\). 
+By construction, the greedy policy meets the conditions of the policy improvement theorem, so we know that it is as good as, or better than, the original policy. 
+The process of making a new policy that improves on an original policy, by making it greedy with respect to the value function of the original policy, is called policy improvement.
+
+\bigskip
+
+\noindent In the general case, a stochastic policy \(\pi\) specifies probabilities, \(\pi(a \mid s)\), for taking each action, \(a\), in each state, \(s\). 
+All the ideas of policy improvement extend easily to stochastic policies, when a greedy only gives portion of the probability to the maximizing actions - 
+because each of these actions can be seen as a product of a deterministic policy, so that they follow all the ideas above, and they give the same result. 
+So it doesn't matter which maximizing action is picked in a stochastic policy. 
+If there are ties in policy improvement steps - that is, if there are several actions at which the maximum is achieved - 
+then in the stochastic case we need not select a single action from among them. Instead, each maximizing action can be given a portion of the probability of being selected in the new greedy policy. 
+Any apportioning scheme is allowed as long as all submaximal actions are given zero probability.
 
 \section{Imitation Learning}
 
@@ -769,7 +854,7 @@ y^{(j)} =
 
 \bigskip
 
-\noindent The most basic way to use playouts is to apply the same number of playouts after each legal move of the current player, then choose the move which led to the most victories. The efficiency of this method—called Pure Monte Carlo Game Search—often increases with time as more playouts are assigned to the moves that have frequently resulted in the current player's victory according to previous playouts. Each round of Monte Carlo tree search consists of four steps:
+\noindent The most basic way to use playouts is to apply the same number of playouts after each legal move of the current player, then choose the move which led to the most victories. The efficiency of this method - called Pure Monte Carlo Game Search - often increases with time as more playouts are assigned to the moves that have frequently resulted in the current player's victory according to previous playouts. Each round of Monte Carlo tree search consists of four steps:
 
 \begin{itemize}
     \item Selection: Start from root \(R\) and select successive child nodes until a leaf node \(L\) is reached. The root is the current game state and a leaf is any node that has a potential child from which no simulation (playout) has yet been initiated. \(L = R\) at the beginning of the search. The section below says more about a way (UCT) of biasing choice of child nodes that lets the game tree expand towards the most promising moves, which is the essence of Monte Carlo tree search.
@@ -814,7 +899,7 @@ y^{(j)} =
     \item \(w_{i}\) stands for the number of wins for the node considered after the i-th move
     \item \(n_{i}\) stands for the number of simulations for the node considered after the i-th move
     \item \(N_{i}\) stands for the total number of simulations after the i-th move run by the parent node of the one considered
-    \item \(c\) is the exploration parameter—theoretically equal to \(\sqrt{2}\); in practice usually chosen empirically
+    \item \(c\) is the exploration parameter - theoretically equal to \(\sqrt{2}\); in practice usually chosen empirically
 \end{itemize}
 
 \noindent The first component of the formula above corresponds to exploitation; it is high for moves with high average win ratio. The second component corresponds to exploration; it is high for moves with few simulations.
