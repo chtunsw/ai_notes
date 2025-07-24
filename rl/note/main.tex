@@ -691,6 +691,65 @@ This typically results in a great increase in the speed of convergence of policy
 
 \noindent \hspace{.5cm} if \(\textit{policy-stable}\), then stop and return \(V \approx v_*\) and \(\pi \approx \pi_*\); else go to 2.
 
+\subsection{Value Iteration}
+
+\noindent One drawback to policy iteration is that each of its iterations involves policy evaluation, 
+which may itself be a protracted iterative computation requiring multiple sweeps through the state set. 
+If policy evaluation is done iteratively, then convergence exactly to \(v_{\pi}\) occurs only in the limit. 
+But sometimes greedy policy \(\pi'\) is achieved before the value function converging to \(v_{\pi}\). 
+It appears that it may be possible to truncate policy evaluation.
+
+\bigskip
+
+\noindent In fact, the policy evaluation step of policy iteration can be truncated in several ways without losing the convergence guarantees of policy iteration. 
+One important special case is when policy evaluation is stopped after just one sweep (one update of each state). This algorithm is called value iteration. 
+It can be written as a particularly simple update operation that combines the policy improvement and truncated policy evaluation steps:
+
+\begin{equation*}
+\begin{split}
+v_{k + 1}(s)
+& = \underset{a}{max} E[R_{t + 1} + \gamma v_k(S_{t + 1}) \mid S_t = s, A_t = a] \\
+& = \underset{a}{max} \sum_{s', r} p(s', r \mid s, a) [r + \gamma v_k(s')]
+\end{split}
+\end{equation*}
+
+\noindent for all \(s \in \mathcal{S}\). For arbitrary \(v_0\), the sequence \(\{ v_k \}\) can be shown to converge to \(v_*\) under the same conditions that guarantee the existence of \(v_*\). 
+(TBD: proof see Contraction Mapping Theorem)
+
+\bigskip
+
+\noindent Value iteration effectively combines, in each of its sweeps, one sweep of policy evaluation and one sweep of policy improvement. 
+Faster convergence is often achieved by interposing multiple policy evaluation sweeps between each policy improvement sweep. In general, 
+the entire class of truncated policy iteration algorithms can be thought of as sequences of sweeps, some of which use policy evaluation updates and some of which use value iteration updates. 
+Because the max operation is the only difference between these updates, this just means that the max operation is added to some sweeps of policy evaluation. 
+All of these algorithms converge to an optimal policy for discounted finite MDPs.
+
+\bigskip
+
+\noindent \textbf{Value Iteration, for estimating deterministic policy \(\pi \approx \pi_*\)}:
+
+\noindent (can extend to stochastic policy with adjustments)
+
+\noindent Algorithm parameter: a small threshold \(\theta > 0\) determining accuracy of estimation
+
+\noindent Initialize \(V(s)\), for all \(s \in \mathcal{S}^+\), arbitrarily except that \(V(terminal) = 0\)
+
+\noindent Loop:
+
+\noindent \hspace{.5cm} \(\Delta \leftarrow 0\)
+
+\noindent \hspace{.5cm} Loop for each \(s \in \mathcal{S}\):
+
+\noindent \hspace{1cm} \(v \leftarrow V(s)\)
+
+\noindent \hspace{1cm} \(V(s) \leftarrow \max_a \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]\)
+
+\noindent \hspace{1cm} \(\Delta \leftarrow \max(\Delta, \vert v -  V(s) \vert)\)
+
+\noindent until \(\Delta < \theta\)
+
+\noindent Output a deterministic policy, \(\pi \approx \pi_*\), such that: \(\pi(s) = \underset{a}{argmax} \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]\)
+
 \section{Imitation Learning}
 
 \noindent Imitation learning, also known as learning from demonstration, is a process where an agent learns a new skill or behavior by observing and replicating the actions of others, often an expert. Training data are from expert inputs observations and actions. It assumes data is independently identity distributed, which is different from reinforcement learning. It is supervised learning.
