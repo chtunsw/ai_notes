@@ -536,7 +536,7 @@ This in-place algorithm also converges to \(v_{\pi}\); in fact, it usually conve
 
 \noindent Input \(\pi\), the policy to be evaluated
 
-\noindent Algorithm parameter: a small threshold \(\Theta > 0\) determining accuracy of estimation
+\noindent Algorithm parameter: a small threshold \(\theta > 0\) determining accuracy of estimation
 
 \noindent Initialize \(V(s)\), for all \(s \in \mathcal{S}^+\), arbitrarily except that \(V(terminal) = 0\)
 
@@ -552,7 +552,7 @@ This in-place algorithm also converges to \(v_{\pi}\); in fact, it usually conve
 
 \noindent \hspace{1cm} \(\Delta \leftarrow \max(\Delta, \vert v -  V(s) \vert)\)
 
-\noindent until \(\Delta < \Theta\)
+\noindent until \(\Delta < \theta\)
 
 \subsection{Policy Improvement}
 
@@ -638,6 +638,58 @@ So it doesn't matter which maximizing action is picked in a stochastic policy.
 If there are ties in policy improvement steps - that is, if there are several actions at which the maximum is achieved - 
 then in the stochastic case we need not select a single action from among them. Instead, each maximizing action can be given a portion of the probability of being selected in the new greedy policy. 
 Any apportioning scheme is allowed as long as all submaximal actions are given zero probability.
+
+\subsection{Policy Iteration}
+
+\noindent Once a policy, \(\pi\), has been improved using \(v_{\pi}\) to yield a better policy, \(\pi'\), we can then compute \(v_{\pi'}\) and improve it again to yield an even better \(\pi''\). 
+We can thus obtain a sequence of monotonically improving policies and value functions: (with policy evaluation \(E\) and policy improvement \(I\))
+
+\[\pi_0 \overset{E}{\rightarrow} v_{\pi_0} \overset{I}{\rightarrow} \pi_1  \overset{E}{\rightarrow} v_{\pi_1} \overset{I}{\rightarrow} \pi_2 \dots \overset{I}{\rightarrow} \pi_*  \overset{E}{\rightarrow} v_*\]
+
+\noindent Each policy is guaranteed to be a strict improvement over the previous one (unless it is already optimal). Because a finite MDP has only a finite number of policies, 
+this process must converge to an optimal policy and optimal value function in a finite number of iterations. This way of finding an optimal policy is called policy iteration. 
+A complete algorithm is given in the box below. Note that each policy evaluation, itself an iterative computation, is started with the value function for the previous policy. 
+This typically results in a great increase in the speed of convergence of policy evaluation (presumably because the value function changes little from one policy to the next).
+
+\bigskip
+
+\noindent \textbf{Policy Iteration (using iterative policy evaluation) for estimating deterministic policy \(\pi \approx \pi_*\)}:
+
+\noindent (can extend to stochastic policy with adjustments)
+
+\noindent 1. Initialization
+
+\noindent \hspace{.5cm} \(V(s) \in \mathbb{R}\) and \(\pi(s) \in \mathcal{A}(s)\) arbitrarily for all \(s \in \mathcal{S}\)
+
+\noindent 2. Policy Evaluation
+
+\noindent \hspace{.5cm} Loop:
+
+\noindent \hspace{1cm} \(\Delta \leftarrow 0\)
+
+\noindent \hspace{1cm} Loop for each \(s \in \mathcal{S}\):
+
+\noindent \hspace{1.5cm} \(v \leftarrow V(s)\)
+
+\noindent \hspace{1.5cm} \(V(s) \leftarrow \sum_{s', r} p(s', r \mid s, \pi(s)) [r + \gamma V(s')]\)
+
+\noindent \hspace{1.5cm} \(\Delta \leftarrow \max(\Delta, \vert v -  V(s) \vert)\)
+
+\noindent \hspace{.5cm} until \(\Delta < \theta\) (a small positive number determining the accuracy of estimation)
+
+\noindent 3. Policy Improvement
+
+\noindent \hspace{.5cm} \(\textit{policy-stable} \leftarrow true\)
+
+\noindent \hspace{.5cm} For each \(s \in \mathcal{S}\):
+
+\noindent \hspace{1cm} \(\textit{old-action} \leftarrow \pi(s)\)
+
+\noindent \hspace{1cm} \(\pi(s) \leftarrow \underset{a}{argmax} \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]\)
+
+\noindent \hspace{1cm} if \(\textit{old-action} \neq \pi(s)\), then \(\textit{policy-stable} \leftarrow false\)
+
+\noindent \hspace{.5cm} if \(\textit{policy-stable}\), then stop and return \(V \approx v_*\) and \(\pi \approx \pi_*\); else go to 2.
 
 \section{Imitation Learning}
 
