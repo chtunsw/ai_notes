@@ -750,6 +750,31 @@ All of these algorithms converge to an optimal policy for discounted finite MDPs
 
 \noindent Output a deterministic policy, \(\pi \approx \pi_*\), such that: \(\pi(s) = \underset{a}{argmax} \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]\)
 
+\subsection{Asynchronous Dynamic Programming}
+
+\noindent A major drawback to the DP methods that we have discussed so far is that they involve operations over the entire state set of the MDP, that is, they require sweeps of the state set. 
+If the state set is very large, then even a single sweep can be prohibitively expensive. For example, the game of backgammon has over 1020 states. Even if we could perform the value iteration update on a million states per second, 
+it would take over a thousand years to complete a single sweep.
+
+\bigskip
+
+\noindent Asynchronous DP algorithms are in-place iterative DP algorithms that are not organized in terms of systematic sweeps of the state set. These algorithms update the values of states in any order whatsoever, 
+using whatever values of other states happen to be available. The values of some states may be updated several times before the values of others are updated once. 
+To converge correctly, however, an asynchronous algorithm must continue to update the values of all the states: it can't ignore any state after some point in the computation. 
+Asynchronous DP algorithms allow great flexibility in selecting states to update.
+
+\bigskip
+
+\noindent Of course, avoiding sweeps does not necessarily mean that we can get away with less computation. It just means that an algorithm does not need to get locked into any hopelessly long sweep before it can make progress improving a policy. 
+We can try to take advantage of this flexibility by selecting the states to which we apply updates so as to improve the algorithm's rate of progress. We can try to order the updates to let value information propagate from state to state in an efficient way. 
+Some states may not need their values updated as often as others. We might even try to skip updating some states entirely if they are not relevant to optimal behavior.
+
+\bigskip
+
+\noindent Asynchronous algorithms also make it easier to intermix computation with real-time interaction. To solve a given MDP, we can run an iterative DP algorithm at the same time that an agent is actually experiencing the MDP. 
+The agent's experience can be used to determine the states to which the DP algorithm applies its updates. At the same time, the latest value and policy information from the DP algorithm can guide the agent's decision making. 
+For example, we can apply updates to states as the agent visits them. This makes it possible to focus the DP algorithm's updates onto parts of the state set that are most relevant to the agent. This kind of focusing is a repeated theme in reinforcement learning.
+
 \section{Imitation Learning}
 
 \noindent Imitation learning, also known as learning from demonstration, is a process where an agent learns a new skill or behavior by observing and replicating the actions of others, often an expert. Training data are from expert inputs observations and actions. It assumes data is independently identity distributed, which is different from reinforcement learning. It is supervised learning.
