@@ -132,6 +132,23 @@ f(x) =
 
 \[f(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{1}{2} (\frac{x - \mu}{\sigma })^{2}}\]
 
+\section{Mathematical Analysis}
+
+\subsection{Metric Space}
+
+\noindent A metric space is an ordered pair \((M, d)\) where \(M\) is a set and \(d\) is a distance metric (function) on \(M\),
+
+\[d: M \times M \rightarrow \mathbb{R}\]
+
+\noindent satisfying the following axioms for all points \(x, y, z \in M\):
+
+\begin{itemize}
+    \item The distance from a point to itself is zero: \(d(x, x) = 0\)
+    \item (Positivity) The distance between two distinct points is always positive: If \(x \neq y\), then \(d(x,y) > 0\)
+    \item (Symmetry) The distance from \(x\) to \(y\) is always the same as the distance from \(y\) to \(x\): \(d(x,y) = d(y,x)\)
+    \item The triangle inequality holds: \(d(x, z) \leq  d(x, y) + d(y, z)\)
+\end{itemize}
+
 \printindex
 
 \end{document}
