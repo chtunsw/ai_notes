@@ -149,12 +149,29 @@ f(x) =
     \item The triangle inequality holds: \(d(x, z) \leq  d(x, y) + d(y, z)\)
 \end{itemize}
 
+\noindent \textbf{Cauchy Sequence}
+
+\noindent Given a metric space \((M, d)\), a sequence of elements of \(X\), \(x_1, x_2, x_3, \dots\) is Cauchy, 
+if for every positive real number \(\epsilon > 0\) there is a positive integer \(N\) such that for all positive integers \(m, n > N\), the distance \(d(x_{m},x_{n}) < \epsilon\).
+
+\bigskip
+
+\noindent \textbf{Complete Metric Space}
+
+\noindent In mathematical analysis, a metric space \(M\) is called complete (or a Cauchy space) if every Cauchy sequence of points in \(M\) has a limit that is also in \(M\).
+
 \subsubsection{Contraction Mapping}
 
 \noindent In mathematics, a contraction mapping, or contraction or contractor, on a metric space \((M, d)\) is a function \(f\) from \(M\) to itself, 
 aka contraction mapping \(f: M \rightarrow M\), with the property that there is some real number \(0 \leq k < 1\) such that for all \(x\) and \(y\) in \(M\),
 
 \[d(f(x), f(y)) \leq k d(x, y)\]
+
+\subsubsection{Banach fixed-point theorem}
+
+\noindent Let \((X, d)\) be a non-empty complete metric space with a contraction mapping \(T:X \rightarrow X\). Then \(T\) admits a unique fixed-point \(x^{*}\) in X, \(T(x^{*})=x^{*}\). 
+Furthermore, \(x^{*}\) can be found as follows: start with an arbitrary element \(x_{0} \in X\) and define a sequence \((x_{n})_{n\in \mathbb {N} }\) by \(x_{n}=T(x_{n-1})\) for \(n \geq 1\). 
+Then \(\lim _{n\to \infty }x_{n}=x^{*}\). (\href{https://en.wikipedia.org/wiki/Banach_fixed-point_theorem}{Wikipedia proof})
 
 \printindex
 
