@@ -830,6 +830,63 @@ In practice, these methods usually converge much faster than their theoretical w
 For some problems, even this much memory and computation is impractical, yet the problem is still potentially solvable because relatively few states occur along optimal solution trajectories. 
 Asynchronous methods and other variations of GPI can be applied in such cases and may find good or optimal policies much faster than synchronous methods can.
 
+\section{Monte Carlo Methods}
+
+\noindent Monte Carlo Methods estimates value functions and discovers optimal policies, without assuming complete knowledge of the environment. 
+Monte Carlo methods require only experience-sample sequences of states, actions, and rewards from actual or simulated interaction with an environment. 
+Learning from actual experience is striking because it requires no prior knowledge of the environment's dynamics, yet can still attain optimal behavior. 
+Learning from simulated experience is also powerful. Although a model is required, the model need only generate sample transitions, 
+not the complete probability distributions of all possible transitions that is required for dynamic programming (DP). 
+In surprisingly many cases it is easy to generate experience sampled according to the desired probability distributions, 
+but infeasible to obtain the distributions in explicit form.
+
+\subsection{Monte Carlo Prediction}
+
+\noindent Suppose we wish to estimate \(v_{\pi}(s)\), the value of a state \(s\) under policy \(\pi\), 
+given a set of episodes obtained by following \(\pi\) and passing through \(s\). Each occurrence of state \(s\) in an episode is called a visit to \(s\). 
+Of course, \(s\) may be visited multiple times in the same episode; let us call the first time it is visited in an episode the first visit to \(s\). 
+The first-visit MC method estimates \(v_{\pi}(s)\) as the average of the returns following first visits to \(s\), 
+whereas the every-visit MC method averages the returns following all visits to \(s\). 
+First-visit MC has been most widely studied. Every-visit MC extends more naturally to function approximation and eligibility traces.
+
+\bigskip
+
+\noindent \textbf{First-visit MC prediction, for estimating \(V \approx v_{\pi}\)}:
+
+\noindent (Every-visit MC would be the same except without the check for \(S_t\) having occurred earlier in the episode.)
+
+\noindent Input: a policy \(\pi\) to be evaluated
+
+\noindent Initialize:
+
+\noindent \hspace{.5cm} \(V(s) \in \mathbb{R}\) arbitrarily for all \(s \in \mathcal{S}\)
+
+\noindent \hspace{.5cm} \(Returns(s)\), an empty list, for all \(s \in \mathcal{S}\)
+
+\noindent Loop forever (for each episode):
+
+\noindent \hspace{.5cm} Generate an episode following \(\pi\): \(S_0, A_0, R_1, S_1, A_1, R_2, \dots, S_{T - 1}, A_{T - 1}, R_{T}\)
+
+\noindent \hspace{.5cm} \(G \leftarrow 0\)
+
+\noindent \hspace{.5cm} Loop for each step of episode, \(t = T - 1, T - 2, \dots, 0\):
+
+\noindent \hspace{1cm} \(G \leftarrow \gamma G + R_{t + 1}\)
+
+\noindent \hspace{1cm} Unless \(S_t\) appearsin \(S_0, S_1, \dots, S_{t - 1}\):
+
+\noindent \hspace{1.5cm} Append \(G\) to \(Returns(S_t)\):
+
+\noindent \hspace{1.5cm} \(V(S_t) \leftarrow average(Returns(S_t))\)
+
+\bigskip
+
+\noindent Both first-visit MC and every-visit MC converge to \(v_{\pi}(s)\) as the number of visits (or first visits) to \(s\) goes to infinity. 
+This is easy to see for the case of first-visit MC. In this case each return is an independent, identically distributed estimate of \(v_{\pi}(s)\) with finite variance. 
+By the law of large numbers the sequence of averages of these estimates converges to their expected value. Each average is itself an unbiased estimate, 
+and the standard deviation of its error falls as \(1 / \sqrt{n}\), where \(n\) is the number of returns averaged. Every-visit MC is less straightforward, 
+but its estimates also converge quadratically to \(v_{\pi}(s)\).
+
 \section{Imitation Learning}
 
 \noindent Imitation learning, also known as learning from demonstration, is a process where an agent learns a new skill or behavior by observing and replicating the actions of others, often an expert. Training data are from expert inputs observations and actions. It assumes data is independently identity distributed, which is different from reinforcement learning. It is supervised learning.
