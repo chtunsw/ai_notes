@@ -43,40 +43,22 @@
 
 \section{Reinforcement Learning}
 
-\begin{center}
-    \includegraphics[scale=0.6]{./images/rl.png}
-\end{center}
-
-\noindent Reinforcement learning is about learning from interaction how to behave in order to achieve a goal. 
-The reinforcement learning agent and its environment interact over a sequence of discrete time steps. 
-The specification of their interface defines a particular task: the actions are the choices made by the agent; 
-the states are the basis for making the choices; and the rewards are the basis for evaluating the choices. 
-Everything inside the agent is completely known and controllable by the agent; 
-everything outside is incompletely controllable but may or may not be completely known. 
-A policy is a stochastic rule by which the agent selects actions as a function of states. 
-The agent's objective is to maximize the amount of reward it receives over time.
-
-\begin{itemize}
-    \item There is no supervisor, only a reward signal
-    \item Feedback is delayed, not instantaneous
-    \item Time really matters (sequential, non independently identity distributed data)
-    \item Agent’s actions affect the subsequent data it receives
-\end{itemize}
-
-\noindent Reinforcement learning is based on the reward hypothesis: 
-All goals can be described by the maximisation of expected cumulative reward. 
-The goal is select actions to maximise total future reward. 
-Actions may have long term consequencesn, and reward may be delayed. 
-It may be better to sacrifice immediate reward to gain more long-term reward.
+\noindent Reinforcement learning is a computational approach to understanding and automating goal-directed learning and decision making. 
+It is distinguished from other computational approaches by its emphasis on learning by an agent from direct interaction with its environment, 
+without requiring exemplary supervision or complete models of the environment. In our opinion, reinforcement learning is the first field to seriously 
+address the computational issues that arise when learning from interaction with an environment in order to achieve long-term goals.
 
 \bigskip
 
-\noindent The agent always learns to maximize its reward. 
-If we want it to do something for us, we must provide rewards to it in such a way that in maximizing them the agent will also achieve our goals. 
-It is thus critical that the rewards we set up truly indicate what we want accomplished. 
-In particular, the reward signal is not the place to impart to the agent prior knowledge about how to achieve what we want it to do. 
-If achieving subgoals were rewarded, then the agent might find a way to achieve them without achieving the real goal. 
-The reward signal is your way of communicating to the agent what you want it to achieve, not how you want it achieved. 
+\noindent Reinforcement learning uses the formal framework of Markov decision processes to define the interaction between a learning agent and its environment in terms of states, 
+actions, and rewards. This framework is intended to be a simple way of representing essential features of the artificial intelligence problem. These features include a sense of cause and effect, 
+a sense of uncertainty and nondeterminism, and the existence of explicit goals.
+
+\bigskip
+
+\noindent The concepts of value and value function are key to most of the reinforcement learning methods. 
+We take the position that value functions are important for efficient search in the space of policies. 
+The use of value functions distinguishes reinforcement learning methods from evolutionary methods that search directly in policy space guided by evaluations of entire policies.
 
 \bigskip
 
@@ -248,6 +230,41 @@ For example, for discrete models it can be \(v_{\pi}(s) = E_{\pi}[G_t \mid S_t =
 \noindent \(U_t\): target for estimate at time \(t\).
 
 \section{Markov Chain and Markov Decision Process}
+
+\begin{center}
+    \includegraphics[scale=0.6]{./images/rl.png}
+\end{center}
+
+\noindent Reinforcement learning is about learning from interaction how to behave in order to achieve a goal. 
+The reinforcement learning agent and its environment interact over a sequence of discrete time steps. 
+The specification of their interface defines a particular task: the actions are the choices made by the agent; 
+the states are the basis for making the choices; and the rewards are the basis for evaluating the choices. 
+Everything inside the agent is completely known and controllable by the agent; 
+everything outside is incompletely controllable but may or may not be completely known. 
+A policy is a stochastic rule by which the agent selects actions as a function of states. 
+The agent's objective is to maximize the amount of reward it receives over time.
+
+\begin{itemize}
+    \item There is no supervisor, only a reward signal
+    \item Feedback is delayed, not instantaneous
+    \item Time really matters (sequential, non independently identity distributed data)
+    \item Agent’s actions affect the subsequent data it receives
+\end{itemize}
+
+\noindent Reinforcement learning is based on the reward hypothesis: 
+All goals can be described by the maximisation of expected cumulative reward. 
+The goal is select actions to maximise total future reward. 
+Actions may have long term consequencesn, and reward may be delayed. 
+It may be better to sacrifice immediate reward to gain more long-term reward.
+
+\bigskip
+
+\noindent The agent always learns to maximize its reward. 
+If we want it to do something for us, we must provide rewards to it in such a way that in maximizing them the agent will also achieve our goals. 
+It is thus critical that the rewards we set up truly indicate what we want accomplished. 
+In particular, the reward signal is not the place to impart to the agent prior knowledge about how to achieve what we want it to do. 
+If achieving subgoals were rewarded, then the agent might find a way to achieve them without achieving the real goal. 
+The reward signal is your way of communicating to the agent what you want it to achieve, not how you want it achieved. 
 
 \subsection{Markov Chain}
 
