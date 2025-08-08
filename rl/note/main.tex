@@ -887,6 +887,15 @@ By the law of large numbers the sequence of averages of these estimates converge
 and the standard deviation of its error falls as \(1 / \sqrt{n}\), where \(n\) is the number of returns averaged. Every-visit MC is less straightforward, 
 but its estimates also converge quadratically to \(v_{\pi}(s)\).
 
+\subsection{Monte Carlo Estimation of Action Values}
+
+\noindent The policy evaluation problem for action values is to estimate \(q_{\pi}(s, a)\), the expected return when starting in state \(s\), taking action \(a\), 
+and thereafter following policy \(\pi\). The Monte Carlo Estimation of Action Values are essentially the same as just presented for state values, except now we talk about visits to a state-action pair rather than to a state. 
+A state-action pair \(s\), \(a\) is said to be visited in an episode if ever the state \(s\) is visited and action \(a\) is taken in it. 
+The every-visit MC method estimates the value of a state-action pair as the average of the returns that have followed all the visits to it. 
+The first-visit MC method averages the returns following the first time in each episode that the state was visited and the action was selected. 
+These methods converge quadratically, as before, to the true expected values as the number of visits to each state-action pair approaches infinity.
+
 \section{Imitation Learning}
 
 \noindent Imitation learning, also known as learning from demonstration, is a process where an agent learns a new skill or behavior by observing and replicating the actions of others, often an expert. Training data are from expert inputs observations and actions. It assumes data is independently identity distributed, which is different from reinforcement learning. It is supervised learning.
