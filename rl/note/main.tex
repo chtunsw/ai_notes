@@ -873,7 +873,7 @@ First-visit MC has been most widely studied. Every-visit MC extends more natural
 
 \noindent \hspace{1cm} \(G \leftarrow \gamma G + R_{t + 1}\)
 
-\noindent \hspace{1cm} Unless \(S_t\) appearsin \(S_0, S_1, \dots, S_{t - 1}\):
+\noindent \hspace{1cm} Unless \(S_t\) appears in \(S_0, S_1, \dots, S_{t - 1}\):
 
 \noindent \hspace{1.5cm} Append \(G\) to \(Returns(S_t)\):
 
@@ -895,6 +895,44 @@ A state-action pair \(s\), \(a\) is said to be visited in an episode if ever the
 The every-visit MC method estimates the value of a state-action pair as the average of the returns that have followed all the visits to it. 
 The first-visit MC method averages the returns following the first time in each episode that the state was visited and the action was selected. 
 These methods converge quadratically, as before, to the true expected values as the number of visits to each state-action pair approaches infinity.
+
+\subsection{Monte Carlo Control}
+
+\noindent For Monte Carlo policy evaluation it is natural to alternate between evaluation and improvement on an episode-by-episode basis. 
+After each episode, the observed returns are used for policy evaluation, and then the policy is improved at all the states visited in the episode. 
+A complete simple algorithm along these lines, which we call Monte Carlo ES, for Monte Carlo with Exploring Starts, is given in pseudocode.
+
+\[\pi_0 \overset{E}{\rightarrow} q_{\pi_0} \overset{I}{\rightarrow} \pi_1  \overset{E}{\rightarrow} q_{\pi_1} \overset{I}{\rightarrow} \pi_2 \dots \overset{I}{\rightarrow} \pi_*  \overset{E}{\rightarrow} q_*\]
+
+\noindent \textbf{Monte Carlo ES (Exploring Starts), for estimating \(\pi \approx \pi_*\)}:
+
+\noindent Initialize:
+
+\noindent \hspace{.5cm} \(\pi(s) \in \mathcal{A}(s)\) (arbitrarily), for all \(s \in \mathcal{S}\)
+
+\noindent \hspace{.5cm} \(Q(s, a) \in \mathbb{R}\) (arbitrarily), for all \(s \in \mathcal{S}\), \(a \in \mathcal{A}(s)\)
+
+\noindent \hspace{.5cm} \(Returns(s, a)\), an empty list, for all \(s \in \mathcal{S}\), \(a \in \mathcal{A}(s)\)
+
+\noindent Loop forever (for each episode):
+
+\noindent \hspace{.5cm} Choose  \(S_0 \in \mathcal{S}\), \(A_0 \in \mathcal{A}(S_0)\) randomly such that all pairs have \(probability > 0\)
+
+\noindent \hspace{.5cm} Generate an episode from \(S_0, A_0\), following \(\pi\): \(S_0, A_0, R_1, S_1, A_1, R_2, \dots, S_{T - 1}, A_{T - 1}, R_{T}\)
+
+\noindent \hspace{.5cm} \(G \leftarrow 0\)
+
+\noindent \hspace{.5cm} Loop for each step of episode, \(t = T - 1, T - 2, \dots, 0\):
+
+\noindent \hspace{1cm} \(G \leftarrow \gamma G + R_{t + 1}\)
+
+\noindent \hspace{1cm} Unless the pair \(S_t, A_t\) appears in \(S_0, A_0, S_1, A_1, \dots, S_{t - 1}, A_{t - 1}\):
+
+\noindent \hspace{1.5cm} Append \(G\) to \(Returns(S_t, A_t)\):
+
+\noindent \hspace{1.5cm} \(Q(S_t, A_t) \leftarrow average(Returns(S_t, A_t))\)
+
+\noindent \hspace{1.5cm} \(\pi(S_t) \leftarrow \underset{a}{argmax} Q(S_t, a)\)
 
 \section{Imitation Learning}
 
