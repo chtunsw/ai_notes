@@ -896,6 +896,16 @@ The every-visit MC method estimates the value of a state-action pair as the aver
 The first-visit MC method averages the returns following the first time in each episode that the state was visited and the action was selected. 
 These methods converge quadratically, as before, to the true expected values as the number of visits to each state-action pair approaches infinity.
 
+\bigskip
+
+\noindent The only complication is that many state-action pairs may never be visited. If \(\pi\) is a deterministic policy, then in following \(\pi\) one will observe returns only for one of the actions from each state.
+
+\bigskip
+
+\noindent For policy evaluation to work for action values, we must assure continual exploration. One way to do this is by specifying that the episodes start in a state-action pair, 
+and that every pair has a nonzero probability of being selected as the start. This guarantees that all state-action pairs will be visited an infinite number of times in the limit of an infinite number of episodes. 
+We call this the assumption of exploring starts.
+
 \subsection{Monte Carlo Control}
 
 \noindent For Monte Carlo policy evaluation it is natural to alternate between evaluation and improvement on an episode-by-episode basis. 
