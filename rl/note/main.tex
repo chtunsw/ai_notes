@@ -944,6 +944,104 @@ A complete simple algorithm along these lines, which we call Monte Carlo ES, for
 
 \noindent \hspace{1.5cm} \(\pi(S_t) \leftarrow \underset{a}{argmax} Q(S_t, a)\)
 
+\subsection{Monte Carlo Control without Exploring Starts}
+
+\noindent How can we avoid the unlikely assumption of exploring starts? The only general way to ensure that all actions are selected infinitely often is for the agent to continue to select them. 
+There are two approaches to ensuring this, resulting in what we call on-policy methods and off-policy methods. On-policy methods attempt to evaluate or improve the policy that is used to make decisions, 
+whereas off-policy methods evaluate or improve a policy different from that used to generate the data. The Monte Carlo ES method developed above is an example of an on-policy method. 
+In this section we show how an on-policy Monte Carlo control method can be designed that does not use the unrealistic assumption of exploring starts.
+
+\bigskip
+
+\noindent In on-policy control methods the policy is generally soft, meaning that \(\pi(a \mid s) > 0\) for all \(s \in \mathcal{S}\) and all \(a \in \mathcal{A}(s)\), 
+but gradually shifted closer and closer to a deterministic optimal policy. 
+\(\epsilon\)-soft policies are defined as policies for which \(\pi(a \mid s) > \frac{\epsilon}{\vert A(s) \vert}\) for all states and actions, for some \(\epsilon > 0\).
+The on-policy method we present in this section uses \(\epsilon\)-greedy policies, 
+meaning that most of the time they choose an action that has maximal estimated action value, but with probability \(\epsilon\) they instead select an action at random.
+That is, all nongreedy actions are given the minimal probability of selection, \(\frac{\epsilon}{\vert A(s) \vert}\), 
+and the remaining bulk of the probability, \(1 - \epsilon + \frac{\epsilon}{\vert A(s) \vert}\), is given to the greedy action.
+The \(\epsilon\)-greedy policies are examples of \(\epsilon\)-soft policies. Among \(\epsilon\)-soft policies, \(\epsilon\)-greedy policies are in some sense those that are closest to greedy.
+
+\bigskip
+
+\noindent \textbf{On-policy first-visit MC control (for \(\epsilon\)-soft policies), estimates \(\pi \approx \pi_*\)}:
+
+\noindent Algorithm parameter: small \(\epsilon > 0\)
+
+\noindent Initialize:
+
+\noindent \hspace{.5cm} \(\pi \leftarrow\) an arbitrary \(\epsilon\)-soft policy
+
+\noindent \hspace{.5cm} \(Q(s, a) \in \mathbb{R}\) (arbitrarily), for all \(s \in \mathcal{S}\), \(a \in \mathcal{A}(s)\)
+
+\noindent \hspace{.5cm} \(Returns(s, a)\), empty list, for all \(s \in \mathcal{S}\), \(a \in \mathcal{A}(s)\)
+
+\noindent Repeat forever (for each episode):
+
+\noindent \hspace{.5cm} Generate an episode following \(\pi\): \(S_0, A_0, R_1, S_1, A_1, R_2, \dots, S_{T - 1}, A_{T - 1}, R_{T}\)
+
+\noindent \hspace{.5cm} \(G \leftarrow 0\)
+
+\noindent \hspace{.5cm} Loop for each step of episode, \(t = T - 1, T - 2, \dots, 0\):
+
+\noindent \hspace{1cm} \(G \leftarrow \gamma G + R_{t + 1}\)
+
+\noindent \hspace{1cm} Unless the pair \(S_t, A_t\) appears in \(S_0, A_0, S_1, A_1, \dots, S_{t - 1}, A_{t - 1}\):
+
+\noindent \hspace{1.5cm} Append \(G\) to \(Returns(S_t, A_t)\):
+
+\noindent \hspace{1.5cm} \(Q(S_t, A_t) \leftarrow average(Returns(S_t, A_t))\)
+
+\noindent \hspace{1.5cm} \(A^* \leftarrow argmax_{a} Q(S_t, a)\), with ties broken arbitrarily
+
+\noindent \hspace{1.5cm} For all \(a \in \mathcal{A}(S_t)\):
+
+\[
+\pi(a \mid S_t) \leftarrow
+\begin{cases}
+1 - \epsilon + \frac{\epsilon}{\vert \mathcal{A}(S_t) \vert}, & \text{if } a = A^*\\
+\frac{\epsilon}{\vert \mathcal{A}(S_t) \vert}, & \text{if } a \neq A^*
+\end{cases}
+\]
+
+\noindent That any \(\epsilon\)-greedy policy with respect to \(q_{\pi}\) is an improvement over any \(\epsilon\)-soft policy \(\pi\) is assured by the policy improvement theorem.
+Let \(\pi'\) be the \(\epsilon\)-greedy policy. The conditions of the policy improvement theorem apply because for any \(s \in \mathcal{S}\):
+
+\begin{equation*}
+\begin{split}
+q_{\pi}(s, \pi'(s))
+& = \sum_{a} \pi'(a \mid s) q_{\pi}(s, a) \\
+& = \frac{\epsilon}{\vert \mathcal{A}(s) \vert} \sum_{a} q_{\pi}(s, a) + (1 - \epsilon) \underset{a}{max} q_{\pi}(s, a) \\
+& \geq \frac{\epsilon}{\vert \mathcal{A}(s) \vert} \sum_{a} q_{\pi}(s, a) + (1 - \epsilon) \sum_{a} \frac{\pi(a \mid s) - \frac{\epsilon}{\vert \mathcal{A}(s) \vert}}{1 - \epsilon} q_{\pi}(s, a) \\
+& = \frac{\epsilon}{\vert \mathcal{A}(s) \vert} \sum_{a} q_{\pi}(s, a) -  \frac{\epsilon}{\vert \mathcal{A}(s) \vert} \sum_{a} q_{\pi}(s, a) + \sum_{a} \pi(a \mid s) q_{\pi}(s, a) \\
+& = v_{\pi}(s)
+\end{split}
+\end{equation*}
+
+\noindent Proof:
+
+\begin{equation*}
+\begin{split}
+\sum_{a} \frac{\pi(a \mid s) - \frac{\epsilon}{\vert \mathcal{A}(s) \vert}}{1 - \epsilon}
+& = \frac{1}{1 - \epsilon} \sum_{a} \pi(a \mid s) - \frac{1}{1 - \epsilon} \sum_{a} \frac{\epsilon}{\vert \mathcal{A}(s) \vert} \\
+& = \frac{1}{1 - \epsilon} - \frac{1}{1 - \epsilon} \cdot \vert \mathcal{A}(s) \vert \cdot \frac{\epsilon}{\vert \mathcal{A}(s) \vert} \\
+& = 1
+\end{split}
+\end{equation*}
+
+\noindent So:
+
+\[\underset{a}{max} q_{\pi}(s, a) \geq \sum_{a} \frac{\pi(a \mid s) - \frac{\epsilon}{\vert \mathcal{A}(s) \vert}}{1 - \epsilon} q_{\pi}(s, a)\]
+
+\noindent Thus, by the policy improvement theorem, \(\pi' \geq \pi\) (.i.e, \(v_{\pi'}(s) \geq v_{\pi}(s)\), for all \(s \in \mathcal{S}\)).
+
+\bigskip
+
+\noindent In essence, we have shown that policy iteration works for \(\epsilon\)-soft policies. Using the natural notion of greedy policy for \(\epsilon\)-soft policies, 
+one is assured of improvement on every step, except when the best policy has been found among the \(\epsilon\)-soft policies. 
+This analysis is independent of how the action-value functions are determined at each stage, but it does assume that they are computed exactly. 
+Now we only achieve the best policy among the \(\epsilon\)-soft policies, but on the other hand, we have eliminated the assumption of exploring starts.
+
 \section{Imitation Learning}
 
 \noindent Imitation learning, also known as learning from demonstration, is a process where an agent learns a new skill or behavior by observing and replicating the actions of others, often an expert. Training data are from expert inputs observations and actions. It assumes data is independently identity distributed, which is different from reinforcement learning. It is supervised learning.
