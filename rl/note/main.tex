@@ -529,7 +529,7 @@ and each successive approximation is obtained by using the Bellman equation as a
 \[v_{k + 1}(s) = \sum_a \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) [r + \gamma v_{k}(s')]\]
 
 \noindent This algorithm is called iterative policy evaluation. The existence and uniqueness of \(v_{\pi}\) are guaranteed as long as either \(\gamma < 1\) or eventual termination is guaranteed from all states under the policy \(\pi\). 
-The sequence \(\{v_k\}\) can be shown in general to converge to \(v_{\pi}\) (TBD: proof see Contraction Mapping Theorem) as \(k \rightarrow \infty\) under the same conditions that guarantee the existence of \(v_{\pi}\).
+The sequence \(\{v_k\}\) can be shown in general to converge to \(v_{\pi}\) (proof see Contraction Mapping Theorem) as \(k \rightarrow \infty\) under the same conditions that guarantee the existence of \(v_{\pi}\).
 
 \bigskip
 
