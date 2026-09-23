@@ -1115,11 +1115,11 @@ $$
 \bigskip
 
 \noindent Recall that we wish to estimate the expected returns (values) under the target policy, but all we have are returns $G _ { t }$ 
-due to the behavior policy. These returns have the wrong expectation $E [ G _ { t } | S _ { t }   =   s ] = v _ { b } ( s )$ and so cannot be averaged 
+due to the behavior policy. These returns have the wrong expectation $E _ b [ G _ { t } | S _ { t }   =   s ] = v _ { b } ( s )$ and so cannot be averaged 
 to obtain $v _ { \pi }$ . This is where importance sampling comes in. The ratio $\rho _ { t : T - 1 }$ transforms the returns to have the right expected value:
 
 $$
-E [ \rho _ { t : T - 1 } G _ { t } | S _ { t } \mathop { = } s ] = v _ { \pi } ( s )
+E _ b [ \rho _ { t : T - 1 } G _ { t } | S _ { t } \mathop { = } s ] = v _ { \pi } ( s )
 $$
 
 \noindent Now we are ready to give a Monte Carlo algorithm that averages returns from a batch of observed episodes following policy $ b $ 
@@ -1133,14 +1133,14 @@ are the returns that pertain to state $ s $, and $\left\{ \rho _ { t : T ( t ) -
 the corresponding importance-sampling ratios. To estimate $v _ { \pi } ( s )$ , we simply scale the returns by the ratios and average the results:
 
 $$
-V ( s ) = \frac { \sum _ { t \in \mathcal { T } ( s ) } \rho _ { t : T ( t ) - 1 } G _ { t } } { | \mathcal { T } ( s ) | }
+V _ \pi ( s ) = \frac { \sum _ { t \in \mathcal { T } ( s ) } \rho _ { t : T ( t ) - 1 } G _ { t } } { | \mathcal { T } ( s ) | }
 $$
 
 \noindent When importance sampling is done as a simple average in this way it is called ordinary importance sampling. 
 An important alternative is weighted importance sampling, which uses a weighted average, defined as:
 
 $$
-V ( s ) = \frac { \sum _ { t \in \mathcal { T } ( s ) } \rho _ { t : T ( t ) - 1 } G _ { t } } { \sum _ { t \in \mathcal { T } ( s ) } \rho _ { t : T ( t ) - 1 } }
+V _ \pi ( s ) = \frac { \sum _ { t \in \mathcal { T } ( s ) } \rho _ { t : T ( t ) - 1 } G _ { t } } { \sum _ { t \in \mathcal { T } ( s ) } \rho _ { t : T ( t ) - 1 } }
 $$
 
 \noindent or zero if the denominator is zero. To understand these two varieties of importance sampling, 
