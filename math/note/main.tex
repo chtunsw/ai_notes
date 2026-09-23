@@ -27,6 +27,9 @@
 \setcounter{tocdepth}{4}
 \setcounter{secnumdepth}{4}
 
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5ex}
+
 \makeindex
 
 
@@ -45,67 +48,62 @@
 
 \subsection{Summary of Notations}
 
-\noindent \textasciicircum: a "hat" placed over a letter means that the value is an estimate, prediction, or fitted value derived from sample data.
+\textasciicircum: a "hat" placed over a letter means that the value is an estimate, prediction, or fitted value derived from sample data.
 
 \subsection{Probability Space}
 
-\noindent In probability theory, a probability space or a probability triple \((\Omega, \mathcal{F}, P)\) is a mathematical construct that provides a formal model of a random process or "experiment".
+In probability theory, a probability space or a probability triple \((\Omega, \mathcal{F}, P)\) is a mathematical construct that provides a formal model of a random process or "experiment".
 
-\bigskip
+\(\Omega\): A sample space, which is the set of all possible outcomes of a random process under consideration.
 
-\noindent \(\Omega\): A sample space, which is the set of all possible outcomes of a random process under consideration.
-
-\noindent \(\mathcal{F}\): An event space, which is a set of events, where an event is a subset of outcomes in the sample space. The \(\sigma\)-algebra 
+\(\mathcal{F}\): An event space, which is a set of events, where an event is a subset of outcomes in the sample space. The \(\sigma\)-algebra 
 \(\mathcal{F}\) is a collection of all the events we would like to consider.
 
-\noindent \(P\): A probability function, which assigns, to each event in the event space, a probability, which is a number between 0 and 1 (inclusive).
+\(P\): A probability function, which assigns, to each event in the event space, a probability, which is a number between 0 and 1 (inclusive).
 
-\bigskip
+In the example of the throw of a standard die:
 
-\noindent In the example of the throw of a standard die:
+The sample space  \(\Omega\) is typically the set \(\{1, 2, 3, 4, 5, 6\}\). 
 
-\bigskip
-
-\noindent The sample space  \(\Omega\) is typically the set \(\{1, 2, 3, 4, 5, 6\}\). 
-
-\noindent The event space \(\mathcal{F}\) could be the set of all subsets of the sample space, 
+The event space \(\mathcal{F}\) could be the set of all subsets of the sample space, 
 which would then contain simple events such as \(\{5\}\) ("the die lands on 5"),
 as well as complex events such as \(\{2, 4, 6\}\) ("the die lands on an even number"). 
 So \(\mathcal{F} = \{\{5\}, \{2, 4, 6\}, \dots\}\)
 
-\noindent The probability function \(P\) would then map each event to the number of outcomes in that event divided by 6. 
+The probability function \(P\) would then map each event to the number of outcomes in that event divided by 6. 
 So for example: \(P(\{5\}) = \frac{1}{6}\), \(P(\{2, 4, 6\}) = \frac{3}{6}\), ...
 
 \subsection{Discrete Probability Distribution}
 
-\noindent Let \(X\) be a random variable with a finite number of finite outcomes \( x_{1},  x_{2}, \ldots, x_{n}\) occurring with probabilities \(p_{1}, p_{2}, \ldots, p_{n}\) respectively. The expectation of \(X\) is defined as
+Let \(X\) be a random variable with a finite number of finite outcomes \( x_{1},  x_{2}, \ldots, x_{n}\) occurring with probabilities \(p_{1}, p_{2}, \ldots, p_{n}\) respectively. The expectation of \(X\) is defined as
 
 \[\mu = E[X] = \sum_{i=1}^{n}x_{i} p_{i} = x_{1} p_{1} + x_{2} p_{2} + \cdots  + x_{n} p_{n}\]
 
-\noindent The variance of \(X\) is
+The variance of \(X\) is
 
 \[\sigma^{2} = Var(X) = \sum_{i=1}^{n}p_{i} \cdot (x_{i} - \mu)^{2}\]
 
-\noindent For a collection of \(n\) equally likely values:
+For a collection of \(n\) equally likely values:
 
 \[\mu = \frac {1}{n} \sum_{i=1}^{n} x_{i}\]
 \[\sigma^{2} = \frac {1}{n} \sum_{i=1}^{n} (x_{i} - \mu)^{2}\]
 
-\noindent \textbf{Expectation}:
+\textbf{Expectation}:
 
-\noindent If \(X\) is independent of \(\mathcal{H}\), then \(E(X \mid \mathcal{H}) = E(X)\).
+If \(X\) is independent of \(\mathcal{H}\), then \(E(X \mid \mathcal{H}) = E(X)\).
 
-\noindent Tower property: for sub-\(\sigma\)-algebras \(\mathcal{H}_1 \subseteq \mathcal{H}_2 \subseteq \mathcal{F}\), then \(E(E(X \mid \mathcal{H}_2) \mid \mathcal{H}_1) = E(X \mid \mathcal{H}_1)\).
+Tower property: for sub-\(\sigma\)-algebras \(\mathcal{H}_1 \subseteq \mathcal{H}_2 \subseteq \mathcal{F}\), then \(E(E(X \mid \mathcal{H}_2) \mid \mathcal{H}_1) = E(X \mid \mathcal{H}_1)\).
 
-\noindent Law of total expectation: \(E(E(X \mid \mathcal{H})) = E(X)\). A special case of tower property when \(\mathcal{H}_1 = \{\emptyset, \Omega\}\).
+Law of total expectation: \(E(E(X \mid \mathcal{H})) = E(X)\). A special case of tower property when \(\mathcal{H}_1 = \{\emptyset, \Omega\}\).
 
-\noindent Linearity:
+Linearity:
+
 \(E(X_{1}+X_{2}\mid {\mathcal {H}})=E(X_{1}\mid {\mathcal {H}})+E(X_{2}\mid {\mathcal {H}})\) and, 
 \(E(aX \mid {\mathcal {H}}) = a E(X \mid {\mathcal {H}})\) when \(a \in \mathbb {R}\).
 
 \subsection{Continuous Probability Distribution}
 
-\noindent If the random variable \(X\) has a probability density function \(f(x)\), and \(F(x)\) is the corresponding cumulative distribution function, then
+If the random variable \(X\) has a probability density function \(f(x)\), and \(F(x)\) is the corresponding cumulative distribution function, then
 
 \[P(a \leq X \leq b) = \int_{a}^{b} f(x)dx\]
 \[F(x) = P(X \leq x) = \int_{-\infty}^{x} f(t)dt\]
@@ -138,23 +136,37 @@ f(x) =
 
 \subsection{Law of large numbers}
 
-\noindent In probability theory, the law of large numbers is a mathematical law that states that the average of the results obtained from a large number of independent random samples converges to the true value, if it exists. 
+In probability theory, the law of large numbers is a mathematical law that states that the average of the results obtained from a large number of independent random samples converges to the true value, if it exists. 
 More formally, the law of large numbers states that given a sample of independent and identically distributed values, the sample mean converges to the true mean.
 
 \subsection{Monte Carlo method}
 
-\noindent Monte Carlo methods, also called the Monte Carlo experiments or Monte Carlo simulations, are a broad class of computational algorithms based on repeated random sampling for obtaining numerical results. 
+Monte Carlo methods, also called the Monte Carlo experiments or Monte Carlo simulations, are a broad class of computational algorithms based on repeated random sampling for obtaining numerical results. 
 The underlying concept is to use randomness to solve deterministic problems.
+
+\subsection{Importance Sampling}
+
+Suppose you want to find the expected value of some function $f(x)$ where $x$ is drawn from a target distribution $p(x)$. Mathematically, that is written as:
+
+\[\mathbb{E}_{x \sim p}[f(x)] = \sum_{x} p(x) f(x)\]
+
+If you cannot sample from $p(x)$, but you \textit{can} sample from a behavior distribution $q(x)$, you can use an algebraic trick. Multiply the top and bottom by $q(x)$:
+
+\[\sum_{x} p(x) f(x) = \sum_{x} q(x) \frac{p(x)}{q(x)} f(x)\]
+
+\[\mathbb{E}_{x \sim p}[f(x)] = \mathbb{E}_{x \sim q}\left[ \frac{p(x)}{q(x)} f(x) \right]\]
+
+The fraction $\frac{p(x)}{q(x)}$ is the \textbf{importance sampling ratio}. It acts as a correction weight. If a sample was highly likely under the target policy but rare under the behavior policy, the ratio scales it up. If it was rare under the target policy but common under the behavior policy, the ratio scales it down.
 
 \section{Mathematical Analysis}
 
 \subsection{Metric Space}
 
-\noindent A metric space is an ordered pair \((M, d)\) where \(M\) is a set and \(d\) is a distance metric (function) on \(M\),
+A metric space is an ordered pair \((M, d)\) where \(M\) is a set and \(d\) is a distance metric (function) on \(M\),
 
 \[d: M \times M \rightarrow \mathbb{R}\]
 
-\noindent satisfying the following axioms for all points \(x, y, z \in M\):
+satisfying the following axioms for all points \(x, y, z \in M\):
 
 \begin{itemize}
     \item The distance from a point to itself is zero: \(d(x, x) = 0\)
@@ -163,27 +175,25 @@ The underlying concept is to use randomness to solve deterministic problems.
     \item The triangle inequality holds: \(d(x, z) \leq  d(x, y) + d(y, z)\)
 \end{itemize}
 
-\noindent \textbf{Cauchy Sequence}
+\textbf{Cauchy Sequence}
 
-\noindent Given a metric space \((M, d)\), a sequence of elements of \(X\), \(x_1, x_2, x_3, \dots\) is Cauchy, 
+Given a metric space \((M, d)\), a sequence of elements of \(X\), \(x_1, x_2, x_3, \dots\) is Cauchy, 
 if for every positive real number \(\epsilon > 0\) there is a positive integer \(N\) such that for all positive integers \(m, n > N\), the distance \(d(x_{m},x_{n}) < \epsilon\).
 
-\bigskip
+\textbf{Complete Metric Space}
 
-\noindent \textbf{Complete Metric Space}
-
-\noindent In mathematical analysis, a metric space \(M\) is called complete (or a Cauchy space) if every Cauchy sequence of points in \(M\) has a limit that is also in \(M\).
+In mathematical analysis, a metric space \(M\) is called complete (or a Cauchy space) if every Cauchy sequence of points in \(M\) has a limit that is also in \(M\).
 
 \subsubsection{Contraction Mapping}
 
-\noindent In mathematics, a contraction mapping, or contraction or contractor, on a metric space \((M, d)\) is a function \(f\) from \(M\) to itself, 
+In mathematics, a contraction mapping, or contraction or contractor, on a metric space \((M, d)\) is a function \(f\) from \(M\) to itself, 
 aka contraction mapping \(f: M \rightarrow M\), with the property that there is some real number \(0 \leq k < 1\) such that for all \(x\) and \(y\) in \(M\),
 
 \[d(f(x), f(y)) \leq k d(x, y)\]
 
 \subsubsection{Banach fixed-point theorem}
 
-\noindent Let \((X, d)\) be a non-empty complete metric space with a contraction mapping \(T:X \rightarrow X\). Then \(T\) admits a unique fixed-point \(x^{*}\) in X, \(T(x^{*})=x^{*}\). 
+Let \((X, d)\) be a non-empty complete metric space with a contraction mapping \(T:X \rightarrow X\). Then \(T\) admits a unique fixed-point \(x^{*}\) in X, \(T(x^{*})=x^{*}\). 
 Furthermore, \(x^{*}\) can be found as follows: start with an arbitrary element \(x_{0} \in X\) and define a sequence \((x_{n})_{n\in \mathbb {N} }\) by \(x_{n}=T(x_{n-1})\) for \(n \geq 1\). 
 Then \(\lim _{n\to \infty }x_{n}=x^{*}\). (\href{https://en.wikipedia.org/wiki/Banach_fixed-point_theorem}{Wikipedia proof})
 
