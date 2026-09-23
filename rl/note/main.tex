@@ -27,6 +27,9 @@
 \setcounter{tocdepth}{4}
 \setcounter{secnumdepth}{4}
 
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5ex}
+
 \makeindex
 
 
@@ -43,26 +46,20 @@
 
 \section{Reinforcement Learning}
 
-\noindent Reinforcement learning is a computational approach to understanding and automating goal-directed learning and decision making. 
+Reinforcement learning is a computational approach to understanding and automating goal-directed learning and decision making. 
 It is distinguished from other computational approaches by its emphasis on learning by an agent from direct interaction with its environment, 
 without requiring exemplary supervision or complete models of the environment. In our opinion, reinforcement learning is the first field to seriously 
 address the computational issues that arise when learning from interaction with an environment in order to achieve long-term goals.
 
-\bigskip
-
-\noindent Reinforcement learning uses the formal framework of Markov decision processes to define the interaction between a learning agent and its environment in terms of states, 
+Reinforcement learning uses the formal framework of Markov decision processes to define the interaction between a learning agent and its environment in terms of states, 
 actions, and rewards. This framework is intended to be a simple way of representing essential features of the artificial intelligence problem. These features include a sense of cause and effect, 
 a sense of uncertainty and nondeterminism, and the existence of explicit goals.
 
-\bigskip
-
-\noindent The concepts of value and value function are key to most of the reinforcement learning methods. 
+The concepts of value and value function are key to most of the reinforcement learning methods. 
 We take the position that value functions are important for efficient search in the space of policies. 
 The use of value functions distinguishes reinforcement learning methods from evolutionary methods that search directly in policy space guided by evaluations of entire policies.
 
-\bigskip
-
-\noindent \textbf{RL process}:
+\textbf{RL process}:
 
 \begin{itemize}
     \item sample the trajectory (i.e. run the policy) in the environment
@@ -71,7 +68,7 @@ The use of value functions distinguishes reinforcement learning methods from evo
     \item repeat
 \end{itemize}
 
-\noindent \textbf{RL algorithm categories}:
+\textbf{RL algorithm categories}:
 
 \begin{itemize}
     \item Value Based
@@ -101,9 +98,9 @@ The use of value functions distinguishes reinforcement learning methods from evo
     \end{itemize}
 \end{itemize}
 
-\noindent \textbf{Learning vs Planning}:
+\textbf{Learning vs Planning}:
 
-\noindent By a model of the environment we mean anything that an agent can use to predict how the
+By a model of the environment we mean anything that an agent can use to predict how the
 environment will respond to its actions. Given a state and an action, a model produces a
 prediction of the resultant next state and next reward. If the model is stochastic, then
 there are several possible next states and next rewards, each with some probability of
@@ -111,14 +108,10 @@ occurring. Some models produce a description of all possibilities and their prob
 these we call distribution models. Other models produce just one of the possibilities,
 sampled according to the probabilities; these we call sample models.
 
-\bigskip
-
-\noindent The kind of model assumed in dynamic programming, estimates of the MDP's dynamics, \(p(s', r \mid s, a)\), is a distribution
+The kind of model assumed in dynamic programming, estimates of the MDP's dynamics, \(p(s', r \mid s, a)\), is a distribution
 model.
 
-\bigskip
-
-\noindent There are two fundamental approaches in sequential decision making:
+There are two fundamental approaches in sequential decision making:
 
 \begin{itemize}
     \item Reinforcement Learning
@@ -136,9 +129,9 @@ model.
     \end{itemize}
 \end{itemize}
 
-\noindent \textbf{Exploration vs Exploitation}:
+\textbf{Exploration vs Exploitation}:
 
-\noindent Reinforcement learning is like trial-and-error learning. The agent should discover a good policy from its experiences of the environment, without losing too much reward along the way. 
+Reinforcement learning is like trial-and-error learning. The agent should discover a good policy from its experiences of the environment, without losing too much reward along the way. 
 It is usually important to explore as well as exploit.
 
 \begin{itemize}
@@ -152,7 +145,7 @@ It is usually important to explore as well as exploit.
     \end{itemize}
 \end{itemize}
 
-\noindent \textbf{Prediction vs Control}:
+\textbf{Prediction vs Control}:
 
 \begin{itemize}
     \item Prediction
@@ -167,82 +160,82 @@ It is usually important to explore as well as exploit.
 
 \subsection{Summary of Notation}
 
-\noindent \(\mathcal{S}\): set of all nonterminal states. \(\mathcal{S^+}\) represents set of all states including the terminal state.
+\(\mathcal{S}\): set of all nonterminal states. \(\mathcal{S^+}\) represents set of all states including the terminal state.
 
-\noindent \(\mathcal{A}\): set of all actions. \(\mathcal{A}(s)\) represents set of all actions available in state \(s\).
+\(\mathcal{A}\): set of all actions. \(\mathcal{A}(s)\) represents set of all actions available in state \(s\).
 
-\noindent \(\mathcal{R}\): set of all possible rewards.
+\(\mathcal{R}\): set of all possible rewards.
 
-\noindent \(t\): discrete time step. \(t = 0, 1, 2, 3, \dots\).
+\(t\): discrete time step. \(t = 0, 1, 2, 3, \dots\).
 
-\noindent \(O_t\): (not fully observed) observation of environment at time step \(t\).
+\(O_t\): (not fully observed) observation of environment at time step \(t\).
 
-\noindent \(A_t\): action at time step \(t\). \(A_t \in \mathcal{A}\).
+\(A_t\): action at time step \(t\). \(A_t \in \mathcal{A}\).
 
-\noindent \(S_t\): (fully observed) state of environment at time step \(t\). \(S_t \in \mathcal{S}\).
+\(S_t\): (fully observed) state of environment at time step \(t\). \(S_t \in \mathcal{S}\).
 
-\noindent \(S_t^e\): environment state, the environment's private representation. 
+\(S_t^e\): environment state, the environment's private representation. 
 Used by environment to pick the next observation/reward. 
 The environment state is not usually visible to the agent, and may contain irrelevant information.
 
-\noindent \(S_t^a\): agent state, the agent's internal representation of the environment. 
+\(S_t^a\): agent state, the agent's internal representation of the environment. 
 Used by agent to pick the next action. 
 It is the state that used in RL algorithms. It can be a function of history: \(S_t^a = f(H_t)\). 
 For example, it can be a complete history \(S_t^a = H_t\), 
 or beliefs of environment state \(S_t^a = (P[S_t^e = s^1], \dots, P[S_t^e = s^n])\), 
 or recurrent neural network \(S_t^a = \sigma(S_{t - 1}^a W_s + O_t W_o)\).
 
-\noindent \textbf{Information state (Markov state)}: \(S_t\) that contains all useful information from the history. 
+\textbf{Information state (Markov state)}: \(S_t\) that contains all useful information from the history. 
 It is a compact summary of the history, which is as useful for predicting the future as the whole history. \(S_t = f(H_t)\). 
 A state \(S_t\) is Markov if and only if: \(P[S_{t + 1} \mid S_t] = P[S_{t + 1} \mid S_1, \dots, S_t]\).
 
-\noindent \(R_t\): reward at time step \(t\), typically due, stochastically, to \(S_{t - 1}\) and \(A_{t - 1}\). \(R_t \in \mathcal{R}\).
+\(R_t\): reward at time step \(t\), typically due, stochastically, to \(S_{t - 1}\) and \(A_{t - 1}\). \(R_t \in \mathcal{R}\).
 
-\noindent \(H_t\): history, a trajectory that contains a sequence of observations and actions up to time step \(t\). \(H_t = A_0, O_1, \dots, A_{t - 1}, O_{t}\).
+\(H_t\): history, a trajectory that contains a sequence of observations and actions up to time step \(t\). \(H_t = A_0, O_1, \dots, A_{t - 1}, O_{t}\).
 
-\noindent \(\gamma\): discount factor. Determines the importance of future rewards, also to avoid infinite returns.
+\(\gamma\): discount factor. Determines the importance of future rewards, also to avoid infinite returns.
 
-\noindent \(G_t\): return following time \(t\), the cumulative future reward. \(G_t = R_{t + 1} + \gamma R_{t + 2} + \gamma^2 R_{t + 3} + \dots\)
+\(G_t\): return following time \(t\), the cumulative future reward. \(G_t = R_{t + 1} + \gamma R_{t + 2} + \gamma^2 R_{t + 3} + \dots\)
 
-\noindent \(p(s', r \mid s, a)\): probability of transition to state \(s'\) with reward \(r\), from state \(s\) and action \(a\). A model of the environment, that completely characterizes the environment's dynamics.
+\(p(s', r \mid s, a)\): probability of transition to state \(s'\) with reward \(r\), from state \(s\) and action \(a\). A model of the environment, that completely characterizes the environment's dynamics.
 
 \[p(s', r \mid s, a) = Pr\{S_t = s', R_t = r | S_{t - 1} = s , A_{t - 1} = a \}\]
 \[\sum_{s' \in \mathcal{S}} \sum_{r \in \mathcal{R}} p(s', r \mid s, a) = 1, \text{ for all \(s \in \mathcal{S}, a \in \mathcal{A}(s)\)}\]
 
-\noindent \(p(s' \mid s, a)\): probability of transition to state \(s'\), from state \(s\) and action \(a\).
+\(p(s' \mid s, a)\): probability of transition to state \(s'\), from state \(s\) and action \(a\).
 
 \[p(s' \mid s, a) = Pr\{S_t = s' | S_{t - 1} = s , A_{t - 1} = a \} = \sum_{r \in \mathcal{R}} p(s', r \mid s, a)\]
 
-\noindent \(r(s, a)\): expected immediate reward from state \(s\) after action \(a\).
+\(r(s, a)\): expected immediate reward from state \(s\) after action \(a\).
 
 \[r(s, a) = E[R_t \mid S_{t - 1} = s , A_{t - 1} = a] = \sum_{r \in \mathcal{R}} r \sum_{s' \in \mathcal{S}} p(s', r \mid s, a)\]
 
-\noindent \(r(s, a, s')\): expected immediate reward on transition from \(s\) to \(s'\) under action \(a\).
+\(r(s, a, s')\): expected immediate reward on transition from \(s\) to \(s'\) under action \(a\).
 
 \[r(s, a, s') = E[R_t \mid S_{t - 1} = s , A_{t - 1} = a, S_t = s'] = \sum_{r \in \mathcal{R}} r p(r \mid s, a, s') = \sum_{r \in \mathcal{R}} r \frac{p(s', r \mid s, a)}{p(s' \mid s, a)}\]
 
-\noindent \(\pi\): a policy decides agent's behaviour. It maps state to action. 
+\(\pi\): a policy decides agent's behaviour. It maps state to action. 
 Deterministic policy: \(a = \pi(s)\). 
 Stochastic policy: \(\pi(a \mid s) = P[A_t = a \mid S_t = s]\).
 
-\noindent \(\pi_*\): optimal policy that gives best \(a\) for given \(s\).
+\(\pi_*\): optimal policy that gives best \(a\) for given \(s\).
 
-\noindent \(v_{\pi}(s)\): value of state \(s\) under policy \(\pi\), estimates the expected return following state \(s\). 
+\(v_{\pi}(s)\): value of state \(s\) under policy \(\pi\), estimates the expected return following state \(s\). 
 For example, for discrete models it can be \(v_{\pi}(s) = E_{\pi}[G_t \mid S_t = s] = E_{\pi}[R_{t + 1} + \gamma R_{t + 2} + \gamma^2 R_{t + 3} + \dots \mid S_t = s]\).
 
-\noindent \(v_{*}(s)\): value of state \(s\) under the optimal policy \(\pi_*\).
+\(v_{*}(s)\): value of state \(s\) under the optimal policy \(\pi_*\).
 
-\noindent \(q_{\pi}(s, a)\): value of taking action a in state s under policy \(\pi\).
+\(q_{\pi}(s, a)\): value of taking action a in state s under policy \(\pi\).
 
-\noindent \(q_{*}(s, a)\): value of taking action \(a\) in state \(s\) under the optimal policy \(\pi_*\). Finding \(q_{*}(s, a)\) is the goal of RL tasks.
+\(q_{*}(s, a)\): value of taking action \(a\) in state \(s\) under the optimal policy \(\pi_*\). Finding \(q_{*}(s, a)\) is the goal of RL tasks.
 
-\noindent \(V\), \(V_t\): array estimates of state-value function \(v_{\pi}\) or \(v_{*}\).
+\(V\), \(V_t\): array estimates of state-value function \(v_{\pi}\) or \(v_{*}\).
 
-\noindent \(Q\), \(Q_t\): array estimates of action-value function \(q_{\pi}\) or \(q_{*}\).
+\(Q\), \(Q_t\): array estimates of action-value function \(q_{\pi}\) or \(q_{*}\).
 
-\noindent \(\bar{V}_{t}(s)\): expected approximate action value, e.g. \(\bar{V}_{t}(s) = \sum_a \pi(a \mid s) Q_t(s, a)\)
+\(\bar{V}_{t}(s)\): expected approximate action value, e.g. \(\bar{V}_{t}(s) = \sum_a \pi(a \mid s) Q_t(s, a)\)
 
-\noindent \(U_t\): target for estimate at time \(t\).
+\(U_t\): target for estimate at time \(t\).
 
 \section{Markov Chain and Markov Decision Process}
 
@@ -250,7 +243,7 @@ For example, for discrete models it can be \(v_{\pi}(s) = E_{\pi}[G_t \mid S_t =
     \includegraphics[scale=0.6]{./images/rl.png}
 \end{center}
 
-\noindent Reinforcement learning is about learning from interaction how to behave in order to achieve a goal. 
+Reinforcement learning is about learning from interaction how to behave in order to achieve a goal. 
 The reinforcement learning agent and its environment interact over a sequence of discrete time steps. 
 The specification of their interface defines a particular task: the actions are the choices made by the agent; 
 the states are the basis for making the choices; and the rewards are the basis for evaluating the choices. 
@@ -266,15 +259,13 @@ The agent's objective is to maximize the amount of reward it receives over time.
     \item Agent’s actions affect the subsequent data it receives
 \end{itemize}
 
-\noindent Reinforcement learning is based on the reward hypothesis: 
+Reinforcement learning is based on the reward hypothesis: 
 All goals can be described by the maximisation of expected cumulative reward. 
 The goal is select actions to maximise total future reward. 
 Actions may have long term consequencesn, and reward may be delayed. 
 It may be better to sacrifice immediate reward to gain more long-term reward.
 
-\bigskip
-
-\noindent The agent always learns to maximize its reward. 
+The agent always learns to maximize its reward. 
 If we want it to do something for us, we must provide rewards to it in such a way that in maximizing them the agent will also achieve our goals. 
 It is thus critical that the rewards we set up truly indicate what we want accomplished. 
 In particular, the reward signal is not the place to impart to the agent prior knowledge about how to achieve what we want it to do. 
@@ -287,21 +278,18 @@ The reward signal is your way of communicating to the agent what you want it to 
 \includegraphics[scale=0.6]{./images/markov_chain_graph.png}
 \end{center}
 
-\noindent A Markov chain is a mathematical system that experiences transitions from one state to another according to certain probabilistic rules. The defining characteristic of a Markov chain is that no matter how the process arrived at its present state, the possible future states are fixed. In other words, the probability of transitioning to any particular state is dependent solely on the current state and time elapsed.
+A Markov chain is a mathematical system that experiences transitions from one state to another according to certain probabilistic rules. The defining characteristic of a Markov chain is that no matter how the process arrived at its present state, the possible future states are fixed. In other words, the probability of transitioning to any particular state is dependent solely on the current state and time elapsed.
 
 \subsection{Markov Decision Process}
 
-\noindent MDPs are meant to be a straightforward framing of the problem of learning from interaction to achieve a goal. 
+MDPs are meant to be a straightforward framing of the problem of learning from interaction to achieve a goal. 
 The learner and decision maker is called the agent. The thing it interacts with, comprising everything outside the agent, 
 is called the environment. These interact continually, the agent selecting actions and the environment responding to these actions and presenting new situations to the agent. 
 The environment also gives rise to rewards, special numerical values that the agent seeks to maximize over time through its choice of actions. 
 The MDP and agent together thereby give rise to a sequence or trajectory that begins like this: \(S_0, A_0, R_1, S_1, A_1, R_2, \dots\). 
 We use \(R_{t + 1}\) instead of \(R_t\) to denote the reward due to \(A_t\) because it emphasizes that the next reward and next state, \(R_{t + 1}\) and \(S_{t + 1}\), are jointly determined.
 
-
-\bigskip
-
-\noindent For episodic tasks, there is a finite time step \(T\) when a terminal state is reached. 
+For episodic tasks, there is a finite time step \(T\) when a terminal state is reached. 
 While for continuing tasks, there is not a terminal state and in this case \(T = \infty\). 
 These two can be unified by considering episode termination to be the entering of a special absorbing state that transitions only to itself and that generates only rewards of zero.
 
@@ -309,7 +297,7 @@ These two can be unified by considering episode termination to be the entering o
 \includegraphics[scale=0.3]{./images/markov_decision_process.png}
 \end{center}
 
-\noindent Markov decision processes formally describe an environment for reinforcement learning. Where the environment is fully observable. 
+Markov decision processes formally describe an environment for reinforcement learning. Where the environment is fully observable. 
 The current state \(S_t\) completely characterises the process. "The future is independent of the past given the present". Almost all RL problems can be formalised as MDPs, e.g.
 
 \begin{itemize}
@@ -318,13 +306,11 @@ The current state \(S_t\) completely characterises the process. "The future is i
     \item Bandits are MDPs with one state
 \end{itemize}
 
-\noindent A state \(S_t\) is Markov if and only if:
+A state \(S_t\) is Markov if and only if:
 
 \[P[S_{t + 1} \mid S_t] = P[S_{t + 1} \mid S_1, \dots, S_t]\]
 
-\bigskip
-
-\noindent \(G_t\): the return \(G_t\) is the total discounted reward from time-step \(t\). Note here \(T = \infty\) or \(\gamma = 1\) is possible (but not both, otherwise return would be infinite).
+\(G_t\): the return \(G_t\) is the total discounted reward from time-step \(t\). Note here \(T = \infty\) or \(\gamma = 1\) is possible (but not both, otherwise return would be infinite).
 
 \begin{equation*}
 \begin{split}
@@ -335,7 +321,7 @@ G_t
 \end{split}
 \end{equation*}
 
-\noindent \(v_{\pi}(s)\): state-value function for policy \(\pi\), the expected return when starting in \(s\) and following \(\pi\) thereafter
+\(v_{\pi}(s)\): state-value function for policy \(\pi\), the expected return when starting in \(s\) and following \(\pi\) thereafter
 
 \begin{equation*}
 \begin{split}
@@ -365,7 +351,7 @@ v_{\pi}(s)
 \end{split}
 \end{equation*}
 
-\noindent \(q_{\pi}(s, a)\): action-value function for policy \(\pi\), the expected return starting from \(s\), taking the action \(a\), and following \(\pi\) thereafter
+\(q_{\pi}(s, a)\): action-value function for policy \(\pi\), the expected return starting from \(s\), taking the action \(a\), and following \(\pi\) thereafter
 
 \begin{equation*}
 \begin{split}
@@ -394,7 +380,7 @@ q_{\pi}(s, a)
 \end{split}
 \end{equation*}
 
-\noindent From the above equations, we can get following relationship between \(v_{\pi}(s)\) and \(q_{\pi}(s, a)\):
+From the above equations, we can get following relationship between \(v_{\pi}(s)\) and \(q_{\pi}(s, a)\):
 
 \begin{equation*}
 \begin{split}
@@ -445,17 +431,17 @@ q_{\pi}(s, a)
 \end{split}
 \end{equation*}
 
-\noindent \(\pi_*\): the optimal policy (at least one, may be more than one). \(\pi \geq \pi'\) if and only if \(v_{\pi}(s) \geq v_{\pi'}(s)\) for all \(s \in \mathcal{S}\). 
+\(\pi_*\): the optimal policy (at least one, may be more than one). \(\pi \geq \pi'\) if and only if \(v_{\pi}(s) \geq v_{\pi'}(s)\) for all \(s \in \mathcal{S}\). 
 
-\noindent \(v_*(s)\): the optimal state-value function, for all \(s \in \mathcal{S}\)
+\(v_*(s)\): the optimal state-value function, for all \(s \in \mathcal{S}\)
 
 \[v_*(s) = \max_{\pi} v_{\pi}(s) \]
 
-\noindent \(q_*(s, a)\): the optimal action-value function, for all \(s \in \mathcal{S}\) and \(a \in \mathcal{A}(s)\)
+\(q_*(s, a)\): the optimal action-value function, for all \(s \in \mathcal{S}\) and \(a \in \mathcal{A}(s)\)
 
 \[q_*(s, a) = \max_{\pi} q_{\pi}(s, a) \]
 
-\noindent An optimal policy can be found by maximising over \(q_*(s, a)\):
+An optimal policy can be found by maximising over \(q_*(s, a)\):
 
 \[
 \pi_*(a \mid s) = 
@@ -465,13 +451,13 @@ q_{\pi}(s, a)
 \end{cases}
 \]
 
-\noindent All optimal policies achieve the optimal state-value function and the optimal action-value function, 
+All optimal policies achieve the optimal state-value function and the optimal action-value function, 
 for all \(s \in \mathcal{S}\) and \(a \in \mathcal{A}(s)\)
 
 \[v_{\pi_*}(s) = v_*(s) \]
 \[q_{\pi_*}(s, a) = q_*(s, a) \]
 
-\noindent The Bellman optimality equation for \(v_*\) intuitively expresses the fact that the value of a state under an optimal policy must equal the expected return for the best action from that state:
+The Bellman optimality equation for \(v_*\) intuitively expresses the fact that the value of a state under an optimal policy must equal the expected return for the best action from that state:
 
 \begin{equation*}
 \begin{split}
@@ -484,7 +470,7 @@ v_*(s)
 \end{split}
 \end{equation*}
 
-\noindent The Bellman optimality equation for \(q_*\), select the best action to maximize the future return:
+The Bellman optimality equation for \(q_*\), select the best action to maximize the future return:
 
 \begin{equation*}
 \begin{split}
@@ -494,15 +480,13 @@ q_*(s, a)
 \end{split}
 \end{equation*}
 
-\noindent For finite MDPs, the Bellman optimality equation is solvable. 
+For finite MDPs, the Bellman optimality equation is solvable. 
 The Bellman optimality equation is actually a system of equations, one for each state, 
 so if there are \(n\) states, then there are \(n\) equations in \(n\) unknowns. 
 If the dynamics \(p\) of the environment are known, then in principle one can solve this system of equations for \(v_*\) using any one of a variety of methods for solving systems of nonlinear equations. 
 One can solve a related set of equations for \(q_*\). 
 
-\bigskip
-
-\noindent Explicitly solving the Bellman optimality equation provides one route to finding an optimal policy, and thus to solving the reinforcement learning problem. 
+Explicitly solving the Bellman optimality equation provides one route to finding an optimal policy, and thus to solving the reinforcement learning problem. 
 However, this solution is rarely directly useful. It is akin to an exhaustive search, looking ahead at all possibilities, computing their probabilities of occurrence and their desirabilities in terms of expected rewards. 
 This solution relies on at least three assumptions that are rarely true in practice: 
 
@@ -512,29 +496,27 @@ This solution relies on at least three assumptions that are rarely true in pract
     \item the Markov property
 \end{itemize}
 
-\noindent In reinforcement learning one typically has to settle for approximate solutions.
+In reinforcement learning one typically has to settle for approximate solutions.
 
 \section{Dynamic Programming}
 
-\noindent The term dynamic programming (DP) refers to a collection of algorithms that can be used to compute optimal policies given a perfect model of the environment as a Markov decision process (MDP). 
+The term dynamic programming (DP) refers to a collection of algorithms that can be used to compute optimal policies given a perfect model of the environment as a Markov decision process (MDP). 
 Classical DP algorithms are of limited utility in reinforcement learning both because of their assumption of a perfect model and because of their great computational expense, but they are still important theoretically. 
 DP provides an essential foundation for the understanding of the methods presented in the rest of this book. In fact, all of these methods can be viewed as attempts to achieve much the same eect as DP, 
 only with less computation and without assuming a perfect model of the environment.
 
-\bigskip
-
-\noindent The key idea of DP, and of reinforcement learning generally, is the use of value functions to organize and structure the search for good policies. 
+The key idea of DP, and of reinforcement learning generally, is the use of value functions to organize and structure the search for good policies. 
 We can easily obtain optimal policies once we have found the optimal value functions, \(v_*\) or \(q_*\), which satisfy the Bellman optimality equations. 
 As we shall see, DP algorithms are obtained by turning Bellman equations into assignments, that is, into update rules for improving approximations of the desired value functions.
 
 \subsection{Policy Evaluation (Prediction)}
 
-\noindent First we consider how to compute the state-value function \(v_{\pi}\) for an arbitrary policy \(\pi\). 
+First we consider how to compute the state-value function \(v_{\pi}\) for an arbitrary policy \(\pi\). 
 This is called policy evaluation in the DP literature. We also refer to it as the prediction problem.
 
 \[v_{\pi}(s) = \sum_a \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) [r + \gamma v_{\pi}(s')]\]
 
-\noindent When \(\pi\) is given, if the environment's dynamics \(p(s', r \mid s, a)\) are completely known, 
+When \(\pi\) is given, if the environment's dynamics \(p(s', r \mid s, a)\) are completely known, 
 then the equation above is a system of \(\vert S \vert\) simultaneous linear equations in \(\vert S \vert\) unknowns (the \(v_{\pi}(s), s \in \mathcal{S}\)). 
 In principle, it can be solved directly. But in practice, iterative solution methods are most suitable. 
 Consider a sequence of approximate value functions \(v_0 , v_1 , v_2 , \dots\), each mapping \(\mathcal{S}^{+}\) to \(\mathbb{R}\). 
@@ -543,52 +525,46 @@ and each successive approximation is obtained by using the Bellman equation as a
 
 \[v_{k + 1}(s) = \sum_a \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) [r + \gamma v_{k}(s')]\]
 
-\noindent This algorithm is called iterative policy evaluation. The existence and uniqueness of \(v_{\pi}\) are guaranteed as long as either \(\gamma < 1\) or eventual termination is guaranteed from all states under the policy \(\pi\). 
+This algorithm is called iterative policy evaluation. The existence and uniqueness of \(v_{\pi}\) are guaranteed as long as either \(\gamma < 1\) or eventual termination is guaranteed from all states under the policy \(\pi\). 
 The sequence \(\{v_k\}\) can be shown in general to converge to \(v_{\pi}\) (proof see Contraction Mapping Theorem) as \(k \rightarrow \infty\) under the same conditions that guarantee the existence of \(v_{\pi}\).
 
-\bigskip
-
-\noindent To produce each successive approximation, \(v_{k + 1}\) from \(v_{k}\), iterative policy evaluation applies the same operation to each state \(s\): 
+To produce each successive approximation, \(v_{k + 1}\) from \(v_{k}\), iterative policy evaluation applies the same operation to each state \(s\): 
 it replaces the old value of \(s\) with a new value obtained from the old values of the successor states of \(s\), and the expected immediate rewards, 
 along all the one-step transitions possible under the policy being evaluated. We call this kind of operation an expected update. 
 All the updates done in DP algorithms are called expected updates because they are based on an expectation over all possible next states rather than on a sample next state. 
 Each iteration of iterative policy evaluation updates the value of every state once to produce the new approximate value function \(v_{k + 1}\).
 
-\bigskip
-
-\noindent To write a sequential computer program to implement iterative policy evaluation you would have to use two arrays, one for the old values, \(v_{k}(s)\), 
+To write a sequential computer program to implement iterative policy evaluation you would have to use two arrays, one for the old values, \(v_{k}(s)\), 
 and one for the new values, \(v_{k + 1}(s)\). With two arrays, the new values can be computed one by one from the old values without the old values being changed. 
 Of course it is easier to use one array and update the values "in place", that is, with each new value immediately overwriting the old one. 
 Then, depending on the order in which the states are updated, sometimes new values are used instead of old ones on the right-hand side of the equation. 
 This in-place algorithm also converges to \(v_{\pi}\); in fact, it usually converges faster than the two-array version, as you might expect, because it uses new data as soon as they are available.
 
-\bigskip
+\textbf{Iterative Policy Evaluation (in-place) process}:
 
-\noindent \textbf{Iterative Policy Evaluation (in-place) process}:
+Input \(\pi\), the policy to be evaluated
 
-\noindent Input \(\pi\), the policy to be evaluated
+Algorithm parameter: a small threshold \(\theta > 0\) determining accuracy of estimation
 
-\noindent Algorithm parameter: a small threshold \(\theta > 0\) determining accuracy of estimation
+Initialize \(V(s)\), for all \(s \in \mathcal{S}^+\), arbitrarily except that \(V(terminal) = 0\)
 
-\noindent Initialize \(V(s)\), for all \(s \in \mathcal{S}^+\), arbitrarily except that \(V(terminal) = 0\)
+Loop:
 
-\noindent Loop:
+\hspace{.5cm} \(\Delta \leftarrow 0\)
 
-\noindent \hspace{.5cm} \(\Delta \leftarrow 0\)
+\hspace{.5cm} Loop for each \(s \in \mathcal{S}\):
 
-\noindent \hspace{.5cm} Loop for each \(s \in \mathcal{S}\):
+\hspace{1cm} \(v \leftarrow V(s)\)
 
-\noindent \hspace{1cm} \(v \leftarrow V(s)\)
+\hspace{1cm} \(V(s) \leftarrow \sum_a \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]\)
 
-\noindent \hspace{1cm} \(V(s) \leftarrow \sum_a \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]\)
+\hspace{1cm} \(\Delta \leftarrow \max(\Delta, \vert v -  V(s) \vert)\)
 
-\noindent \hspace{1cm} \(\Delta \leftarrow \max(\Delta, \vert v -  V(s) \vert)\)
-
-\noindent until \(\Delta < \theta\)
+until \(\Delta < \theta\)
 
 \subsection{Policy Improvement}
 
-\noindent Our reason for computing the value function for a policy is to help find better policies. 
+Our reason for computing the value function for a policy is to help find better policies. 
 Suppose we have determined the value function \(v_{\pi}\) for an arbitrary deterministic policy \(\pi\). 
 For some state \(s\) we would like to know whether or not we should change the policy to deterministically choose an action \(a \ne \pi(s)\). 
 We know how good it is to follow the current policy from \(s\) - that is \(v_{\pi}(s)\) - but would it be better or worse to change to the new policy? 
@@ -603,7 +579,7 @@ q_{\pi}(s, a)
 \end{split}
 \end{equation*}
 
-\noindent The key criterion is whether this is greater than or less than \(v_{\pi}(s)\). 
+The key criterion is whether this is greater than or less than \(v_{\pi}(s)\). 
 If it is greater - that is, if it is better to select \(a\) once in \(s\) and thereafter follow \(\pi\) than it would be to follow \(\pi\) all the time - 
 then one would expect it to be better still to select \(a\) every time \(s\) is encountered, 
 and that the new policy would in fact be a better one overall. That this is true is a special case of a general result called the policy improvement theorem. 
@@ -611,11 +587,11 @@ Let \(\pi\) and \(\pi'\) be any pair of deterministic policies such that, for al
 
 \[q_{\pi}(s, \pi'(s)) \geq v_{\pi}(s)\]
 
-\noindent Then the policy \(\pi'\) must be as good as, or better than, \(\pi\). That is, it must obtain greater or equal expected return from all states \(s \in \mathcal{S}\),
+Then the policy \(\pi'\) must be as good as, or better than, \(\pi\). That is, it must obtain greater or equal expected return from all states \(s \in \mathcal{S}\),
 
 \[v_{\pi'}(s) \geq v_{\pi}(s)\]
 
-\noindent Here is the proof of the policy improvement theorem:
+Here is the proof of the policy improvement theorem:
 
 \begin{equation*}
 \begin{split}
@@ -638,12 +614,10 @@ v_{\pi}(s)
 \end{split}
 \end{equation*}
 
-\noindent Inside the equation, for example, the \(E_{\pi'}[R_{t + 1} + \gamma R_{t + 2} + \gamma^2 v_{\pi}(S_{t + 2}) \mid S_t = s]\) means the expected discounted action-value when starting in state \(s\), 
+Inside the equation, for example, the \(E_{\pi'}[R_{t + 1} + \gamma R_{t + 2} + \gamma^2 v_{\pi}(S_{t + 2}) \mid S_t = s]\) means the expected discounted action-value when starting in state \(s\), 
 choosing actions according to \(\pi'\) for \(A_t = \pi'(S_t)\) and \(A_{t + 1} = \pi'(S_{t + 1})\), and according to \(\pi\) thereafter for \(v_{\pi}(S_{t + 2})\).
 
-\bigskip
-
-\noindent So far we have seen how, given a policy and its value function, we can easily evaluate a change in the policy at a single state to a particular action. 
+So far we have seen how, given a policy and its value function, we can easily evaluate a change in the policy at a single state to a particular action. 
 It is a natural extension to consider changes at all states and to all possible actions, selecting at each state the action that appears best according to \(q_{\pi}(s,a)\). 
 In other words, to consider the new greedy policy, \(\pi'\), given by
 
@@ -656,14 +630,12 @@ In other words, to consider the new greedy policy, \(\pi'\), given by
 \end{split}
 \end{equation*}
 
-\noindent where \(\underset{a}{argmax}\) denotes the value of \(a\) at which the expression that follows is maximized (with ties broken arbitrarily). 
+where \(\underset{a}{argmax}\) denotes the value of \(a\) at which the expression that follows is maximized (with ties broken arbitrarily). 
 The greedy policy takes the action that looks best in the short term - after one step of lookahead - according to \(v_{\pi}\). 
 By construction, the greedy policy meets the conditions of the policy improvement theorem, so we know that it is as good as, or better than, the original policy. 
 The process of making a new policy that improves on an original policy, by making it greedy with respect to the value function of the original policy, is called policy improvement.
 
-\bigskip
-
-\noindent In the general case, a stochastic policy \(\pi\) specifies probabilities, \(\pi(a \mid s)\), for taking each action, \(a\), in each state, \(s\). 
+In the general case, a stochastic policy \(\pi\) specifies probabilities, \(\pi(a \mid s)\), for taking each action, \(a\), in each state, \(s\). 
 All the ideas of policy improvement extend easily to stochastic policies, when a greedy only gives portion of the probability to the maximizing actions - 
 because each of these actions can be seen as a product of a deterministic policy, so that they follow all the ideas above, and they give the same result. 
 So it doesn't matter which maximizing action is picked in a stochastic policy. 
@@ -673,67 +645,63 @@ Any apportioning scheme is allowed as long as all submaximal actions are given z
 
 \subsection{Policy Iteration}
 
-\noindent Once a policy, \(\pi\), has been improved using \(v_{\pi}\) to yield a better policy, \(\pi'\), we can then compute \(v_{\pi'}\) and improve it again to yield an even better \(\pi''\). 
+Once a policy, \(\pi\), has been improved using \(v_{\pi}\) to yield a better policy, \(\pi'\), we can then compute \(v_{\pi'}\) and improve it again to yield an even better \(\pi''\). 
 We can thus obtain a sequence of monotonically improving policies and value functions: (with policy evaluation \(E\) and policy improvement \(I\))
 
 \[\pi_0 \overset{E}{\rightarrow} v_{\pi_0} \overset{I}{\rightarrow} \pi_1  \overset{E}{\rightarrow} v_{\pi_1} \overset{I}{\rightarrow} \pi_2 \dots \overset{I}{\rightarrow} \pi_*  \overset{E}{\rightarrow} v_*\]
 
-\noindent Each policy is guaranteed to be a strict improvement over the previous one (unless it is already optimal). Because a finite MDP has only a finite number of policies, 
+Each policy is guaranteed to be a strict improvement over the previous one (unless it is already optimal). Because a finite MDP has only a finite number of policies, 
 this process must converge to an optimal policy and optimal value function in a finite number of iterations. This way of finding an optimal policy is called policy iteration. 
 A complete algorithm is given in the box below. Note that each policy evaluation, itself an iterative computation, is started with the value function for the previous policy. 
 This typically results in a great increase in the speed of convergence of policy evaluation (presumably because the value function changes little from one policy to the next).
 
-\bigskip
+\textbf{Policy Iteration (using iterative policy evaluation) for estimating deterministic policy \(\pi \approx \pi_*\)}:
 
-\noindent \textbf{Policy Iteration (using iterative policy evaluation) for estimating deterministic policy \(\pi \approx \pi_*\)}:
+(can extend to stochastic policy with adjustments)
 
-\noindent (can extend to stochastic policy with adjustments)
+1. Initialization
 
-\noindent 1. Initialization
+\hspace{.5cm} \(V(s) \in \mathbb{R}\) and \(\pi(s) \in \mathcal{A}(s)\) arbitrarily for all \(s \in \mathcal{S}\)
 
-\noindent \hspace{.5cm} \(V(s) \in \mathbb{R}\) and \(\pi(s) \in \mathcal{A}(s)\) arbitrarily for all \(s \in \mathcal{S}\)
+2. Policy Evaluation
 
-\noindent 2. Policy Evaluation
+\hspace{.5cm} Loop:
 
-\noindent \hspace{.5cm} Loop:
+\hspace{1cm} \(\Delta \leftarrow 0\)
 
-\noindent \hspace{1cm} \(\Delta \leftarrow 0\)
+\hspace{1cm} Loop for each \(s \in \mathcal{S}\):
 
-\noindent \hspace{1cm} Loop for each \(s \in \mathcal{S}\):
+\hspace{1.5cm} \(v \leftarrow V(s)\)
 
-\noindent \hspace{1.5cm} \(v \leftarrow V(s)\)
+\hspace{1.5cm} \(V(s) \leftarrow \sum_{s', r} p(s', r \mid s, \pi(s)) [r + \gamma V(s')]\)
 
-\noindent \hspace{1.5cm} \(V(s) \leftarrow \sum_{s', r} p(s', r \mid s, \pi(s)) [r + \gamma V(s')]\)
+\hspace{1.5cm} \(\Delta \leftarrow \max(\Delta, \vert v -  V(s) \vert)\)
 
-\noindent \hspace{1.5cm} \(\Delta \leftarrow \max(\Delta, \vert v -  V(s) \vert)\)
+\hspace{.5cm} until \(\Delta < \theta\) (a small positive number determining the accuracy of estimation)
 
-\noindent \hspace{.5cm} until \(\Delta < \theta\) (a small positive number determining the accuracy of estimation)
+3. Policy Improvement
 
-\noindent 3. Policy Improvement
+\hspace{.5cm} \(\textit{policy-stable} \leftarrow true\)
 
-\noindent \hspace{.5cm} \(\textit{policy-stable} \leftarrow true\)
+\hspace{.5cm} For each \(s \in \mathcal{S}\):
 
-\noindent \hspace{.5cm} For each \(s \in \mathcal{S}\):
+\hspace{1cm} \(\textit{old-action} \leftarrow \pi(s)\)
 
-\noindent \hspace{1cm} \(\textit{old-action} \leftarrow \pi(s)\)
+\hspace{1cm} \(\pi(s) \leftarrow \underset{a}{argmax} \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]\)
 
-\noindent \hspace{1cm} \(\pi(s) \leftarrow \underset{a}{argmax} \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]\)
+\hspace{1cm} if \(\textit{old-action} \neq \pi(s)\), then \(\textit{policy-stable} \leftarrow false\)
 
-\noindent \hspace{1cm} if \(\textit{old-action} \neq \pi(s)\), then \(\textit{policy-stable} \leftarrow false\)
-
-\noindent \hspace{.5cm} if \(\textit{policy-stable}\), then stop and return \(V \approx v_*\) and \(\pi \approx \pi_*\); else go to 2.
+\hspace{.5cm} if \(\textit{policy-stable}\), then stop and return \(V \approx v_*\) and \(\pi \approx \pi_*\); else go to 2.
 
 \subsection{Value Iteration}
 
-\noindent One drawback to policy iteration is that each of its iterations involves policy evaluation, 
+One drawback to policy iteration is that each of its iterations involves policy evaluation, 
 which may itself be a protracted iterative computation requiring multiple sweeps through the state set. 
 If policy evaluation is done iteratively, then convergence exactly to \(v_{\pi}\) occurs only in the limit. 
 But sometimes greedy policy \(\pi'\) is achieved before the value function converging to \(v_{\pi}\). 
 It appears that it may be possible to truncate policy evaluation.
 
-\bigskip
-
-\noindent In fact, the policy evaluation step of policy iteration can be truncated in several ways without losing the convergence guarantees of policy iteration. 
+In fact, the policy evaluation step of policy iteration can be truncated in several ways without losing the convergence guarantees of policy iteration. 
 One important special case is when policy evaluation is stopped after just one sweep (one update of each state). This algorithm is called value iteration. 
 It can be written as a particularly simple update operation that combines the policy improvement and truncated policy evaluation steps:
 
@@ -745,109 +713,91 @@ v_{k + 1}(s)
 \end{split}
 \end{equation*}
 
-\noindent for all \(s \in \mathcal{S}\). For arbitrary \(v_0\), the sequence \(\{ v_k \}\) can be shown to converge to \(v_*\) under the same conditions that guarantee the existence of \(v_*\). 
+for all \(s \in \mathcal{S}\). For arbitrary \(v_0\), the sequence \(\{ v_k \}\) can be shown to converge to \(v_*\) under the same conditions that guarantee the existence of \(v_*\). 
 (proof see Contraction Mapping Theorem)
 
-\bigskip
-
-\noindent Value iteration effectively combines, in each of its sweeps, one sweep of policy evaluation and one sweep of policy improvement. 
+Value iteration effectively combines, in each of its sweeps, one sweep of policy evaluation and one sweep of policy improvement. 
 Faster convergence is often achieved by interposing multiple policy evaluation sweeps between each policy improvement sweep. In general, 
 the entire class of truncated policy iteration algorithms can be thought of as sequences of sweeps, some of which use policy evaluation updates and some of which use value iteration updates. 
 Because the max operation is the only difference between these updates, this just means that the max operation is added to some sweeps of policy evaluation. 
 All of these algorithms converge to an optimal policy for discounted finite MDPs.
 
-\bigskip
+\textbf{Value Iteration, for estimating deterministic policy \(\pi \approx \pi_*\)}:
 
-\noindent \textbf{Value Iteration, for estimating deterministic policy \(\pi \approx \pi_*\)}:
+(can extend to stochastic policy with adjustments)
 
-\noindent (can extend to stochastic policy with adjustments)
+Algorithm parameter: a small threshold \(\theta > 0\) determining accuracy of estimation
 
-\noindent Algorithm parameter: a small threshold \(\theta > 0\) determining accuracy of estimation
+Initialize \(V(s)\), for all \(s \in \mathcal{S}^+\), arbitrarily except that \(V(terminal) = 0\)
 
-\noindent Initialize \(V(s)\), for all \(s \in \mathcal{S}^+\), arbitrarily except that \(V(terminal) = 0\)
+Loop:
 
-\noindent Loop:
+\hspace{.5cm} \(\Delta \leftarrow 0\)
 
-\noindent \hspace{.5cm} \(\Delta \leftarrow 0\)
+\hspace{.5cm} Loop for each \(s \in \mathcal{S}\):
 
-\noindent \hspace{.5cm} Loop for each \(s \in \mathcal{S}\):
+\hspace{1cm} \(v \leftarrow V(s)\)
 
-\noindent \hspace{1cm} \(v \leftarrow V(s)\)
+\hspace{1cm} \(V(s) \leftarrow \max_a \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]\)
 
-\noindent \hspace{1cm} \(V(s) \leftarrow \max_a \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]\)
+\hspace{1cm} \(\Delta \leftarrow \max(\Delta, \vert v -  V(s) \vert)\)
 
-\noindent \hspace{1cm} \(\Delta \leftarrow \max(\Delta, \vert v -  V(s) \vert)\)
+until \(\Delta < \theta\)
 
-\noindent until \(\Delta < \theta\)
-
-\noindent Output a deterministic policy, \(\pi \approx \pi_*\), such that: \(\pi(s) = \underset{a}{argmax} \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]\)
+Output a deterministic policy, \(\pi \approx \pi_*\), such that: \(\pi(s) = \underset{a}{argmax} \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]\)
 
 \subsection{Asynchronous Dynamic Programming}
 
-\noindent A major drawback to the DP methods that we have discussed so far is that they involve operations over the entire state set of the MDP, that is, they require sweeps of the state set. 
+A major drawback to the DP methods that we have discussed so far is that they involve operations over the entire state set of the MDP, that is, they require sweeps of the state set. 
 If the state set is very large, then even a single sweep can be prohibitively expensive. For example, the game of backgammon has over 1020 states. Even if we could perform the value iteration update on a million states per second, 
 it would take over a thousand years to complete a single sweep.
 
-\bigskip
-
-\noindent Asynchronous DP algorithms are in-place iterative DP algorithms that are not organized in terms of systematic sweeps of the state set. These algorithms update the values of states in any order whatsoever, 
+Asynchronous DP algorithms are in-place iterative DP algorithms that are not organized in terms of systematic sweeps of the state set. These algorithms update the values of states in any order whatsoever, 
 using whatever values of other states happen to be available. The values of some states may be updated several times before the values of others are updated once. 
 To converge correctly, however, an asynchronous algorithm must continue to update the values of all the states: it can't ignore any state after some point in the computation. 
 Asynchronous DP algorithms allow great flexibility in selecting states to update.
 
-\bigskip
-
-\noindent Of course, avoiding sweeps does not necessarily mean that we can get away with less computation. It just means that an algorithm does not need to get locked into any hopelessly long sweep before it can make progress improving a policy. 
+Of course, avoiding sweeps does not necessarily mean that we can get away with less computation. It just means that an algorithm does not need to get locked into any hopelessly long sweep before it can make progress improving a policy. 
 We can try to take advantage of this flexibility by selecting the states to which we apply updates so as to improve the algorithm's rate of progress. We can try to order the updates to let value information propagate from state to state in an efficient way. 
 Some states may not need their values updated as often as others. We might even try to skip updating some states entirely if they are not relevant to optimal behavior.
 
-\bigskip
-
-\noindent Asynchronous algorithms also make it easier to intermix computation with real-time interaction. To solve a given MDP, we can run an iterative DP algorithm at the same time that an agent is actually experiencing the MDP. 
+Asynchronous algorithms also make it easier to intermix computation with real-time interaction. To solve a given MDP, we can run an iterative DP algorithm at the same time that an agent is actually experiencing the MDP. 
 The agent's experience can be used to determine the states to which the DP algorithm applies its updates. At the same time, the latest value and policy information from the DP algorithm can guide the agent's decision making. 
 For example, we can apply updates to states as the agent visits them. This makes it possible to focus the DP algorithm's updates onto parts of the state set that are most relevant to the agent. This kind of focusing is a repeated theme in reinforcement learning.
 
 \subsection{Generalized Policy Iteration}
 
-\noindent We use the term generalized policy iteration (GPI) to refer to the general idea of letting policy-evaluation and policy-improvement processes interact, 
+We use the term generalized policy iteration (GPI) to refer to the general idea of letting policy-evaluation and policy-improvement processes interact, 
 independent of the granularity and other details of the two processes. Almost all reinforcement learning methods are well described as GPI. 
 That is, all have identifiable policies and value functions, with the policy always being improved with respect to the value function and the value function always being driven toward the value function for the policy. 
 If both the evaluation process and the improvement process stabilize, that is, no longer produce changes, then the value function and policy must be optimal. 
 The value function stabilizes only when it is consistent with the current policy, and the policy stabilizes only when it is greedy with respect to the current value function. 
 Thus, both processes stabilize only when a policy has been found that is greedy with respect to its own evaluation function. This implies that the Bellman optimality equation holds, and thus that the policy and the value function are optimal.
 
-\bigskip
-
-\noindent All of DP methods update estimates of the values of states based on estimates of the values of successor states. That is, they update estimates on the basis of other estimates. 
+All of DP methods update estimates of the values of states based on estimates of the values of successor states. That is, they update estimates on the basis of other estimates. 
 We call this general idea bootstrapping. Many reinforcement learning methods perform bootstrapping, even those that do not require, as DP requires, a complete and accurate model of the environment.
 
 \subsection{Efficiency of Dynamic Programming}
 
-\noindent DP may not be practical for very large problems, but compared with other methods for solving MDPs, DP methods are actually quite efficient. If we ignore a few technical details, 
+DP may not be practical for very large problems, but compared with other methods for solving MDPs, DP methods are actually quite efficient. If we ignore a few technical details, 
 then the (worst case) time DP methods take to find an optimal policy is polynomial in the number of states and actions. If \(n\) and \(k\) denote the number of states and actions, 
 this means that a DP method takes a number of computational operations that is less than some polynomial function of \(n\) and \(k\). A DP method is guaranteed to find an optimal policy in polynomial time even though the total number of (deterministic) policies is \(k^n\). 
 In this sense, DP is exponentially faster than any direct search in policy space could be, because direct search would have to exhaustively examine each policy to provide the same guarantee. Linear programming methods can also be used to solve MDPs, 
 and in some cases their worst-case convergence guarantees are better than those of DP methods. But linear programming methods become impractical at a much smaller number of states than do DP methods (by a factor of about 100). For the largest problems, only DP methods are feasible.
 
-\bigskip
-
-\noindent DP is sometimes thought to be of limited applicability because of the curse of dimensionality, the fact that the number of states often grows exponentially with the number of state variables. 
+DP is sometimes thought to be of limited applicability because of the curse of dimensionality, the fact that the number of states often grows exponentially with the number of state variables. 
 Large state sets do create difficulties, but these are inherent difficulties of the problem, not of DP as a solution method. In fact, DP is comparatively better suited to handling large state spaces than competing methods such as direct search and linear programming.
 
-\bigskip
-
-\noindent In practice, DP methods can be used with today's computers to solve MDPs with millions of states. Both policy iteration and value iteration are widely used, and it is not clear which, if either, is better in general. 
+In practice, DP methods can be used with today's computers to solve MDPs with millions of states. Both policy iteration and value iteration are widely used, and it is not clear which, if either, is better in general. 
 In practice, these methods usually converge much faster than their theoretical worst-case run times, particularly if they are started with good initial value functions or policies.
 
-\bigskip
-
-\noindent On problems with large state spaces, asynchronous DP methods are often preferred. To complete even one sweep of a synchronous method requires computation and memory for every state. 
+On problems with large state spaces, asynchronous DP methods are often preferred. To complete even one sweep of a synchronous method requires computation and memory for every state. 
 For some problems, even this much memory and computation is impractical, yet the problem is still potentially solvable because relatively few states occur along optimal solution trajectories. 
 Asynchronous methods and other variations of GPI can be applied in such cases and may find good or optimal policies much faster than synchronous methods can.
 
 \section{Monte Carlo Methods}
 
-\noindent Monte Carlo Methods estimates value functions and discovers optimal policies, without assuming complete knowledge of the environment. 
+Monte Carlo Methods estimates value functions and discovers optimal policies, without assuming complete knowledge of the environment. 
 Monte Carlo methods require only experience-sample sequences of states, actions, and rewards from actual or simulated interaction with an environment. 
 Learning from actual experience is striking because it requires no prior knowledge of the environment's dynamics, yet can still attain optimal behavior. 
 Learning from simulated experience is also powerful. Although a model is required, the model need only generate sample transitions, 
@@ -857,46 +807,42 @@ but infeasible to obtain the distributions in explicit form.
 
 \subsection{Monte Carlo Prediction}
 
-\noindent Suppose we wish to estimate \(v_{\pi}(s)\), the value of a state \(s\) under policy \(\pi\), 
+Suppose we wish to estimate \(v_{\pi}(s)\), the value of a state \(s\) under policy \(\pi\), 
 given a set of episodes obtained by following \(\pi\) and passing through \(s\). Each occurrence of state \(s\) in an episode is called a visit to \(s\). 
 Of course, \(s\) may be visited multiple times in the same episode; let us call the first time it is visited in an episode the first visit to \(s\). 
 The first-visit MC method estimates \(v_{\pi}(s)\) as the average of the returns following first visits to \(s\), 
 whereas the every-visit MC method averages the returns following all visits to \(s\). 
 First-visit MC has been most widely studied. Every-visit MC extends more naturally to function approximation and eligibility traces.
 
-\bigskip
+\textbf{First-visit MC prediction, for estimating \(V \approx v_{\pi}\)}:
 
-\noindent \textbf{First-visit MC prediction, for estimating \(V \approx v_{\pi}\)}:
+(Every-visit MC would be the same except without the check for \(S_t\) having occurred earlier in the episode.)
 
-\noindent (Every-visit MC would be the same except without the check for \(S_t\) having occurred earlier in the episode.)
+Input: a policy \(\pi\) to be evaluated
 
-\noindent Input: a policy \(\pi\) to be evaluated
+Initialize:
 
-\noindent Initialize:
+\hspace{.5cm} \(V(s) \in \mathbb{R}\) arbitrarily for all \(s \in \mathcal{S}\)
 
-\noindent \hspace{.5cm} \(V(s) \in \mathbb{R}\) arbitrarily for all \(s \in \mathcal{S}\)
+\hspace{.5cm} \(Returns(s)\), an empty list, for all \(s \in \mathcal{S}\)
 
-\noindent \hspace{.5cm} \(Returns(s)\), an empty list, for all \(s \in \mathcal{S}\)
+Loop forever (for each episode):
 
-\noindent Loop forever (for each episode):
+\hspace{.5cm} Generate an episode following \(\pi\): \(S_0, A_0, R_1, S_1, A_1, R_2, \dots, S_{T - 1}, A_{T - 1}, R_{T}\)
 
-\noindent \hspace{.5cm} Generate an episode following \(\pi\): \(S_0, A_0, R_1, S_1, A_1, R_2, \dots, S_{T - 1}, A_{T - 1}, R_{T}\)
+\hspace{.5cm} \(G \leftarrow 0\)
 
-\noindent \hspace{.5cm} \(G \leftarrow 0\)
+\hspace{.5cm} Loop for each step of episode, \(t = T - 1, T - 2, \dots, 0\):
 
-\noindent \hspace{.5cm} Loop for each step of episode, \(t = T - 1, T - 2, \dots, 0\):
+\hspace{1cm} \(G \leftarrow \gamma G + R_{t + 1}\)
 
-\noindent \hspace{1cm} \(G \leftarrow \gamma G + R_{t + 1}\)
+\hspace{1cm} Unless \(S_t\) appears in \(S_0, S_1, \dots, S_{t - 1}\):
 
-\noindent \hspace{1cm} Unless \(S_t\) appears in \(S_0, S_1, \dots, S_{t - 1}\):
+\hspace{1.5cm} Append \(G\) to \(Returns(S_t)\):
 
-\noindent \hspace{1.5cm} Append \(G\) to \(Returns(S_t)\):
+\hspace{1.5cm} \(V(S_t) \leftarrow average(Returns(S_t))\)
 
-\noindent \hspace{1.5cm} \(V(S_t) \leftarrow average(Returns(S_t))\)
-
-\bigskip
-
-\noindent Both first-visit MC and every-visit MC converge to \(v_{\pi}(s)\) as the number of visits (or first visits) to \(s\) goes to infinity. 
+Both first-visit MC and every-visit MC converge to \(v_{\pi}(s)\) as the number of visits (or first visits) to \(s\) goes to infinity. 
 This is easy to see for the case of first-visit MC. In this case each return is an independent, identically distributed estimate of \(v_{\pi}(s)\) with finite variance. 
 By the law of large numbers the sequence of averages of these estimates converges to their expected value. Each average is itself an unbiased estimate, 
 and the standard deviation of its error falls as \(1 / \sqrt{n}\), where \(n\) is the number of returns averaged. Every-visit MC is less straightforward, 
@@ -904,71 +850,65 @@ but its estimates also converge quadratically to \(v_{\pi}(s)\).
 
 \subsection{Monte Carlo Estimation of Action Values}
 
-\noindent The policy evaluation problem for action values is to estimate \(q_{\pi}(s, a)\), the expected return when starting in state \(s\), taking action \(a\), 
+The policy evaluation problem for action values is to estimate \(q_{\pi}(s, a)\), the expected return when starting in state \(s\), taking action \(a\), 
 and thereafter following policy \(\pi\). The Monte Carlo Estimation of Action Values are essentially the same as just presented for state values, except now we talk about visits to a state-action pair rather than to a state. 
 A state-action pair \(s\), \(a\) is said to be visited in an episode if ever the state \(s\) is visited and action \(a\) is taken in it. 
 The every-visit MC method estimates the value of a state-action pair as the average of the returns that have followed all the visits to it. 
 The first-visit MC method averages the returns following the first time in each episode that the state was visited and the action was selected. 
 These methods converge quadratically, as before, to the true expected values as the number of visits to each state-action pair approaches infinity.
 
-\bigskip
+The only complication is that many state-action pairs may never be visited. If \(\pi\) is a deterministic policy, then in following \(\pi\) one will observe returns only for one of the actions from each state.
 
-\noindent The only complication is that many state-action pairs may never be visited. If \(\pi\) is a deterministic policy, then in following \(\pi\) one will observe returns only for one of the actions from each state.
-
-\bigskip
-
-\noindent For policy evaluation to work for action values, we must assure continual exploration. One way to do this is by specifying that the episodes start in a state-action pair, 
+For policy evaluation to work for action values, we must assure continual exploration. One way to do this is by specifying that the episodes start in a state-action pair, 
 and that every pair has a nonzero probability of being selected as the start. This guarantees that all state-action pairs will be visited an infinite number of times in the limit of an infinite number of episodes. 
 We call this the assumption of exploring starts.
 
 \subsection{Monte Carlo Control}
 
-\noindent For Monte Carlo policy evaluation it is natural to alternate between evaluation and improvement on an episode-by-episode basis. 
+For Monte Carlo policy evaluation it is natural to alternate between evaluation and improvement on an episode-by-episode basis. 
 After each episode, the observed returns are used for policy evaluation, and then the policy is improved at all the states visited in the episode. 
 A complete simple algorithm along these lines, which we call Monte Carlo ES, for Monte Carlo with Exploring Starts, is given in pseudocode.
 
 \[\pi_0 \overset{E}{\rightarrow} q_{\pi_0} \overset{I}{\rightarrow} \pi_1  \overset{E}{\rightarrow} q_{\pi_1} \overset{I}{\rightarrow} \pi_2 \dots \overset{I}{\rightarrow} \pi_*  \overset{E}{\rightarrow} q_*\]
 
-\noindent \textbf{Monte Carlo ES (Exploring Starts), for estimating \(\pi \approx \pi_*\)}:
+\textbf{Monte Carlo ES (Exploring Starts), for estimating \(\pi \approx \pi_*\)}:
 
-\noindent Initialize:
+Initialize:
 
-\noindent \hspace{.5cm} \(\pi(s) \in \mathcal{A}(s)\) (arbitrarily), for all \(s \in \mathcal{S}\)
+\hspace{.5cm} \(\pi(s) \in \mathcal{A}(s)\) (arbitrarily), for all \(s \in \mathcal{S}\)
 
-\noindent \hspace{.5cm} \(Q(s, a) \in \mathbb{R}\) (arbitrarily), for all \(s \in \mathcal{S}\), \(a \in \mathcal{A}(s)\)
+\hspace{.5cm} \(Q(s, a) \in \mathbb{R}\) (arbitrarily), for all \(s \in \mathcal{S}\), \(a \in \mathcal{A}(s)\)
 
-\noindent \hspace{.5cm} \(Returns(s, a)\), an empty list, for all \(s \in \mathcal{S}\), \(a \in \mathcal{A}(s)\)
+\hspace{.5cm} \(Returns(s, a)\), an empty list, for all \(s \in \mathcal{S}\), \(a \in \mathcal{A}(s)\)
 
-\noindent Loop forever (for each episode):
+Loop forever (for each episode):
 
-\noindent \hspace{.5cm} Choose  \(S_0 \in \mathcal{S}\), \(A_0 \in \mathcal{A}(S_0)\) randomly such that all pairs have \(probability > 0\)
+\hspace{.5cm} Choose  \(S_0 \in \mathcal{S}\), \(A_0 \in \mathcal{A}(S_0)\) randomly such that all pairs have \(probability > 0\)
 
-\noindent \hspace{.5cm} Generate an episode from \(S_0, A_0\), following \(\pi\): \(S_0, A_0, R_1, S_1, A_1, R_2, \dots, S_{T - 1}, A_{T - 1}, R_{T}\)
+\hspace{.5cm} Generate an episode from \(S_0, A_0\), following \(\pi\): \(S_0, A_0, R_1, S_1, A_1, R_2, \dots, S_{T - 1}, A_{T - 1}, R_{T}\)
 
-\noindent \hspace{.5cm} \(G \leftarrow 0\)
+\hspace{.5cm} \(G \leftarrow 0\)
 
-\noindent \hspace{.5cm} Loop for each step of episode, \(t = T - 1, T - 2, \dots, 0\):
+\hspace{.5cm} Loop for each step of episode, \(t = T - 1, T - 2, \dots, 0\):
 
-\noindent \hspace{1cm} \(G \leftarrow \gamma G + R_{t + 1}\)
+\hspace{1cm} \(G \leftarrow \gamma G + R_{t + 1}\)
 
-\noindent \hspace{1cm} Unless the pair \(S_t, A_t\) appears in \(S_0, A_0, S_1, A_1, \dots, S_{t - 1}, A_{t - 1}\):
+\hspace{1cm} Unless the pair \(S_t, A_t\) appears in \(S_0, A_0, S_1, A_1, \dots, S_{t - 1}, A_{t - 1}\):
 
-\noindent \hspace{1.5cm} Append \(G\) to \(Returns(S_t, A_t)\):
+\hspace{1.5cm} Append \(G\) to \(Returns(S_t, A_t)\):
 
-\noindent \hspace{1.5cm} \(Q(S_t, A_t) \leftarrow average(Returns(S_t, A_t))\)
+\hspace{1.5cm} \(Q(S_t, A_t) \leftarrow average(Returns(S_t, A_t))\)
 
-\noindent \hspace{1.5cm} \(\pi(S_t) \leftarrow \underset{a}{argmax} Q(S_t, a)\)
+\hspace{1.5cm} \(\pi(S_t) \leftarrow \underset{a}{argmax} Q(S_t, a)\)
 
 \subsection{Monte Carlo Control without Exploring Starts}
 
-\noindent How can we avoid the unlikely assumption of exploring starts? The only general way to ensure that all actions are selected infinitely often is for the agent to continue to select them. 
+How can we avoid the unlikely assumption of exploring starts? The only general way to ensure that all actions are selected infinitely often is for the agent to continue to select them. 
 There are two approaches to ensuring this, resulting in what we call on-policy methods and off-policy methods. On-policy methods attempt to evaluate or improve the policy that is used to make decisions, 
 whereas off-policy methods evaluate or improve a policy different from that used to generate the data. The Monte Carlo ES method developed above is an example of an on-policy method. 
 In this section we show how an on-policy Monte Carlo control method can be designed that does not use the unrealistic assumption of exploring starts.
 
-\bigskip
-
-\noindent In on-policy control methods the policy is generally soft, meaning that \(\pi(a \mid s) > 0\) for all \(s \in \mathcal{S}\) and all \(a \in \mathcal{A}(s)\), 
+In on-policy control methods the policy is generally soft, meaning that \(\pi(a \mid s) > 0\) for all \(s \in \mathcal{S}\) and all \(a \in \mathcal{A}(s)\), 
 but gradually shifted closer and closer to a deterministic optimal policy. 
 \(\epsilon\)-soft policies are defined as policies for which \(\pi(a \mid s) > \frac{\epsilon}{\vert A(s) \vert}\) for all states and actions, for some \(\epsilon > 0\).
 The on-policy method we present in this section uses \(\epsilon\)-greedy policies, 
@@ -977,39 +917,37 @@ That is, all nongreedy actions are given the minimal probability of selection, \
 and the remaining bulk of the probability, \(1 - \epsilon + \frac{\epsilon}{\vert A(s) \vert}\), is given to the greedy action.
 The \(\epsilon\)-greedy policies are examples of \(\epsilon\)-soft policies. Among \(\epsilon\)-soft policies, \(\epsilon\)-greedy policies are in some sense those that are closest to greedy.
 
-\bigskip
+\textbf{On-policy first-visit MC control (for \(\epsilon\)-soft policies), estimates \(\pi \approx \pi_*\)}:
 
-\noindent \textbf{On-policy first-visit MC control (for \(\epsilon\)-soft policies), estimates \(\pi \approx \pi_*\)}:
+Algorithm parameter: small \(\epsilon > 0\)
 
-\noindent Algorithm parameter: small \(\epsilon > 0\)
+Initialize:
 
-\noindent Initialize:
+\hspace{.5cm} \(\pi \leftarrow\) an arbitrary \(\epsilon\)-soft policy
 
-\noindent \hspace{.5cm} \(\pi \leftarrow\) an arbitrary \(\epsilon\)-soft policy
+\hspace{.5cm} \(Q(s, a) \in \mathbb{R}\) (arbitrarily), for all \(s \in \mathcal{S}\), \(a \in \mathcal{A}(s)\)
 
-\noindent \hspace{.5cm} \(Q(s, a) \in \mathbb{R}\) (arbitrarily), for all \(s \in \mathcal{S}\), \(a \in \mathcal{A}(s)\)
+\hspace{.5cm} \(Returns(s, a)\), empty list, for all \(s \in \mathcal{S}\), \(a \in \mathcal{A}(s)\)
 
-\noindent \hspace{.5cm} \(Returns(s, a)\), empty list, for all \(s \in \mathcal{S}\), \(a \in \mathcal{A}(s)\)
+Repeat forever (for each episode):
 
-\noindent Repeat forever (for each episode):
+\hspace{.5cm} Generate an episode following \(\pi\): \(S_0, A_0, R_1, S_1, A_1, R_2, \dots, S_{T - 1}, A_{T - 1}, R_{T}\)
 
-\noindent \hspace{.5cm} Generate an episode following \(\pi\): \(S_0, A_0, R_1, S_1, A_1, R_2, \dots, S_{T - 1}, A_{T - 1}, R_{T}\)
+\hspace{.5cm} \(G \leftarrow 0\)
 
-\noindent \hspace{.5cm} \(G \leftarrow 0\)
+\hspace{.5cm} Loop for each step of episode, \(t = T - 1, T - 2, \dots, 0\):
 
-\noindent \hspace{.5cm} Loop for each step of episode, \(t = T - 1, T - 2, \dots, 0\):
+\hspace{1cm} \(G \leftarrow \gamma G + R_{t + 1}\)
 
-\noindent \hspace{1cm} \(G \leftarrow \gamma G + R_{t + 1}\)
+\hspace{1cm} Unless the pair \(S_t, A_t\) appears in \(S_0, A_0, S_1, A_1, \dots, S_{t - 1}, A_{t - 1}\):
 
-\noindent \hspace{1cm} Unless the pair \(S_t, A_t\) appears in \(S_0, A_0, S_1, A_1, \dots, S_{t - 1}, A_{t - 1}\):
+\hspace{1.5cm} Append \(G\) to \(Returns(S_t, A_t)\):
 
-\noindent \hspace{1.5cm} Append \(G\) to \(Returns(S_t, A_t)\):
+\hspace{1.5cm} \(Q(S_t, A_t) \leftarrow average(Returns(S_t, A_t))\)
 
-\noindent \hspace{1.5cm} \(Q(S_t, A_t) \leftarrow average(Returns(S_t, A_t))\)
+\hspace{1.5cm} \(A^* \leftarrow argmax_{a} Q(S_t, a)\), with ties broken arbitrarily
 
-\noindent \hspace{1.5cm} \(A^* \leftarrow argmax_{a} Q(S_t, a)\), with ties broken arbitrarily
-
-\noindent \hspace{1.5cm} For all \(a \in \mathcal{A}(S_t)\):
+\hspace{1.5cm} For all \(a \in \mathcal{A}(S_t)\):
 
 \[
 \pi(a \mid S_t) \leftarrow
@@ -1019,7 +957,7 @@ The \(\epsilon\)-greedy policies are examples of \(\epsilon\)-soft policies. Amo
 \end{cases}
 \]
 
-\noindent That any \(\epsilon\)-greedy policy with respect to \(q_{\pi}\) is an improvement over any \(\epsilon\)-soft policy \(\pi\) is assured by the policy improvement theorem.
+That any \(\epsilon\)-greedy policy with respect to \(q_{\pi}\) is an improvement over any \(\epsilon\)-soft policy \(\pi\) is assured by the policy improvement theorem.
 Let \(\pi'\) be the \(\epsilon\)-greedy policy. The conditions of the policy improvement theorem apply because for any \(s \in \mathcal{S}\):
 
 \begin{equation*}
@@ -1033,7 +971,7 @@ q_{\pi}(s, \pi'(s))
 \end{split}
 \end{equation*}
 
-\noindent Proof:
+Proof:
 
 \begin{equation*}
 \begin{split}
@@ -1044,24 +982,22 @@ q_{\pi}(s, \pi'(s))
 \end{split}
 \end{equation*}
 
-\noindent So:
+So:
 
 \[\underset{a}{max} q_{\pi}(s, a) \geq \sum_{a} \frac{\pi(a \mid s) - \frac{\epsilon}{\vert \mathcal{A}(s) \vert}}{1 - \epsilon} q_{\pi}(s, a)\]
 
-\noindent Thus, by the policy improvement theorem, \(\pi' \geq \pi\) (.i.e, \(v_{\pi'}(s) \geq v_{\pi}(s)\), for all \(s \in \mathcal{S}\)).
+Thus, by the policy improvement theorem, \(\pi' \geq \pi\) (.i.e, \(v_{\pi'}(s) \geq v_{\pi}(s)\), for all \(s \in \mathcal{S}\)).
 We now prove that equality can hold only when both \(\pi'\) and \(\pi\) are optimal among the \(\epsilon\)-soft
 policies, that is, when they are better than or equal to all other \(\epsilon\)-soft policies.
 
-\bigskip
-
-\noindent In essence, we have shown that policy iteration works for \(\epsilon\)-soft policies. Using the natural notion of greedy policy for \(\epsilon\)-soft policies, 
+In essence, we have shown that policy iteration works for \(\epsilon\)-soft policies. Using the natural notion of greedy policy for \(\epsilon\)-soft policies, 
 one is assured of improvement on every step, except when the best policy has been found among the \(\epsilon\)-soft policies. 
 This analysis is independent of how the action-value functions are determined at each stage, but it does assume that they are computed exactly. 
 Now we only achieve the best policy among the \(\epsilon\)-soft policies, but on the other hand, we have eliminated the assumption of exploring starts.
 
 \subsection{Off-policy Prediction via Importance Sampling}
 
-\noindent The on-policy approach in the
+The on-policy approach in the
 preceding section is actually a compromise — it learns action values not for the optimal
 policy, but for a near-optimal policy that still explores. A more straightforward approach
 is to use two policies, one that is learned about and that becomes the optimal policy, and
@@ -1070,33 +1006,25 @@ about is called the target policy, and the policy used to generate behavior is c
 behavior policy. In this case we say that learning is from data "off" the target policy, and
 the overall process is termed off-policy learning.
 
-\bigskip
-
-\noindent On-policy methods are generally simpler and are considered first. Off-policy methods
+On-policy methods are generally simpler and are considered first. Off-policy methods
 require additional concepts and notation, and because the data is due to a different policy,
 off-policy methods are often of greater variance and are slower to converge. On the other
 hand, off-policy methods are more powerful and general. They include on-policy methods
 as the special case in which the target and behavior policies are the same.
 
-\bigskip
-
-\noindent In this section we begin the study of off-policy methods by considering the prediction
+In this section we begin the study of off-policy methods by considering the prediction
 problem, in which both target and behavior policies are fixed. That is, suppose we wish
 to estimate \(v_{\pi}\) or \(q_{\pi}\), but all we have are episodes following another policy \(b\), where
 \(b \neq \pi\). In this case, \(\pi\) is the target policy, \(b\) is the behavior policy, and both policies are
 considered fixed and given.
 
-\bigskip
-
-\noindent In order to use episodes from \(b\) to estimate values for \(\pi\), we require that every action
+In order to use episodes from \(b\) to estimate values for \(\pi\), we require that every action
 taken under \(\pi\) is also taken, at least occasionally, under \(b\). That is, we require that
 \(\pi(a \mid s) > 0\) implies \(b(a \mid s) > 0\). This is called the assumption of coverage. It follows
 from coverage that \(b\) must be stochastic in states where it is not identical to \(\pi\). The
 target policy \(\pi\), on the other hand, may be deterministic.
 
-\bigskip
-
-\noindent Almost all off-policy methods utilize importance sampling, a general technique for estimating expected values 
+Almost all off-policy methods utilize importance sampling, a general technique for estimating expected values 
 under one distribution given samples from another. We apply importance sampling to off-policy learning by weighting returns 
 according to the relative probability of their trajectories occurring under the target and behavior policies, 
 called the importance-sampling ratio. Given a starting state $S _ { t }$ , the probability of the subsequent state-action trajectory, 
@@ -1106,15 +1034,13 @@ $$
 \begin{aligned} { } & { { } \operatorname* { P r } \{ A _ { t } , S _ { t + 1 } , A _ { t + 1 } , \ldots , S _ { T } \mid S _ { t } , A _ { t : T - 1 } \sim \pi \} } \\ { } & { { } \quad = \pi ( A _ { t } | S _ { t } ) p ( S _ { t + 1 } \thinspace \vert \thinspace S _ { t } , A _ { t } ) \pi ( A _ { t + 1 } | S _ { t + 1 } ) \cdots p ( S _ { T } \thinspace \vert \thinspace S _ { T - 1 } , A _ { T - 1 } ) } \\ { } & { { } \quad = \prod _ { k = t } ^ { T - 1 } \pi ( A _ { k } | S _ { k } ) p ( S _ { k + 1 } \thinspace \vert \thinspace S _ { k } , A _ { k } ) } \\ \end{aligned}
 $$
 
-\noindent The relative probability of the trajectory under the target and behavior policies (the importance sampling ratio) is:
+The relative probability of the trajectory under the target and behavior policies (the importance sampling ratio) is:
 
 $$
 \rho _ { t : T - 1 } = \frac { \prod _ { k = t } ^ { T - 1 } \pi ( A _ { k } | S _ { k } ) p ( S _ { k + 1 } \thinspace | \thinspace S _ { k } , A _ { k } ) } { \prod _ { k = t } ^ { T - 1 } b ( A _ { k } | S _ { k } ) p ( S _ { k + 1 } \thinspace | \thinspace S _ { k } , A _ { k } ) } = \prod _ { k = t } ^ { T - 1 } \frac { \pi ( A _ { k } | S _ { k } ) } { b ( A _ { k } | S _ { k } ) }
 $$
 
-\bigskip
-
-\noindent Recall that we wish to estimate the expected returns (values) under the target policy, but all we have are returns $G _ { t }$ 
+Recall that we wish to estimate the expected returns (values) under the target policy, but all we have are returns $G _ { t }$ 
 due to the behavior policy. These returns have the wrong expectation $E _ b [ G _ { t } | S _ { t }   =   s ] = v _ { b } ( s )$ and so cannot be averaged 
 to obtain $v _ { \pi }$ . This is where importance sampling comes in. The ratio $\rho _ { t : T - 1 }$ transforms the returns to have the right expected value:
 
@@ -1122,7 +1048,7 @@ $$
 E _ b [ \rho _ { t : T - 1 } G _ { t } | S _ { t } \mathop { = } s ] = v _ { \pi } ( s )
 $$
 
-\noindent Now we are ready to give a Monte Carlo algorithm that averages returns from a batch of observed episodes following policy $ b $ 
+Now we are ready to give a Monte Carlo algorithm that averages returns from a batch of observed episodes following policy $ b $ 
 to estimate $v _ { \pi } ( s )$ . It is convenient here to number time steps in a way that increases across episode boundaries. 
 That is, if the first episode of the batch ends in a terminal state at time 100, then the next episode begins at time $t = 1 0 1$ . 
 This enables us to use time-step numbers to refer to particular steps in particular episodes. In particular, we can define the set of all time steps 
@@ -1136,14 +1062,14 @@ $$
 V _ \pi ( s ) = \frac { \sum _ { t \in \mathcal { T } ( s ) } \rho _ { t : T ( t ) - 1 } G _ { t } } { | \mathcal { T } ( s ) | }
 $$
 
-\noindent When importance sampling is done as a simple average in this way it is called ordinary importance sampling. 
+When importance sampling is done as a simple average in this way it is called ordinary importance sampling. 
 An important alternative is weighted importance sampling, which uses a weighted average, defined as:
 
 $$
 V _ \pi ( s ) = \frac { \sum _ { t \in \mathcal { T } ( s ) } \rho _ { t : T ( t ) - 1 } G _ { t } } { \sum _ { t \in \mathcal { T } ( s ) } \rho _ { t : T ( t ) - 1 } }
 $$
 
-\noindent or zero if the denominator is zero. To understand these two varieties of importance sampling, 
+or zero if the denominator is zero. To understand these two varieties of importance sampling, 
 consider the estimates of their first-visit methods after observing a single return from state $ s $. 
 In the weighted-average estimate, the ratio $\rho _ { t : T ( t ) - 1 }$ for the single return cancels in the numerator and denominator, 
 so that the estimate is equal to the observed return independent of the ratio (assuming the ratio is nonzero). 
@@ -1154,9 +1080,7 @@ indicating that the trajectory observed is ten times as likely under the target 
 In this case the ordinary importance-sampling estimate would be ten times the observed return. 
 That is, it would be quite far from the observed return even though the episode's trajectory is considered very representative of the target policy.
 
-\bigskip
-
-\noindent Formally, the difference between the first-visit methods of the two kinds of importance sampling is expressed in their biases and variances. 
+Formally, the difference between the first-visit methods of the two kinds of importance sampling is expressed in their biases and variances. 
 Ordinary importance sampling is unbiased whereas weighted importance sampling is biased (though the bias converges asymptotically to zero). 
 On the other hand, the variance of ordinary importance sampling is in general unbounded because the variance of the ratios can be unbounded, 
 whereas in the weighted estimator the largest weight on any single return is one. In fact, assuming bounded returns, the variance of the 
@@ -1164,34 +1088,30 @@ weighted importance-sampling estimator converges to zero even if the variance of
 In practice, the weighted estimator usually has dramatically lower variance and is strongly preferred. Nevertheless, we will not totally abandon 
 ordinary importance sampling as it is easier to extend to the approximate methods using function approximation.
 
-\bigskip
-
-\noindent The every-visit methods for ordinary and weighed importance sampling are both biased, though, again, the bias falls asymptotically to zero 
+The every-visit methods for ordinary and weighed importance sampling are both biased, though, again, the bias falls asymptotically to zero 
 as the number of samples increases. In practice, every-visit methods are often preferred because they remove the need to keep track of which states have been visited 
 and because they are much easier to extend to approximations.
 
 \section{Imitation Learning}
 
-\noindent Imitation learning, also known as learning from demonstration, is a process where an agent learns a new skill or behavior by observing and replicating the actions of others, often an expert. Training data are from expert inputs observations and actions. It assumes data is independently identity distributed, which is different from reinforcement learning. It is supervised learning.
+Imitation learning, also known as learning from demonstration, is a process where an agent learns a new skill or behavior by observing and replicating the actions of others, often an expert. Training data are from expert inputs observations and actions. It assumes data is independently identity distributed, which is different from reinforcement learning. It is supervised learning.
 
-\bigskip
+\(p_{data}(o_t)\): Distribution of training data. The probability of taking action \(a_t\) at observation \(o_t\).
 
-\noindent \(p_{data}(o_t)\): Distribution of training data. The probability of taking action \(a_t\) at observation \(o_t\).
+\(p_{\pi_{\theta}}(o_t)\): Distribution of validation data. The probability of taking correct action \(a_t\) at observation \(o_t\).
 
-\noindent \(p_{\pi_{\theta}}(o_t)\): Distribution of validation data. The probability of taking correct action \(a_t\) at observation \(o_t\).
-
-\noindent A standard training objective. Choose the optimal \(\theta\) that maxmizes the expectation of log probability of taking correct action \(a_t\) at observation \(o_t\), where \(o_t\) is sample from \(p_{data}(o_t)\):
+A standard training objective. Choose the optimal \(\theta\) that maxmizes the expectation of log probability of taking correct action \(a_t\) at observation \(o_t\), where \(o_t\) is sample from \(p_{data}(o_t)\):
 
 \[\underset{\theta}{max} E_{o_t \sim p_{data}(o_t)}[log \pi_{\theta}(a_t \mid o_t)]\]
 \[\underset{\theta}{max} \sum_{t = 1}^{m} log \pi_{\theta}(a_t \mid o_t)\]
 
-\noindent An alternative training objective. We can either maxmize the reward:
+An alternative training objective. We can either maxmize the reward:
 
 \[r(o, a) = log p(a = \pi^*(o) \mid o)\]
 \[\underset{\theta}{max} E_{o_t \sim p_{\pi_{\theta}}(o_t)}[r(o_t, a_t)]\]
 \[\underset{\theta}{max} \sum_{t = 1}^{m} r(o_t, a_t)\]
 
-\noindent Or, minimize the expect cost (number of mistakes) that the policy gonna make:
+Or, minimize the expect cost (number of mistakes) that the policy gonna make:
 
 \[c(o_t, a_t) = 
 \begin{cases}
@@ -1202,7 +1122,7 @@ and because they are much easier to extend to approximations.
 \[\underset{\theta}{min} E_{o_t \sim p_{\pi_{\theta}}(o_t)}[c(o_t, a_t)]\]
 \[\underset{\theta}{min} \sum_{t = 1}^{m} c(o_t, a_t)\]
 
-\noindent Imitation learning only learn from exsisting human behaviour, doesn't search for new approach. 
+Imitation learning only learn from exsisting human behaviour, doesn't search for new approach. 
 Sometimes the expert data is lacks of mistakes, after training the model can be trapped in an unfamiliar state and cannot recover from that it. 
 Humans need to provide data, which is typically finite. Deep learning works best when data is plentiful, while humans are not good at providing some kinds of actions. 
 So the result can hardly outperform humans'. Some approaches to improve performance:
@@ -1240,51 +1160,47 @@ So the result can hardly outperform humans'. Some approaches to improve performa
 
 \section{Q-learning}
 
-\noindent For any finite Markov decision process (FMDP), Q-learning finds an optimal policy in the sense of maximizing the expected value of the total reward over any and all successive steps, starting from the current state. Q-learning can identify an optimal action-selection policy for any given FMDP, given infinite exploration time and a partly-random policy.
+For any finite Markov decision process (FMDP), Q-learning finds an optimal policy in the sense of maximizing the expected value of the total reward over any and all successive steps, starting from the current state. Q-learning can identify an optimal action-selection policy for any given FMDP, given infinite exploration time and a partly-random policy.
 
-\bigskip
+\(s\): current state.
 
-\noindent \(s\): current state.
+\(a\): current action.
 
-\noindent \(a\): current action.
+\(s'\): new state after taking action \(a\).
 
-\noindent \(s'\): new state after taking action \(a\).
+\(a'\): action chosen on state \(s'\).
 
-\noindent \(a'\): action chosen on state \(s'\).
+\(\gamma\): discount factor.
 
-\noindent \(\gamma\): discount factor.
+\(\eta\): soft update factor.
 
-\noindent \(\eta\): soft update factor.
+\(episode\): a sequence of states, from an initial state to a terminal state.
 
-\noindent \(episode\): a sequence of states, from an initial state to a terminal state.
+\(experience\): agent's experience on a state \((s, a, R(s), s')\).
 
-\noindent \(experience\): agent's experience on a state \((s, a, R(s), s')\).
+\(M\): number of episodes.
 
-\noindent \(M\): number of episodes.
+\(T\): maximum episode length (time steps) if episode doesn't terminate.
 
-\noindent \(T\): maximum episode length (time steps) if episode doesn't terminate.
+\(N\): memory buffer capacity to store experiences.
 
-\noindent \(N\): memory buffer capacity to store experiences.
+\(C\): number of time steps for update.
 
-\noindent \(C\): number of time steps for update.
+\(B\): batch size.
 
-\noindent \(B\): batch size.
+\(R(s)\): reward from state \(s\).
 
-\noindent \(R(s)\): reward from state \(s\).
+\(\epsilon\): greedy policy during training - with probability \(\epsilon\), pick an action randomly; with probability \(1 - \epsilon\), pick the action that maximizes \(Q(s, a)\). (can start high and reduce gradually during the training process)
 
-\noindent \(\epsilon\): greedy policy during training - with probability \(\epsilon\), pick an action randomly; with probability \(1 - \epsilon\), pick the action that maximizes \(Q(s, a)\). (can start high and reduce gradually during the training process)
-
-\bigskip
-
-\noindent \(Q(s, a)\): The expected cumulative reward for taking action \(a\) on state \(s\), then choosing actions for the following states that maximizes cumulative reward.
+\(Q(s, a)\): The expected cumulative reward for taking action \(a\) on state \(s\), then choosing actions for the following states that maximizes cumulative reward.
 
 \[Q(s, a) = R(s) + \gamma \max_{a'} Q(s', a')\]
 
-\noindent \(\pi(s)\): a policy that given state \(s\), returns best action that maximizes the cumulative reward from state \(s\) onward.
+\(\pi(s)\): a policy that given state \(s\), returns best action that maximizes the cumulative reward from state \(s\) onward.
 
 \[\pi(s) = \underset{a}{argmax} \ Q(s, a)\]
 
-\noindent \textbf{Training data}: get \((s_{i}, a_{i}, R(s_{i}), s_{i+1})\) experience tuple from environment.
+\textbf{Training data}: get \((s_{i}, a_{i}, R(s_{i}), s_{i+1})\) experience tuple from environment.
 
 \[x^{(i)} = s_{i}\]
 \[
@@ -1295,45 +1211,43 @@ y^{(i)} =
 \end{cases}
 \]
 
-\noindent \textbf{Cost function}:
+\textbf{Cost function}:
 
 \[J(w, b) = \frac{1}{2m} \sum_{i = 1}^m (Q(s_{i}, a_{i}) - y^{(i)})^2\]
 
-\noindent \textbf{Random (stochastic) environment?}
+\textbf{Random (stochastic) environment?}
 
-\noindent In a stochastic environment, after taking an action, the next state can have multiple possibilities. For example, after taking action \(a\), there is 0.1 chance that we get state \(s_1\), 0.2 chance to get state \(s_2\), and 0.7 chance to get state \(s_3\). To solve this problem, we can take the expectation of following cumulative reward:
+In a stochastic environment, after taking an action, the next state can have multiple possibilities. For example, after taking action \(a\), there is 0.1 chance that we get state \(s_1\), 0.2 chance to get state \(s_2\), and 0.7 chance to get state \(s_3\). To solve this problem, we can take the expectation of following cumulative reward:
 
 \[Q(s, a) = R(s) + \gamma E[\max_{a'} Q(s', a')]\]
 
-\noindent \textbf{Learning Process}:
+\textbf{Learning Process}:
 
 \begin{center}
 \includegraphics[scale=0.3]{./images/q_learning_nn.png}
 \end{center}
 
-\noindent Initialize memory buffer with capacity \(N\).
+Initialize memory buffer with capacity \(N\).
 
-\noindent Initialize Q-network with random \(w, b\) as a guess of \(Q(s, a)\).
+Initialize Q-network with random \(w, b\) as a guess of \(Q(s, a)\).
 
-\noindent for \(i \in \{1, \dots, M\}\):
+for \(i \in \{1, \dots, M\}\):
 
-\noindent \hspace{.5cm} Receive initial state \(s_1\).
+\hspace{.5cm} Receive initial state \(s_1\).
 
-\noindent \hspace{.5cm} for \(t \in \{1, \dots, T\}\):
+\hspace{.5cm} for \(t \in \{1, \dots, T\}\):
 
-\noindent \hspace{1cm} Choose \(a_{t}\) for \(s_{t}\) with greedy policy \(\epsilon\).
+\hspace{1cm} Choose \(a_{t}\) for \(s_{t}\) with greedy policy \(\epsilon\).
 
-\noindent \hspace{1cm} Get \((s_{t}, a_{t}, R(s_{t}), s_{t+1})\) experience tuple from environment.
+\hspace{1cm} Get \((s_{t}, a_{t}, R(s_{t}), s_{t+1})\) experience tuple from environment.
 
-\noindent \hspace{1cm} Store experience tuple in memory buffer, first in first out.
+\hspace{1cm} Store experience tuple in memory buffer, first in first out.
 
-\bigskip
+\hspace{1cm} Every \(C\) time steps perform a learning update:
 
-\noindent \hspace{1cm} Every \(C\) time steps perform a learning update:
+\hspace{1cm} Sample \(B\) random experiences from memory buffer.
 
-\noindent \hspace{1cm} Sample \(B\) random experiences from memory buffer.
-
-\noindent \hspace{1cm} For \((s_{j}, a_{j}, R(s_{j}), s_{j+1})\), \(j \in \{1, \dots, B\}\), construct training sample:
+\hspace{1cm} For \((s_{j}, a_{j}, R(s_{j}), s_{j+1})\), \(j \in \{1, \dots, B\}\), construct training sample:
 
 \[x^{(j)} = s_{j}\]
 \[
@@ -1344,22 +1258,20 @@ y^{(j)} =
 \end{cases}
 \]
 
-\noindent \hspace{1cm} Train \(Q_{new}\) such that \(Q_{new}(s, a) \approx y\):
+\hspace{1cm} Train \(Q_{new}\) such that \(Q_{new}(s, a) \approx y\):
 
-\noindent \hspace{1cm} Perform a gradient descent with mini batch and implement soft update:
+\hspace{1cm} Perform a gradient descent with mini batch and implement soft update:
 
 \[w = (1 - \eta)w + \eta w_{new}\]
 \[b = (1 - \eta)b + \eta b_{new}\]
 
-\bigskip
-
-\noindent \hspace{1cm} Start a new episode if \(s_{t+1}\) terminates, else continue.
+\hspace{1cm} Start a new episode if \(s_{t+1}\) terminates, else continue.
 
 \section{Policy Gradient}
 
-\noindent \textbf{On-policy vs Off-policy learning}:
+\textbf{On-policy vs Off-policy learning}:
 
-\noindent The key difference lies in how these methods approach learning:
+The key difference lies in how these methods approach learning:
 
 \begin{itemize}
     \item On-policy:
@@ -1375,17 +1287,15 @@ y^{(j)} =
     \item The primary distinction lies in how they approach exploration and exploitation, which affects their convergence properties and practical performance in different types of environments.
 \end{itemize}
 
-\noindent \textbf{Policy Gradient Algorithms}:
+\textbf{Policy Gradient Algorithms}:
 
-\noindent TBD: https://lilianweng.github.io/posts/2018-04-08-policy-gradient/
+TBD: https://lilianweng.github.io/posts/2018-04-08-policy-gradient/
 
 \section{Monte Carlo tree search (MCTS)}
 
-\noindent The focus of MCTS is on the analysis of the most promising moves, expanding the search tree based on random sampling of the search space. The application of Monte Carlo tree search in games is based on many playouts, also called roll-outs. In each playout, the game is played out to the very end by selecting moves at random. The final game result of each playout is then used to weight the nodes in the game tree so that better nodes are more likely to be chosen in future playouts.
+The focus of MCTS is on the analysis of the most promising moves, expanding the search tree based on random sampling of the search space. The application of Monte Carlo tree search in games is based on many playouts, also called roll-outs. In each playout, the game is played out to the very end by selecting moves at random. The final game result of each playout is then used to weight the nodes in the game tree so that better nodes are more likely to be chosen in future playouts.
 
-\bigskip
-
-\noindent The most basic way to use playouts is to apply the same number of playouts after each legal move of the current player, then choose the move which led to the most victories. The efficiency of this method - called Pure Monte Carlo Game Search - often increases with time as more playouts are assigned to the moves that have frequently resulted in the current player's victory according to previous playouts. Each round of Monte Carlo tree search consists of four steps:
+The most basic way to use playouts is to apply the same number of playouts after each legal move of the current player, then choose the move which led to the most victories. The efficiency of this method - called Pure Monte Carlo Game Search - often increases with time as more playouts are assigned to the moves that have frequently resulted in the current player's victory according to previous playouts. Each round of Monte Carlo tree search consists of four steps:
 
 \begin{itemize}
     \item Selection: Start from root \(R\) and select successive child nodes until a leaf node \(L\) is reached. The root is the current game state and a leaf is any node that has a potential child from which no simulation (playout) has yet been initiated. \(L = R\) at the beginning of the search. The section below says more about a way (UCT) of biasing choice of child nodes that lets the game tree expand towards the most promising moves, which is the essence of Monte Carlo tree search.
@@ -1402,27 +1312,17 @@ y^{(j)} =
 \includegraphics[scale=0.1]{./images/mcts_steps.png}
 \end{center}
 
-\noindent This graph shows the steps involved in one decision, with each node showing the ratio of wins to total playouts from that point in the game tree for the player that the node represents. In the Selection diagram, black is about to move. The root node shows there are 11 wins out of 21 playouts for white from this position so far. It complements the total of 10/21 black wins shown along the three black nodes under it, each of which represents a possible black move. Note that this graph does not follow the UCT algorithm described below.
+This graph shows the steps involved in one decision, with each node showing the ratio of wins to total playouts from that point in the game tree for the player that the node represents. In the Selection diagram, black is about to move. The root node shows there are 11 wins out of 21 playouts for white from this position so far. It complements the total of 10/21 black wins shown along the three black nodes under it, each of which represents a possible black move. Note that this graph does not follow the UCT algorithm described below.
 
-\bigskip
+If white loses the simulation, all nodes along the selection incremented their simulation count (the denominator), but among them only the black nodes were credited with wins (the numerator). If instead white wins, all nodes along the selection would still increment their simulation count, but among them only the white nodes would be credited with wins. In games where draws are possible, a draw causes the numerator for both black and white to be incremented by 0.5 and the denominator by 1. This ensures that during selection, each player's choices expand towards the most promising moves for that player, which mirrors the goal of each player to maximize the value of their move.
 
-\noindent If white loses the simulation, all nodes along the selection incremented their simulation count (the denominator), but among them only the black nodes were credited with wins (the numerator). If instead white wins, all nodes along the selection would still increment their simulation count, but among them only the white nodes would be credited with wins. In games where draws are possible, a draw causes the numerator for both black and white to be incremented by 0.5 and the denominator by 1. This ensures that during selection, each player's choices expand towards the most promising moves for that player, which mirrors the goal of each player to maximize the value of their move.
+Rounds of search are repeated as long as the time allotted to a move remains. Then the move with the most simulations made (i.e. the highest denominator) is chosen as the final answer.
 
-\bigskip
+DeepMind's AlphaZero replaces the simulation step with an evaluation based on a neural network.
 
-\noindent Rounds of search are repeated as long as the time allotted to a move remains. Then the move with the most simulations made (i.e. the highest denominator) is chosen as the final answer.
+\textbf{UCT (Upper Confidence Bound 1 applied to trees):}
 
-\bigskip
-
-\noindent DeepMind's AlphaZero replaces the simulation step with an evaluation based on a neural network.
-
-\bigskip
-
-\noindent \textbf{UCT (Upper Confidence Bound 1 applied to trees):}
-
-\bigskip
-
-\noindent The main difficulty in selecting child nodes is maintaining some balance between the exploitation of deep variants after moves with high average win rate and the exploration of moves with few simulations. The first formula for balancing exploitation and exploration in games is called UCT. UCT recommends to choose in each node of the game tree the move for which the following expression has the highest value:
+The main difficulty in selecting child nodes is maintaining some balance between the exploitation of deep variants after moves with high average win rate and the exploration of moves with few simulations. The first formula for balancing exploitation and exploration in games is called UCT. UCT recommends to choose in each node of the game tree the move for which the following expression has the highest value:
 
 \[\frac{w_{i}}{n_{i}} + c \sqrt{\frac{ln N_{i}}{n_i}}\]
 
@@ -1433,7 +1333,7 @@ y^{(j)} =
     \item \(c\) is the exploration parameter - theoretically equal to \(\sqrt{2}\); in practice usually chosen empirically
 \end{itemize}
 
-\noindent The first component of the formula above corresponds to exploitation; it is high for moves with high average win ratio. The second component corresponds to exploration; it is high for moves with few simulations.
+The first component of the formula above corresponds to exploitation; it is high for moves with high average win ratio. The second component corresponds to exploration; it is high for moves with few simulations.
 
 \printindex
 
