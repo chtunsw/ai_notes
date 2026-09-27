@@ -1092,6 +1092,96 @@ The every-visit methods for ordinary and weighed importance sampling are both bi
 as the number of samples increases. In practice, every-visit methods are often preferred because they remove the need to keep track of which states have been visited 
 and because they are much easier to extend to approximations.
 
+\subsection{Incremental Implementation}
+
+Monte Carlo prediction methods can be implemented incrementally, on an episode-by-episode basis. For off-policy Monte Carlo methods, 
+we need to separately consider those that use ordinary importance sampling and those that use weighted importance sampling.
+
+In ordinary importance sampling, the returns are scaled by the importance sampling ratio $\rho _ { t : T ( t ) - 1 }$, 
+then simply averaged. In this case, the incremental methods are straightforward.
+
+Here we discuss the case of off-policy methods using weighted importance sampling. We have to form a weighted average of the returns, 
+and a slightly different incremental algorithm is required.
+
+Suppose we have a sequence of returns $G _ { 1 } , G _ { 2 } , \ldots , G _ { n - 1 }$, all starting in the same state 
+and each with a corresponding random weight $W _ { i } ( \operatorname { e . g . , } W _ { i } = \rho _ { t _ { i } : T ( t _ { i } ) - 1 } )$. 
+We wish to form the estimate:
+
+$$
+V _ { n } = \frac { \sum _ { k = 1 } ^ { n - 1 } W _ { k } G _ { k } } { \sum _ { k = 1 } ^ { n - 1 } W _ { k } } , \qquad n \geq 2
+$$
+
+and keep it up-to-date as we obtain a single additional return $G _ { n }$. In addition to keeping track of $V _ { n }$, we must maintain for each state 
+the cumulative sum $C _ { n }$ of the weights given to the first n returns. The update rule for $V _ { n }$ is:
+
+$$
+C _ { n } = \sum _ { k = 1 } ^ { n } W _ { k }
+$$
+
+$$
+V_n = \frac{\sum_{k=1}^{n-1} W_k G_k}{C_{n-1}}
+$$
+
+$$
+\sum_{k=1}^{n-1} W_k G_k = C_{n-1} V_n
+$$
+
+$$
+V_{n+1} = \frac{\sum_{k=1}^{n} W_k G_k}{C_n}
+$$
+
+$$
+V_{n+1} = \frac{\sum_{k=1}^{n-1} W_k G_k + W_n G_n}{C_n}
+$$
+
+$$
+V_{n+1} = \frac{C_{n-1} V_n + W_n G_n}{C_n}
+$$
+
+$$
+V_{n+1} = \frac{(C_n - W_n) V_n + W_n G_n}{C_n}
+$$
+
+$$
+V_{n+1} = V_n + \frac{W_n}{C_n} \Big[ G_n - V_n \Big]
+$$
+
+$$
+V _ { n + 1 } = V _ { n } + \frac { W _ { n } } { C _ { n } } \Big [ G _ { n } - V _ { n } \Big ] , \qquad n \geq 1
+$$
+
+where $C _ { 0 } = 0$ (and $V _ { 1 }$ is arbitrary and thus need not be specified).
+
+\textbf{Off-policy, episode-by-episode incremental algorithm for MC prediction (policy evaluation), using weighted importance sampling, for estimating $Q \approx q _ { \pi }$}:
+
+Input: an arbitrary target policy $ \pi $
+
+Initialize, for all $s \in \mathcal { S } , a \in \mathcal { A } ( s )$:
+
+\hspace{.5cm} $Q ( s , a ) \in \mathbb { R }$ (arbitrarily)
+
+\hspace{.5cm} $C ( s , a ) \gets 0$
+
+Loop forever (for each episode):
+
+\hspace{.5cm} $ b \gets $ any policy with coverage of $\pi$
+
+\hspace{.5cm} Generate an episode following $ b $: $S _ { 0 } , A _ { 0 } , R _ { 1 } , \ldots , S _ { T - 1 } , A _ { T - 1 } , R _ { T }$
+
+\hspace{.5cm} $G \gets 0$
+
+\hspace{.5cm} $W \leftarrow 1$
+
+\hspace{.5cm} Loop for each step of episode, $t = T   -   1 , T   -   2 , \ldots , 0 ,$ while $W \neq 0 :$
+
+\hspace{1cm} $G \leftarrow \gamma G + R _ { t + 1 }$
+
+\hspace{1cm} $C ( S _ { t } , A _ { t } ) \leftarrow C ( S _ { t } , A _ { t } ) + W$
+
+\hspace{1cm} $Q ( S _ { t } , A _ { t } ) \leftarrow Q ( S _ { t } , A _ { t } ) + \frac { W } { C ( S _ { t } , A _ { t } ) } \left[ G - Q ( S _ { t } , A _ { t } ) \right]$
+
+\hspace{1cm} $W \leftarrow W \frac { \pi ( A _ { t } | S _ { t } ) } { b ( A _ { t } | S _ { t } ) }$
+
 \section{Imitation Learning}
 
 Imitation learning, also known as learning from demonstration, is a process where an agent learns a new skill or behavior by observing and replicating the actions of others, often an expert. Training data are from expert inputs observations and actions. It assumes data is independently identity distributed, which is different from reinforcement learning. It is supervised learning.
