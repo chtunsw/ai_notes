@@ -1182,6 +1182,60 @@ Loop forever (for each episode):
 
 \hspace{1cm} $W \leftarrow W \frac { \pi ( A _ { t } | S _ { t } ) } { b ( A _ { t } | S _ { t } ) }$
 
+\subsection{Off-policy Monte Carlo Control}
+
+Off-policy Monte Carlo control methods follow the behavior policy while learning about and improving the target policy. These techniques require that the behavior policy 
+has a nonzero probability of selecting all actions that might be selected by the target policy (coverage). To explore all possibilities, 
+we require that the behavior policy be soft (i.e., that it select all actions in all states with nonzero probability).
+
+Here it shows an off-policy Monte Carlo control method, based on GPI and weighted importance sampling, 
+for estimating $\pi _ { * }$ and $q _ { * }$ . The target policy $\pi \approx \pi _ { * }$ is the greedy policy with respect to $Q$, 
+which is an estimate of $q _ { \pi }$ . The behavior policy $b$ can be anything, but in order to assure convergence of $\pi$ to the optimal policy, 
+an infinite number of returns must be obtained for each pair of state and action. This can be assured by choosing $b$ to be $\epsilon$-soft. 
+The policy $\pi$ converges to optimal at all encountered states even though actions are selected according to a different soft policy $b$, 
+which may change between or even within episodes.
+
+\textbf{Off-policy MC control, for estimating $ \pi \approx \pi_{*} $}:
+
+Initialize, for all $s \in \mathcal { S } ,   a \in \mathcal { A } ( s )$:
+
+\hspace{.5cm} $Q ( s , a ) \in \mathbb { R }$ (arbitrarily)
+
+\hspace{.5cm} $C ( s , a ) \gets 0$
+
+\hspace{.5cm} $\pi ( s ) \gets \operatorname { a r g   m a x } _ { a } Q ( s , a )$ (with ties broken consistently)
+
+Loop forever (for each episode):
+
+\hspace{.5cm} $b \leftarrow$ any soft policy
+
+\hspace{.5cm} Generate an episode using b: $S _ { 0 } , A _ { 0 } , R _ { 1 } , \ldots , S _ { T - 1 } , A _ { T - 1 } , R _ { T }$
+
+\hspace{.5cm} $G \gets 0$
+
+\hspace{.5cm} $W \leftarrow 1$
+
+\hspace{.5cm} Loop for each step of episode, $t = T   -   1 , T   -   2 , \ldots , 0$:
+
+\hspace{1cm} $G \leftarrow \gamma G + R _ { t + 1 }$
+
+\hspace{1cm} $C ( S _ { t } , A _ { t } ) \leftarrow C ( S _ { t } , A _ { t } ) + W$
+
+\hspace{1cm} $Q ( S _ { t } , A _ { t } ) \leftarrow Q ( S _ { t } , A _ { t } ) + \frac { W } { C ( S _ { t } , A _ { t } ) } \left[ G - Q ( S _ { t } , A _ { t } ) \right]$
+
+\hspace{1cm} $\pi ( S _ { t } ) \leftarrow \operatorname { a r g   m a x } _ { a } Q ( S _ { t } , a )$ (with ties broken consistently)
+
+\hspace{1cm} If $ A_{t} $ is the greedy action, \(\pi(A_t\vert{}S_t) = 1\). If $ A_{t} $ is a non-greedy action, \(\pi(A_t\vert{}S_t) = 0\).
+
+\hspace{1cm} If $A _ { t } \neq \pi ( S _ { t } )$ then exit inner Loop (proceed to next episode)
+
+\hspace{1cm} $W \leftarrow W \frac { 1 } { b ( A _ { t } | S _ { t } ) }$
+
+A potential problem is that this method learns only from the tails of episodes, when all of the remaining actions in the episode are greedy. 
+If nongreedy actions are common, then learning will be slow, particularly for states appearing in the early portions of long episodes. 
+Potentially, this could greatly slow learning. There has been insuffcient experience with off-policy Monte Carlo methods to assess how serious this problem is. 
+If it is serious, the most important way to address it is probably by incorporating temporal difference learning.
+
 \section{Imitation Learning}
 
 Imitation learning, also known as learning from demonstration, is a process where an agent learns a new skill or behavior by observing and replicating the actions of others, often an expert. Training data are from expert inputs observations and actions. It assumes data is independently identity distributed, which is different from reinforcement learning. It is supervised learning.
