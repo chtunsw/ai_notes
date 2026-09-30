@@ -1236,6 +1236,78 @@ If nongreedy actions are common, then learning will be slow, particularly for st
 Potentially, this could greatly slow learning. There has been insuffcient experience with off-policy Monte Carlo methods to assess how serious this problem is. 
 If it is serious, the most important way to address it is probably by incorporating temporal difference learning.
 
+\section{Temporal-Difference Learning}
+
+If one had to identify one idea as central and novel to reinforcement learning, it would undoubtedly be temporal-difference (TD) learning. 
+TD learning is a combination of Monte Carlo ideas and dynamic programming (DP) ideas. Like Monte Carlo methods, TD methods can learn directly 
+from raw experience without a model of the environment's dynamics. Like DP, TD methods update estimates based in part on other learned estimates, 
+without waiting for a final outcome (they bootstrap).
+
+\subsection{Running average}
+
+To estimate the value of a state $S_t$ by averaging all the actual returns ($G$) you have observed after visiting that state. 
+If there are $k$ returns, the estimated value $V_k$ is the sum of all returns divided by $k$:
+
+\[
+V_k = \frac{G_1 + G_2 + \dots + G_k}{k}
+\]
+
+If we keep a list of every single return to calculate this average, it quickly run out of computer memory. 
+Instead, we can break apart the equation so it only requires the \textbf{previous average} ($V_{k-1}$) and the \textbf{newest observation} ($G_k$):
+
+\begin{align*}
+V_k &= \frac{1}{k} \sum_{i=1}^k G_i \\
+V_k &= \frac{1}{k} \left( G_k + \sum_{i=1}^{k-1} G_i \right)
+\end{align*}
+
+Because $V_{k-1} = \frac{1}{k-1} \sum_{i=1}^{k-1} G_i$, we can swap that sum out for $(k-1)V_{k-1}$:
+
+\begin{align*}
+V_k &= \frac{1}{k} \left( G_k + (k-1)V_{k-1} \right) \\
+V_k &= \frac{1}{k} \left( G_k + kV_{k-1} - V_{k-1} \right) \\
+V_k &= V_{k-1} + \frac{1}{k} \big[ G_k - V_{k-1} \big]
+\end{align*}
+
+Look closely at this result. It says:
+
+\[
+\text{NewEstimate} \leftarrow \text{OldEstimate} + \text{StepSize} \big[ \text{Target} - \text{OldEstimate} \big]
+\]
+
+In a true mathematical average, the step-size is $\frac{1}{k}$. As you gather more samples ($k$ gets huge), 
+$\frac{1}{k}$ shrinks to almost zero. This means older data is permanently locked in, and new data barely changes your average.
+However, in Reinforcement Learning, the agent is constantly learning new strategies. The environment effectively "changes" 
+because the agent's policy is improving. Usually old rewards matter less than recent rewards.
+
+To fix this, replace the shrinking step-size $\frac{1}{k}$ with a \textbf{constant step-size parameter $\alpha$} (where $0 < \alpha \le 1$). 
+This forces the algorithm to give more weight to recent rewards than past ones. Switching the notation to timesteps ($t$):
+
+\[
+V(S_t) \leftarrow V(S_t) + \alpha \Big[ G_t - V(S_t) \Big]
+\]
+
+The core bracket of the equation is often called the \textbf{Error}:
+
+\[
+\underbrace{G_t}_{\text{Target (What actually happened)}} - \underbrace{V(S_t)}_{\text{Prediction (What you expected)}}
+\]
+
+\begin{itemize}
+    \item \textbf{Positive Error:} If $G_t$ is \textbf{larger} than expected, the error is positive. The formula adds to $V(S_t)$, bumping your future expectation \textbf{up}.
+    \item \textbf{Negative Error:} If $G_t$ is \textbf{smaller} than expected, the error is negative. The formula subtracts from $V(S_t)$, dragging your future expectation \textbf{down}.
+    \item \textbf{Step Size ($\alpha$):} Dictates \emph{how aggressively} you adjust your expectations based on that single new experience.
+\end{itemize}
+
+\subsection{TD Prediction}
+
+Both TD and Monte Carlo methods use experience to solve the prediction problem. Given some experience following a policy $\pi$, both methods update their estimate $V$ of $v _ { \pi }$ 
+for the nonterminal states $S _ { t }$ occurring in that experience. Roughly speaking, Monte Carlo methods wait until the return following the visit is known, 
+then use that return as a target for $V ( S _ { t } )$ . A simple every-visit Monte Carlo method suitable for nonstationary environments is:
+
+$$
+V ( S _ { t } ) \leftarrow V ( S _ { t } ) + \alpha \Big [ G _ { t } - V ( S _ { t } ) \Big ]
+$$
+
 \section{Imitation Learning}
 
 Imitation learning, also known as learning from demonstration, is a process where an agent learns a new skill or behavior by observing and replicating the actions of others, often an expert. Training data are from expert inputs observations and actions. It assumes data is independently identity distributed, which is different from reinforcement learning. It is supervised learning.
