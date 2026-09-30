@@ -1308,6 +1308,83 @@ $$
 V ( S _ { t } ) \leftarrow V ( S _ { t } ) + \alpha \Big [ G _ { t } - V ( S _ { t } ) \Big ]
 $$
 
+where $G _ { t }$ is the actual return following time $t$, and $ \alpha $ is a constant step-size parameter. Let us call this method constant-$ \alpha $ MC.
+Whereas Monte Carlo methods must wait until the end of the episode to determine the increment to $V ( S _ { t } )$ (only then is $G _ { t }$ known), TD methods need to wait only until the next time step.
+At time $t + 1$ they immediately form a target and make a useful update using the observed reward $R _ { t + 1 }$ and the estimate $V ( S _ { t + 1 } )$. The simplest TD method makes the update 
+immediately on transition to $S _ { t + 1 }$ and receiving $R _ { t + 1 }$:
+
+$$
+G_{t}=R_{t+1} + \gamma G_{t+1}
+$$
+
+$$
+V ( S _ { t } ) \leftarrow V ( S _ { t } ) + \alpha \Big [ R _ { t + 1 } + \gamma G _ { t + 1 } - V ( S _ { t } ) \Big ]
+$$
+
+Subtitute \(G_{t+1}\) with the estimated value of \(G_{t+1}\), which is \(V(S_{t+1})\):
+
+$$
+V ( S _ { t } ) \leftarrow V ( S _ { t } ) + \alpha \Big [ R _ { t + 1 } + \gamma V ( S _ { t + 1 } ) - V ( S _ { t } ) \Big ]
+$$
+
+In effect, the target for the Monte Carlo update is $G _ { t }$, whereas the target for the TD update is $R _ { t + 1 } + \gamma V ( S _ { t + 1 } )$.
+This TD method is called $TD(0)$, or one-step TD, because it is a special case of the $TD ( \lambda )$ and n-step TD methods.
+
+\textbf{Tabular $ TD(0) $ for estimating $ v _ { \pi } $}
+
+Input: the policy $ \pi $ to be evaluated
+
+Algorithm parameter: step size $ \alpha \in ( 0 , 1 ]$
+
+Initialize $V ( s )$, for all $s \in \mathcal { S } ^ { + }$, arbitrarily except that $V(terminal) = 0$
+
+Loop for each episode:
+
+\hspace{.5cm} Initialize $S$
+
+\hspace{.5cm} Loop for each step of episode:
+
+\hspace{1cm} $A \leftarrow$ action given by $ \pi $ for $S$
+
+\hspace{1cm} Take action $A$, observe $R , S ^ { \prime }$
+
+\hspace{1cm} $V ( S ) \leftarrow V ( S ) + \alpha \big [ R + \gamma V ( S ^ { \prime } ) - V ( S ) \big ]$
+
+\hspace{1cm} $S \leftarrow S ^ { \prime }$
+
+\hspace{.5cm} until $S$ is terminal
+
+Because $TD(0)$ bases its update in part on an existing estimate, we say that it is a bootstrapping method, like DP.
+
+$$
+\begin{aligned}
+{ v _ { \pi } ( s ) } & { } = E _ { \pi } [ G _ { t } | S _ { t } = s ] \\
+{ } & { } = E _ { \pi } [ R _ { t + 1 } + \gamma G _ { t + 1 } | S _ { t } = s ] \\
+{ } & { } = E _ { \pi } [ R _ { t + 1 } + \gamma v _ { \pi } ( S _ { t + 1 } ) | S _ { t } = s ]
+\end{aligned}
+$$
+
+The TD target is an estimate for both reasons: it samples the expected values in $ E _ { \pi } [ R _ { t + 1 } + \gamma v _ { \pi } ( S _ { t + 1 } ) | S _ { t } = s ] $ and 
+it uses the current estimate $V$ instead of the true $v _ { \pi }$. Thus, TD methods combine the sampling of Monte Carlo with the bootstrapping of DP.
+
+Note that the quantity in brackets in the $TD(0)$ update is a sort of error, measuring the difference between the estimated value of $S _ { t }$ and 
+the better estimate $R _ { t + 1 } + \gamma V ( S _ { t + 1 } )$ . This quantity, called the TD error, arises in various forms throughout reinforcement learning:
+
+$$
+\delta _ { t } = R _ { t + 1 } + \gamma V ( S _ { t + 1 } ) - V ( S _ { t } )
+$$
+
+Notice that the TD error at each time is the error in the estimate made at that time. Because the TD error depends on the next state and next reward, 
+it is not actually available until one time step later. That is, $\delta _ { t }$ is the error in $V ( S _ { t } )$ , available at time $t + 1$. 
+Also note that if the array $V$ does not change during the episode (as it does not in Monte Carlo methods), then the Monte Carlo error can be written as a sum of TD errors:
+
+$$
+\begin{aligned} { G _ { t } - V ( S _ { t } ) } & { { } = R _ { t + 1 } + \gamma G _ { t + 1 } - V ( S _ { t } ) + \gamma V ( S _ { t + 1 } ) - \gamma V ( S _ { t + 1 } ) } \\ { } & { { } = \delta _ { t } + \gamma \big ( G _ { t + 1 } - V ( S _ { t + 1 } ) \big ) } \\ { } & { { } = \delta _ { t } + \gamma \delta _ { t + 1 } + \gamma ^ { 2 } \big ( G _ { t + 2 } - V ( S _ { t + 2 } ) \big ) } \\ { } & { { } = \delta _ { t } + \gamma \delta _ { t + 1 } + \gamma ^ { 2 } \delta _ { t + 2 } + \cdots + \gamma ^ { T - t - 1 } \delta _ { T - 1 } + \gamma ^ { T - t } \big ( G _ { T } - V ( S _ { T } ) \big ) } \\ { } & { { } = \delta _ { t } + \gamma \delta _ { t + 1 } + \gamma ^ { 2 } \delta _ { t + 2 } + \cdots + \gamma ^ { T - t - 1 } \delta _ { T - 1 } + \gamma ^ { T - t } \big ( 0 - 0 \big ) } \\ { } & { { } = \sum _ { k = t } ^ { T - 1 } \gamma ^ { k - t } \delta _ { k } } \\ \end{aligned}
+$$
+
+This identity is not exact if $V$ is updated during the episode (as it is in $TD(0)$), but if the step size is small then it may still hold approximately. 
+Generalizations of this identity play an important role in the theory and algorithms of temporal-difference learning.
+
 \section{Imitation Learning}
 
 Imitation learning, also known as learning from demonstration, is a process where an agent learns a new skill or behavior by observing and replicating the actions of others, often an expert. Training data are from expert inputs observations and actions. It assumes data is independently identity distributed, which is different from reinforcement learning. It is supervised learning.
