@@ -1385,6 +1385,34 @@ $$
 This identity is not exact if $V$ is updated during the episode (as it is in $TD(0)$), but if the step size is small then it may still hold approximately. 
 Generalizations of this identity play an important role in the theory and algorithms of temporal-difference learning.
 
+\subsection{Advantages of TD Prediction Methods}
+
+Obviously, TD methods have an advantage over DP methods in that they do not require a model of the environment, of its reward and next-state probability distributions.
+
+The next most obvious advantage of TD methods over Monte Carlo methods is that they are naturally implemented in an online, fully incremental fashion. 
+With Monte Carlo methods one must wait until the end of an episode, because only then is the return known, whereas with TD methods one need wait only one time step. 
+Finally, as we noted in the previous chapter, some Monte Carlo methods must ignore or discount episodes 
+on which experimental actions are taken, which can greatly slow learning. TD methods are much less susceptible to these problems because they learn from each transition 
+regardless of what subsequent actions are taken.
+
+\textbf{Step-size (learning rate) conditions}:
+
+Let $\alpha_n(a)$ denote the step-size parameter used to process the reward received after the nth selection of action $a$. As we have noted, the choice $\alpha_n(a) = \frac{1}{n}$ 
+results in the sample-average method, which is guaranteed to converge to the true action values by the law of large numbers. But of course convergence is not guaranteed for all choices 
+of the sequence $\{\alpha_n(a)\}$. A well-known result in stochastic approximation theory gives us the conditions required to assure convergence with probability 1:
+
+\[\sum_{n=1}^{\infty} \alpha_n(a) = \infty \text{ and } \sum_{n=1}^{\infty} \alpha_n(a)^2 < \infty\]
+
+The first condition is required to guarantee that the steps are large enough to eventually overcome any initial conditions or random fluctuations. The second condition guarantees 
+that eventually the steps become small enough to assure convergence.
+
+For any fixed policy $ \pi $, $TD(0)$ has been proved to converge to $v _ { \pi }$, in the mean for a constant step-size parameter if it is suffciently small, 
+and with probability 1 if the step-size parameter decreases according to the usual stochastic approximation conditions. 
+Most convergence proofs apply only to the table-based case of the algorithm, but some also apply to the case of general linear function approximation. 
+
+For TD and Monte Carlo methods, at the current time this is an open question in the sense that no one has been able to prove 
+mathematically that one method converges faster than the other. In practice, however, TD methods have usually been found to converge faster than constant-$\alpha$ MC methods on stochastic tasks.
+
 \section{Imitation Learning}
 
 Imitation learning, also known as learning from demonstration, is a process where an agent learns a new skill or behavior by observing and replicating the actions of others, often an expert. Training data are from expert inputs observations and actions. It assumes data is independently identity distributed, which is different from reinforcement learning. It is supervised learning.
