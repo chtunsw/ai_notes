@@ -1413,6 +1413,46 @@ Most convergence proofs apply only to the table-based case of the algorithm, but
 For TD and Monte Carlo methods, at the current time this is an open question in the sense that no one has been able to prove 
 mathematically that one method converges faster than the other. In practice, however, TD methods have usually been found to converge faster than constant-$\alpha$ MC methods on stochastic tasks.
 
+\subsection{Sarsa: On-policy TD Control}
+
+The first step is to learn an action-value function rather than a state-value function. In particular, for an on-policy method we must estimate $q _ { \pi } ( s , a )$ 
+for the current behavior policy $ \pi $ and for all states $s$ and actions $a$. This can be done using essentially the same TD method described above for learning $v _ { \pi }$. 
+Now we consider transitions from state-action pair to state-action pair, and learn the values of state-action pairs. Formally these cases are identical: 
+they are both Markov chains with a reward process. The theorems assuring the convergence of state values under $TD(0)$ also apply to the corresponding algorithm for action values:
+
+$$
+Q ( S _ { t } , A _ { t } ) \leftarrow Q ( S _ { t } , A _ { t } ) + \alpha \Big [ R _ { t + 1 } + \gamma Q ( S _ { t + 1 } , A _ { t + 1 } ) - Q ( S _ { t } , A _ { t } ) \Big ]
+$$
+
+The convergence properties of the Sarsa algorithm depend on the nature of the policy's dependence on $Q$. For example, one could use $\epsilon$-greedy or $\epsilon$-soft policies. 
+Sarsa converges with probability 1 to an optimal policy and action-value function as long as all state-action pairs are visited an infinite number of times and the policy converges 
+in the limit to the greedy policy (which can be arranged, for example, with $\epsilon$-greedy policies by setting $\epsilon = 1 / t )$.
+
+\textbf{Sarsa (on-policy TD control) for estimating $Q \approx q_*$}
+
+Algorithm parameters: step size $\alpha \in ( 0 , 1 ]$ , small $\epsilon > 0$
+
+Initialize $Q ( s , a )$ , for all $s \in \mathcal { S } ^ { + } , a \in \mathcal { A } ( s )$, arbitrarily except that $Q(terminal,.) = 0$
+
+Loop for each episode:
+
+\hspace{.5cm} Initialize $S$
+
+\hspace{.5cm} Choose $A$ from $S$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)
+
+\hspace{.5cm} Loop for each step of episode:
+
+\hspace{1cm} Take action $A$, observe $R ,   S ^ { \prime }$
+
+\hspace{1cm} Choose $A ^ { \prime }$ from $S ^ { \prime }$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)
+
+\hspace{1cm} $Q ( S , A ) \leftarrow Q ( S , A ) + \alpha \big [ R + \gamma Q ( S ^ { \prime } , A ^ { \prime } ) - Q ( S , A ) \big ]$
+
+\hspace{1cm} $S \leftarrow S ^ { \prime } ;   A \leftarrow A ^ { \prime } ;$
+
+\hspace{.5cm} until $S$ is terminal
+
+
 \section{Imitation Learning}
 
 Imitation learning, also known as learning from demonstration, is a process where an agent learns a new skill or behavior by observing and replicating the actions of others, often an expert. Training data are from expert inputs observations and actions. It assumes data is independently identity distributed, which is different from reinforcement learning. It is supervised learning.
