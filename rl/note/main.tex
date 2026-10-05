@@ -1488,7 +1488,7 @@ Loop for each episode:
 
 \hspace{.5cm} until $S$ is terminal
 
-\section{Q-learning}
+\subsection{Q-learning from Coursera, By Andrew Ng}
 
 For any finite Markov decision process (FMDP), Q-learning finds an optimal policy in the sense of maximizing the expected value of the total reward over any and all successive steps, starting from the current state. Q-learning can identify an optimal action-selection policy for any given FMDP, given infinite exploration time and a partly-random policy.
 
@@ -1596,6 +1596,33 @@ y^{(j)} =
 \[b = (1 - \eta)b + \eta b_{new}\]
 
 \hspace{1cm} Start a new episode if \(s_{t+1}\) terminates, else continue.
+
+\subsection{Expected Sarsa}
+
+Consider the learning algorithm that is just like Q-learning except that instead of the maximum over next state-action pairs 
+it uses the expected value, taking into account how likely each action is under the current policy. That is, consider the algorithm with the update rule
+
+$$
+\begin{aligned} { Q ( S _ { t } , A _ { t } ) } & { { } \leftarrow Q ( S _ { t } , A _ { t } ) + \alpha \Big [ R _ { t + 1 } + \gamma E  _ { \pi } [ Q ( S _ { t + 1 } , A _ { t + 1 } ) | S _ { t + 1 } ] - Q ( S _ { t } , A _ { t } ) \Big ] } \\ { } & { { } \leftarrow Q ( S _ { t } , A _ { t } ) + \alpha \Big [ R _ { t + 1 } + \gamma \sum _ { a } \pi ( a | S _ { t + 1 } ) Q ( S _ { t + 1 } , a ) - Q ( S _ { t } , A _ { t } ) \Big ] , } \\ \end{aligned}
+$$
+
+but that otherwise follows the schema of Q-learning. Given the next state, $S _ { t + 1 }$, this algorithm moves deterministically in the same direction 
+as Sarsa moves in expectation, and accordingly it is called Expected Sarsa.
+
+Expected Sarsa is more complex computationally than Sarsa but, in return, it eliminates the variance due to the random selection of $A _ { t + 1 }$ . 
+Given the same amount of experience we might expect it to perform slightly better than Sarsa, and indeed it generally does.
+
+\subsection{Maximization Bias and Double Learning}
+
+All the control algorithms that we have discussed so far involve maximization in the construction of their target policies. 
+For example, in Q-learning the target policy is the greedy policy given the current action values, which is defined with a max, 
+and in Sarsa the policy is often $\epsilon$-greedy, which also involves a maximization operation. In these algorithms, 
+a maximum over estimated values is used implicitly as an estimate of the maximum value, which can lead to a significant positive bias. 
+To see why, consider a single state $s$ where there are many actions $a$ whose true values, $q ( s , a )$ , are all zero but whose estimated values, 
+$Q ( s , a )$, are uncertain and thus distributed some above and some below zero. The maximum of the true values is zero, 
+but the maximum of the estimates is positive, a positive bias. We call this maximization bias.
+
+
 
 \section{Policy Gradient}
 
