@@ -1622,7 +1622,70 @@ To see why, consider a single state $s$ where there are many actions $a$ whose t
 $Q ( s , a )$, are uncertain and thus distributed some above and some below zero. The maximum of the true values is zero, 
 but the maximum of the estimates is positive, a positive bias. We call this maximization bias.
 
+Are there algorithms that avoid maximization bias? To start, consider a bandit case in which we have noisy estimates of the value of each of many actions, 
+obtained as sample averages of the rewards received on all the plays with each action. As we discussed above, there will be a positive maximization bias 
+if we use the maximum of the estimates as an estimate of the maximum of the true values. One way to view the problem is that it is due to using the same samples (plays) 
+both to determine the maximizing action and to estimate its value. Suppose we divided the plays in two sets and used them to learn two independent estimates, 
+call them $Q _ { 1 } ( a )$ and $Q _ { 2 } ( a )$ , each an estimate of the true value $q ( a )$ , for all $a \in \mathcal { A }$ . We could then use one estimate, 
+say $Q _ { 1 }$ , to determine the maximizing action $A ^ { * } = \operatorname { a r g   m a x } _ { a } Q _ { 1 } ( a )$ , and the other, $Q _ { 2 }$ , 
+to provide the estimate of its value, $\begin{array} { r } { Q _ { 2 } ( A ^ { * } ) = Q _ { 2 } ( \operatorname { a r g } \operatorname* { m a x } _ { a } Q _ { 1 } ( a ) ) } \end{array}$ . 
+This estimate will then be unbiased in the sense that $ E [ Q _ { 2 } ( A ^ { * } ) ] = q ( A ^ { * } )$ . We can also repeat the process 
+with the role of the two estimates reversed to yield a second unbiased estimate $Q _ { 1 } ( \operatorname { a r g } \operatorname { m a x } _ { a } Q _ { 2 } ( a ) )$ . 
+This is the idea of double learning. Note that although we learn two estimates, only one estimate is updated on each play; double learning doubles the memory requirements, 
+but does not increase the amount of computation per step.
 
+\textbf{Double Q-learning, for estimating $ Q_1 \approx Q_2 \approx q_* $}
+
+Algorithm parameters: step size $\alpha \in ( 0 , 1 ]$ , small $\epsilon > 0$
+
+Initialize $Q _ { 1 } ( s , a )$ and $Q _ { 2 } ( s , a )$ for all $s \in \mathcal { S } ^ { + } , a \in \mathcal { A } ( s )$ such that $ Q(terminal, .) = 0 $
+
+Loop for each episode:
+
+\hspace{.5cm} Initialize $S$
+
+\hspace{.5cm} Loop for each step of episode:
+
+\hspace{1cm} Choose $A$ from $S$ using the policy $\epsilon$-greedy in $Q _ { 1 } + Q _ { 2 }$
+
+\hspace{1cm} Take action $A$, observe $R ,   S ^ { \prime }$
+
+\hspace{1cm} With 0.5 probabilility:
+
+\hspace{1.5cm} $Q _ { 1 } ( S , A ) \leftarrow Q _ { 1 } ( S , A ) + \alpha \Big ( R + \gamma Q _ { 2 } \big ( S ^ { \prime } , \operatorname { a r g } \operatorname* { m a x } _ { a } Q _ { 1 } ( S ^ { \prime } , a ) \big ) - Q _ { 1 } ( S , A ) \Big )$
+
+\hspace{1cm} else:
+
+\hspace{1.5cm} $Q _ { 2 } ( S , A ) \leftarrow Q _ { 2 } ( S , A ) + \alpha \Big ( R + \gamma Q _ { 1 } \big ( S ^ { \prime } , \operatorname { a r g } \operatorname* { m a x } _ { a } Q _ { 2 } ( S ^ { \prime } , a ) \big ) - Q _ { 2 } ( S , A ) \Big )$
+
+\hspace{1cm} $S \leftarrow S ^ { \prime }$
+
+\hspace{.5cm} until $S$ is terminal
+
+Notice the difference between two types of errors: random estimation noise (which averages out to zero) and maximization bias (the systematic overestimation caused by the \(\max \) operator).
+Double Q-learning does not instantly clear the noise from the individual tables, but it completely breaks the mathematical trap that turns random noise into systematic overestimation.
+
+\subsection{Games, Afterstates, and Other Special Cases}
+
+In this book we try to present a uniform approach to a wide class of tasks, but of course there are always exceptional tasks that are better treated in a specialized way. 
+A conventional state-value function evaluates states in which the agent has the option of selecting an action, but the state-value function used in
+tic-tac-toe evaluates board positions after the agent has made its move. Let us call these afterstates, and value functions over these, afterstate value functions. 
+Afterstates are useful when we have knowledge of an initial part of the environment's dynamics but not necessarily of the full dynamics. For example, in games we typically know the immediate effects of our moves. 
+We know for each possible chess move what the resulting position will be, but not how our opponent will reply. Afterstate value functions are a natural way to take advantage of this kind of knowledge and thereby 
+produce a more effcient learning method.
+
+The reason it is more effcient to design algorithms in terms of afterstates is apparent from the tic-tac-toe example. A conventional action-value function would map from positions and moves to an estimate of the value. 
+But many position-move pairs produce the same resulting position.
+
+In such cases the position-move pairs are different but produce the same "afterposition" and thus must have the same value. A conventional action-value function would have to separately assess both pairs, 
+whereas an afterstate value function would immediately assess both equally.
+
+Afterstates arise in many tasks, not just games. For example, in queuing tasks there are actions such as assigning customers to servers, rejecting customers, or discarding information. 
+In such cases the actions are in fact defined in terms of their immediate effects, which are completely known.
+
+It is impossible to describe all the possible kinds of specialized problems and corresponding specialized learning algorithms. However, the principles should apply widely. 
+For example, afterstate methods are still aptly described in terms of generalized policy iteration, with a policy and (afterstate) value function interacting in essentially the same way. 
+In many cases one will still face the choice between on-policy and off-policy methods for managing the need for persistent exploration.
 
 \section{Policy Gradient}
 
