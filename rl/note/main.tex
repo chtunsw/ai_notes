@@ -1687,6 +1687,77 @@ It is impossible to describe all the possible kinds of specialized problems and 
 For example, afterstate methods are still aptly described in terms of generalized policy iteration, with a policy and (afterstate) value function interacting in essentially the same way. 
 In many cases one will still face the choice between on-policy and off-policy methods for managing the need for persistent exploration.
 
+\section{Planning and Learning with Tabular Methods}
+
+Model-based methods rely on planning as their primary component, while model-free methods primarily rely on learning. Although there are real differences between 
+these two kinds of methods, there are also great similarities. In particular, the heart of both kinds of methods is the computation of value functions. Moreover, all the methods 
+are based on looking ahead to future events, computing a backed-up value, and then using it as an update target for an approximate value function.
+
+\subsection{Models and Planning}
+
+By a model of the environment we mean anything that an agent can use to predict how the environment will respond to its actions. Given a state and an action, 
+a model produces a prediction of the resultant next state and next reward. If the model is stochastic, then there are several possible next states and next rewards, 
+each with some probability of occurring. Some models produce a description of all possibilities and their probabilities; these we call distribution models. 
+Other models produce just one of the possibilities, sampled according to the probabilities; these we call sample models. 
+For example, consider modeling the sum of a dozen dice. A distribution model would produce all possible sums and their probabilities of occurring, 
+whereas a sample model would produce an individual sum drawn according to this probability distribution. The kind of model assumed in dynamic programming—estimates of the 
+MDP's dynamics, $p ( s ^ { \prime } , r   |   s , a )$ — is a distribution model. Distribution models are stronger than sample models in that they can always be used to produce samples. 
+However, in many applications it is much easier to obtain sample models than distribution models.
+
+Models can be used to mimic or simulate experience. Given a starting state and action, a sample model produces a possible transition, and a distribution model generates 
+all possible transitions weighted by their probabilities of occurring. Given a starting state and a policy, a sample model could produce an entire episode, 
+and a distribution model could generate all possible episodes and their probabilities. In either case, we say the model is used to simulate the environment and produce simulated experience.
+
+The word planning is used in several different ways in different fields. We use the term to refer to any computational process that takes a model as input and produces or improves a policy 
+for interacting with the modeled environment:
+
+$$
+model \xrightarrow{planning} policy
+$$
+
+In artificial intelligence, there are two distinct approaches to planning according to our definition. State-space planning, which includes the approach we take in this book, 
+is viewed primarily as a search through the state space for an optimal policy or an optimal path to a goal. Actions cause transitions from state to state, and value functions are computed over states. 
+In what we call plan-space planning, planning is instead a search through the space of plans. Operators transform one plan into another, and value functions, if any, are defined over the space of plans. 
+Plan-space planning includes evolutionary methods and "partial-order planning", a common kind of planning in artificial intelligence in which the ordering of steps is not completely determined at all stages of planning. 
+Plan-space methods are diffcult to apply effciently to the stochastic sequential decision problems that are the focus in reinforcement learning, and we do not consider them further.
+
+The unified view we present here is that all state-space planning methods share a common structure.
+There are two basic ideas: (1) all state-space planning methods involve computing value functions as a key intermediate step toward improving the policy, 
+and (2) they compute value functions by updates or backup operations applied to simulated experience. This common structure can be diagrammed as follows:
+
+$$
+model \rightarrow \text{simulated experience} \xrightarrow{backups} values \rightarrow policy
+$$
+
+Dynamic programming methods clearly fit this structure: they make sweeps through the space of states, generating for each state the distribution of possible transitions. 
+Each distribution is then used to compute a backed-up value (update target) and update the state's estimated value. Various other state-space 
+planning methods also fit this structure, with individual methods differing only in the kinds of updates they do, the order in which they do them, and in how long the backed-up information is retained.
+
+The heart of both learning and planning methods 
+is the estimation of value functions by backing-up update operations. The difference is that whereas planning uses simulated experience generated by a model, 
+learning methods use real experience generated by the environment. Of course this difference leads to a number of other differences, for example, in how performance is assessed 
+and in how flexibly experience can be generated. But the common structure means that many ideas and algorithms can be transferred between planning and learning. In particular, 
+in many cases a learning algorithm can be substituted for the key update step of a planning method. Learning methods require only experience as input, and in many cases they can be applied to simulated experience 
+just as well as to real experience. The box below shows a simple example of a planning method based on one-step tabular Q-learning and on random samples from a sample model. 
+This method, which we call random-sample one-step tabular Q-planning, converges to the optimal policy for the model under the same conditions that one-step tabular Q-learning converges to the optimal policy 
+for the real environment (each state-action pair must be selected an infinite number of times in Step 1, and must decrease appropriately over time).
+
+\textbf{Random-sample one-step tabular Q-planning}
+
+Loop forever:
+
+\hspace{.5cm} 1. Select a state, $S \in { \mathcal { S } }$ , and an action, $A \in { \mathcal { A } } ( S )$ , at random
+
+\hspace{.5cm} 2. Send $S$, $A$ to a sample model, and obtain a sample next reward, $R$, and a sample next state, $S ^ { \prime }$
+
+\hspace{.5cm} 3. Apply one-step tabular Q-learning to $S , A , R , S ^ { \prime }$:
+
+\hspace{1cm} $Q ( S , A ) \leftarrow Q ( S , A ) + \alpha \big [ R + \gamma \operatorname* { m a x } _ { a } Q ( S ^ { \prime } , a ) - Q ( S , A ) \big ]$
+
+The benefits of planning in small, incremental steps: 
+this enables planning to be interrupted or redirected at any time with little wasted computation, which appears to be a key requirement for effciently intermixing planning 
+with acting and with learning of the model. Planning in very small steps may be the most efficient approach even on pure planning problems if the problem is too large to be solved exactly.
+
 \section{Policy Gradient}
 
 \textbf{On-policy vs Off-policy learning}:
