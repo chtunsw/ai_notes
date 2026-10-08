@@ -1880,31 +1880,7 @@ testing all accessible state transitions and even to find long sequences of acti
 to carry out such tests. Of course all this testing has its cost, but in many cases, 
 this kind of computational curiosity is well worth the extra exploration.
 
-\section{Policy Gradient}
-
-\textbf{On-policy vs Off-policy learning}:
-
-The key difference lies in how these methods approach learning:
-
-\begin{itemize}
-    \item On-policy:
-    \begin{itemize}
-        \item Training data is only generated from the exact same policy. e.g. Policy Gradient
-        \item Learn from your own current strategy (even if it's not the best one yet).
-    \end{itemize}
-    \item Off-policy:
-    \begin{itemize}
-        \item Training data can originate from other sources that are not from the exact same policy. e.g. Q-learning, with greedy policy \(\epsilon\) in training, without \(\epsilon\) in prediction
-        \item Learn from a different strategy (potentially better or more informed) than what you're currently using.
-    \end{itemize}
-    \item The primary distinction lies in how they approach exploration and exploitation, which affects their convergence properties and practical performance in different types of environments.
-\end{itemize}
-
-\textbf{Policy Gradient Algorithms}:
-
-TBD: https://lilianweng.github.io/posts/2018-04-08-policy-gradient/
-
-\section{Monte Carlo tree search (MCTS)}
+\subsection{Monte Carlo tree search (MCTS)}
 
 The focus of MCTS is on the analysis of the most promising moves, expanding the search tree based on random sampling of the search space. The application of Monte Carlo tree search in games is based on many playouts, also called roll-outs. In each playout, the game is played out to the very end by selecting moves at random. The final game result of each playout is then used to weight the nodes in the game tree so that better nodes are more likely to be chosen in future playouts.
 
@@ -1947,6 +1923,30 @@ The main difficulty in selecting child nodes is maintaining some balance between
 \end{itemize}
 
 The first component of the formula above corresponds to exploitation; it is high for moves with high average win ratio. The second component corresponds to exploration; it is high for moves with few simulations.
+
+\section{Policy Gradient}
+
+\textbf{On-policy vs Off-policy learning}:
+
+The key difference lies in how these methods approach learning:
+
+\begin{itemize}
+    \item On-policy:
+    \begin{itemize}
+        \item Training data is only generated from the exact same policy. e.g. Policy Gradient
+        \item Learn from your own current strategy (even if it's not the best one yet).
+    \end{itemize}
+    \item Off-policy:
+    \begin{itemize}
+        \item Training data can originate from other sources that are not from the exact same policy. e.g. Q-learning, with greedy policy \(\epsilon\) in training, without \(\epsilon\) in prediction
+        \item Learn from a different strategy (potentially better or more informed) than what you're currently using.
+    \end{itemize}
+    \item The primary distinction lies in how they approach exploration and exploitation, which affects their convergence properties and practical performance in different types of environments.
+\end{itemize}
+
+\textbf{Policy Gradient Algorithms}:
+
+TBD: https://lilianweng.github.io/posts/2018-04-08-policy-gradient/
 
 \printindex
 
