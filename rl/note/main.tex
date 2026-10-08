@@ -1845,6 +1845,41 @@ it is trivial to intermix planning and acting. Both proceed as fast as they can.
 planning in the background. Also ongoing in the background is the model-learning process. As new information is gained, the model is updated to better match reality. As the model changes, the ongoing planning process 
 will gradually compute a different way of behaving to match the new model.
 
+\subsection{When the Model Is Wrong}
+
+Models may be incorrect because the environment is stochastic and only a limited number of samples have been observed, or because the model was learned using 
+function approximation that has generalized imperfectly, or simply because the environment has changed and its new behavior has not yet been observed. 
+When the model is incorrect, the planning process is likely to compute a suboptimal policy.
+
+In some cases, the suboptimal policy computed by planning quickly leads to the discovery and correction of the modeling error. This tends to happen when the model 
+is optimistic in the sense of predicting greater reward or better state transitions than are actually possible. The planned policy attempts to exploit these opportunities 
+and in doing so discovers that they do not exist.
+
+Greater diffculties arise when the environment changes to become better than it was 
+before, and yet the formerly correct policy does not reveal the improvement. In these 
+cases the modeling error may not be detected for a long time, if ever.
+
+The general problem here is another version of the conflict between exploration and 
+exploitation. In a planning context, exploration means trying actions that improve the 
+model, whereas exploitation means behaving in the optimal way given the current model. 
+We want the agent to explore to find changes in the environment, but not so much that 
+performance is greatly degraded. As in the earlier exploration/exploitation conflict, there 
+probably is no solution that is both perfect and practical, but simple heuristics are often 
+effective.
+
+The Dyna-Q+ agent that did solve the shortcut maze uses one such heuristic. This 
+agent keeps track for each state-action pair of how many time steps have elapsed since 
+the pair was last tried in a real interaction with the environment. The more time that 
+has elapsed, the greater (we might presume) the chance that the dynamics of this pair 
+has changed and that the model of it is incorrect. To encourage behavior that tests 
+long-untried actions, a special “bonus reward” is given on simulated experiences involving 
+these actions. In particular, if the modeled reward for a transition is $r$, and the transition 
+has not been tried in $\tau$ time steps, then planning updates are done as if that transition 
+produced a reward of $r + \kappa { \sqrt { \tau } }$ , for some small $\kappa$. This encourages the agent to keep 
+testing all accessible state transitions and even to find long sequences of actions in order 
+to carry out such tests. Of course all this testing has its cost, but in many cases, 
+this kind of computational curiosity is well worth the extra exploration.
+
 \section{Policy Gradient}
 
 \textbf{On-policy vs Off-policy learning}:
