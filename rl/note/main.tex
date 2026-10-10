@@ -1909,6 +1909,14 @@ Rounds of search are repeated as long as the time allotted to a move remains. Th
 
 DeepMind's AlphaZero replaces the simulation step with an evaluation based on a neural network.
 
+At its base, MCTS is a decision-time planning algorithm based on Monte Carlo control applied to simulations that start from the root state; 
+that is, it is a kind of rollout algorithm. It therefore benefits from online, incremental, sample-based value estimation and policy improvement. 
+Beyond this, it saves action-value estimates attached to the tree edges and updates them using reinforcement learning's sample updates. 
+This has the effect of focusing the Monte Carlo trials on trajectories whose initial segments are common to high-return trajectories previously simulated. 
+Further, by incrementally expanding the tree, MCTS effectively grows a lookup table to store a partial action-value function, with memory allocated to the estimated values 
+of state-action pairs visited in the initial segments of high-yielding sample trajectories. MCTS thus avoids the problem of globally approximating 
+an action-value function while it retains the benefit of using past experience to guide exploration.
+
 \textbf{UCT (Upper Confidence Bound 1 applied to trees):}
 
 The main difficulty in selecting child nodes is maintaining some balance between the exploitation of deep variants after moves with high average win rate and the exploration of moves with few simulations. The first formula for balancing exploitation and exploration in games is called UCT. UCT recommends to choose in each node of the game tree the move for which the following expression has the highest value:
