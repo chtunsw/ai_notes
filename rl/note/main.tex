@@ -1932,6 +1932,32 @@ The main difficulty in selecting child nodes is maintaining some balance between
 
 The first component of the formula above corresponds to exploitation; it is high for moves with high average win ratio. The second component corresponds to exploration; it is high for moves with few simulations.
 
+\section{On-policy Prediction with Approximation}
+
+The problem with large state spaces is not just the memory needed for large tables, but the time and data needed to fill them accurately. 
+In many of our target tasks, almost every state encountered will never have been seen before. To make sensible decisions in such states 
+it is necessary to generalize from previous encounters with different states that are in some sense similar to the current one. 
+In other words, the key issue is that of generalization.
+
+We combine reinforcement learning methods with existing generalization methods. The kind of generalization we require is often called function approximation 
+because it takes examples from a desired function (e.g., a value function) and attempts to generalize from them to construct an approximation of the entire function. 
+Function approximation is an instance of supervised learning, the primary topic studied in machine learning, artificial neural networks, pattern recognition, 
+and statistical curve fitting. In theory, any of the methods studied in these fields can be used in the role of function approximator within reinforcement learning algorithms, 
+although in practice some fit more easily into this role than others.
+
+Consider function approximation in estimating the state-value function from on-policy data, that is, in approximating $v _ { \pi }$ from experience generated using a known policy $\pi$. 
+The approximate value function is represented not as a table but as a parameterized functional form with weight vector $\mathbf { w } \in \mathbb { R } ^ { d } $ . 
+We will write $\hat { v } ( s \mathbf { , } \mathbf { w } ) \approx v _ { \pi } ( s )$ for the approximate value of state $s$ given weight vector $\mathbf { w }$. For example, $\hat { v }$ might be 
+a linear function in features of the state, with $\mathbf { w }$ the vector of feature weights. More generally, $\hat { v }$ might be the function computed by a multi-layer artificial neural network, 
+with $\mathbf { w }$ the vector of connection weights in all the layers. By adjusting the weights, any of a wide range of different functions can be implemented by the network. 
+Or $\hat { v }$ might be the function computed by a decision tree, where $\mathbf { w }$ is all the numbers defining the split points and leaf values of the tree. 
+Typically, the number of weights (the dimensionality of $\mathbf { w }$) is much less than the number of states $( d \ll | \mathcal { S } | )$ , and changing one weight 
+changes the estimated value of many states. Consequently, when a single state is updated, the change generalizes from that state to affect the values of many other states. 
+Such generalization makes the learning potentially more powerful but also potentially more difficult to manage and understand.
+
+Extending reinforcement learning to function approximation also makes it applicable to partially observable problems, in which the full state is not available to the agent. 
+If the parameterized function form for $\hat { v }$ does not allow the estimated value to depend on certain aspects of the state, then it is just as if those aspects are unobservable. 
+
 \section{Policy Gradient}
 
 \textbf{On-policy vs Off-policy learning}:
