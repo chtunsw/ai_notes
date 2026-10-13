@@ -255,6 +255,112 @@ For example, for discrete models it can be \(v_{\pi}(s) = E_{\pi}[G_t \mid S_t =
 
 \(U_t\): target for estimate at time \(t\).
 
+$\delta _ { t }$: temporal-difference (TD) error at $t$ (a random variable)
+
+$\delta _ { t } ^ { s } , \delta _ { t } ^ { a }$: state-specific and action-specific forms of the TD error
+
+$n$: in n-step methods, $n$ is the number of steps of bootstrapping
+
+$d$: dimensionality — the number of components of $\mathbf { w }$
+
+$d ^ { \prime }$: alternate dimensionality — the number of components of $\boldsymbol{\theta}$
+
+$\mathbf { w } , \mathbf { w } _ { t }$: d-vector of weights underlying an approximate value function
+
+$w _ { i } , w _ { t , i }$: ith component of learnable weight vector
+
+$\hat { v } ( s , \mathbf { w } )$: approximate value of state $s$ given weight vector $\mathbf { w }$
+
+$v _ { \mathbf { w } } ( s )$: alternate notation for $\hat { v } ( s , \mathbf { w } )$
+
+$\hat { q } ( s , a , \mathbf { w } )$: approximate value of state-action pair $s , a$ given weight vector $\mathbf { w }$
+
+$\nabla \hat { v } ( s , \mathbf { w } )$: column vector of partial derivatives of $\hat { v } ( s , \mathbf { w } )$ with respect to $\mathbf { w }$
+
+$\nabla \hat { q } ( s , a , \mathbf { w } )$: column vector of partial derivatives of $\hat { q } ( s , a , \mathbf { w } )$ with respect to $\mathbf { w }$
+
+$\mathbf { x } ( s )$: vector of features visible when in state $s$
+
+$\mathbf { x } ( s , a )$: vector of features visible when in state $s$ taking action $a$
+
+$x _ { i } ( s ) , x _ { i } ( s , a )$: ith component of vector $\mathbf { x } ( s )$ or $\mathbf { x } ( s , a )$
+
+$\mathbf { x } _ { t }$: shorthand for $\mathbf { x } ( S _ { t } )$ or $\mathbf { x } ( S _ { t } , A _ { t } )$
+
+$\mathbf { w } ^ { \top } \mathbf { x }$: inner product of vectors, $\mathbf { w } ^ { \top } \mathbf { x } \doteq \sum _ { i } w _ { i } x _ { i } ; \mathrm { e . g . , } \; \hat { v } ( s \mathbf { , } \mathbf { w } ) \doteq \mathbf { w } ^ { \top } \mathbf { x } ( s )$
+
+$\mathbf { v } , \mathbf { v } _ { t }$: secondary d-vector of weights, used to learn $\mathbf { w }$
+
+$\mathbf { z } _ { t }$: d-vector of eligibility traces at time $t$
+
+$\boldsymbol{\theta}, \boldsymbol{\theta}_t$: parameter vector of target policy
+
+$\pi ( a \mid s , \boldsymbol { \theta } )$: probability of taking action $a$ in state $s$ given parameter vector $\boldsymbol { \theta }$
+
+$\pi _ { \boldsymbol{\theta} }$: policy corresponding to parameter $\boldsymbol{\theta}$
+
+$\nabla \pi ( a \mid s , \boldsymbol { \theta } )$: column vector of partial derivatives of $\pi ( a \mid s , \boldsymbol { \theta } )$ with respect to $\boldsymbol { \theta }$
+
+$J ( \boldsymbol { \theta } )$: performance measure for the policy $\pi _ { \boldsymbol{\theta} }$
+
+$\nabla J ( \boldsymbol { \theta } )$: column vector of partial derivatives of $J ( \boldsymbol { \theta } )$ with respect to $\boldsymbol{\theta}$
+
+$h ( s , a , \boldsymbol { \theta } )$: preference for selecting action $a$ in state $s$ based on $\boldsymbol{\theta}$
+
+$b ( a \mid s )$: behavior policy used to select actions while learning about target policy $\pi$
+
+$b ( s )$: a baseline function $b : \mathcal { S } \mapsto \mathbb { R }$ for policy-gradient methods
+
+$b$: branching factor for an MDP or search tree
+
+$\rho _ { t : h }$: importance sampling ratio for time $t$ through time $h$
+
+$\rho _ { t }$: importance sampling ratio for time $t$ alone, $\rho _ { t } \doteq \rho _ { t : t }$ 
+
+$r ( \pi )$: average reward (reward rate) for policy $\pi$
+
+$\bar { R } _ { t }$: estimate of $r ( \pi )$ at time $t$
+
+$\mu ( s )$: on-policy distribution over states
+
+$\boldsymbol{\mu}$: $\vert \mathcal{S} \vert$-vector of the $\mu ( s )$ for all $s \in \mathcal { S }$
+
+$\vert \vert v \vert \vert _ { \mu } ^ { 2 }$: $\mu$-weighted squared norm of value function $v$, i.e., $\vert \vert v \vert \vert _ { \mu } ^ { 2 } \doteq \sum _ { s \in \mathcal { S } } \mu ( s ) v ( s ) ^ { 2 }$
+
+$\eta ( s )$: expected number of visits to state $s$ per episode
+
+$\Pi$: projection operator for value functions
+
+$B _ { \pi }$: Bellman operator for value functions
+
+$\mathbf { A }$: $d \times d$ matrix $\mathbf { A } \doteq E \Big [ \mathbf { x } _ { t } \big ( \mathbf { x } _ { t } - \gamma \mathbf { x } _ { t + 1 } \big ) ^ { \top } \Big ]$
+
+$\mathbf { b }$: d-dimensional vector $\mathbf { b } \doteq E [ R _ { t + 1 } \mathbf { x } _ { t } ]$
+
+$\mathbf { w } _ { \mathrm { T D } }$: TD fixed point $\mathbf { w } _ { \mathrm { T D } } \doteq \mathbf { A } ^ { - 1 } \mathbf { b }$ (a d-vector)
+
+$\mathbf { I }$: identity matrix
+
+$\mathbf { P }$: $\vert \mathcal{S} \vert \times \vert \mathcal{S} \vert$ matrix of state-transition probabilities under $\pi$
+
+$\mathbf { D }$: $\vert \mathcal{S} \vert \times \vert \mathcal{S} \vert$ diagonal matrix with $\boldsymbol{\mu}$ on its diagonal
+
+$\mathbf { X }$: $\vert \mathcal{S} \vert \times d$ matrix with the $\mathbf { x } ( s )$ as its rows 
+
+$\bar { \delta } _ { \mathbf { w } } ( s )$: Bellman error (expected TD error) for $v _ { \mathbf { w } }$ at state $s$
+
+$\overline { { \delta } } _ { \mathbf { w } }$ , $\mathrm { BE }$: Bellman error vector, with components $\bar { \delta } _ { \mathbf { w } } ( s )$
+
+$\overline { { \operatorname { V E } } } ( \mathbf { w } )$: mean square value error $\overline { { \operatorname { V E } } } ( \mathbf { w } ) \doteq \vert \vert v _ { \mathbf { w } } - v _ { \pi } \vert \vert _ { \mu } ^ { 2 }$
+
+$\overline { { \operatorname { B E } } } ( \mathbf { w } )$: mean square Bellman error $\overline { { \operatorname { B E } } } ( \mathbf { w } ) \doteq \vert \vert \bar { \delta } _ { \mathbf { w } } \vert \vert _ { \mu } ^ { 2 }$
+
+$\overline { { \operatorname { P B E } } } ( \mathbf { w } )$: mean square projected Bellman error $\overline { { \operatorname { P B E } } } ( \mathbf { w } ) \doteq \vert \vert \Pi \bar { \delta } _ { \mathbf { w } } \vert \vert _ { \mu } ^ { 2 }$
+
+$\overline { { \operatorname { T D E } } } ( \mathbf { w } )$: mean square temporal-difference error $\overline { { \operatorname { T D E } } } ( \mathbf { w } ) \doteq E _ { b } \big [ \rho _ { t } \delta _ { t } ^ { 2 } \big ]$
+
+$\overline { { \operatorname { R E } } } ( \mathbf { w } )$: mean square return error
+
 \section{Markov Chain and Markov Decision Process}
 
 \begin{center}
