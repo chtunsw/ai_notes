@@ -2122,6 +2122,22 @@ This is the natural choice without discounting. If there is discounting $( \gamm
 $$
 \eta ( s ) = h ( s ) + \gamma \sum _ { \overline { s } } \eta ( \overline { s } ) \sum _ { a } \pi ( a | \overline { s } ) p ( s | \overline { s } , a ) , \text { for all } s \in \mathcal { S }
 $$
+
+The two cases, continuing and episodic, behave similarly, but with approximation they must be treated separately in formal analyses. This completes the specification of the learning objective.
+
+But it is not completely clear that the $\overline { { \operatorname { V E } } }$ is the right performance objective for reinforcement learning. Remember that our ultimate purpose — the reason we are learning a value function — is to find a better policy. 
+The best value function for this purpose is not necessarily the best for minimizing $\overline { { \operatorname { V E } } }$. Nevertheless, it is not yet clear what a more useful alternative goal for value prediction might be. For now, we will focus on $\overline { { \operatorname { V E } } }$.
+
+An ideal goal in terms of $\overline { \operatorname { V E } }$ would be to find a global optimum, a weight vector $\mathbf { w } ^ { * }$ for which $\overline { \operatorname { V E } } ( \mathbf { w } ^ { * } ) \leq \overline { { \operatorname { V E } } } ( \mathbf { w } )$ 
+for all possible $\mathbf { w }$. Reaching this goal is sometimes possible for simple function approximators such as linear ones, but is rarely possible for complex function approximators such as artificial neural networks and decision trees. 
+Short of this, complex function approximators may seek to converge instead to a local optimum, a weight vector $\mathbf { w } ^ { * }$ for which $\overline { { \operatorname { V E } } } ( \mathbf { w } ^ { * } ) \leq \overline { { \operatorname { V E } } } ( \mathbf { w } )$ 
+for all $\mathbf { w }$ in some neighborhood of $\mathbf { w } ^ { * }$. Although this guarantee is only slightly reassuring, it is typically the best that can be said for nonlinear function approximators, and often it is enough. 
+Still, for many cases of interest in reinforcement learning there is no guarantee of convergence to an optimum, or even to within a bounded distance of an optimum. Some methods may in fact diverge, with their $\overline { { \mathrm { V E } } }$ approaching infinity in the limit.
+
+In the last two sections we outlined a framework for combining a wide range of reinforcement learning methods for value prediction with a wide range of function approximation methods, using the updates of the former to generate training examples for the latter. 
+We also described a $\overline { { \mathrm { V E } } }$ performance measure which these methods may aspire to minimize. The range of possible function approximation methods is far too large to cover all, 
+and anyway too little is known about most of them to make a reliable evaluation or recommendation. Of necessity, we consider only a few possibilities.
+
 \section{Policy Gradient}
 
 \textbf{On-policy vs Off-policy learning}:
