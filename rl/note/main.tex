@@ -2104,23 +2104,36 @@ Under on-policy training this is called the on-policy distribution. In continuin
 
 \textbf{The on-policy distribution in episodic tasks}
 
+Imagine you start an episode. You walk around the environment following your policy \(\pi \). Let's define a mathematical "clicker" (an indicator function) that clicks 1 every time you visit state \(s\) at time step \(t\), and 0 if you don't. 
+The total number of times you visit state \(s\) in an episode is just the sum of all clicks from start (\(t=0\)) to the end of time (\(t=\infty\)):
+
+$$
+N(s) = \sum_{t=0}^{\infty} 1(S_t = s)
+$$
+
 In an episodic task, the on-policy distribution is a little different in that it depends on how the initial states of episodes are chosen. Let $h ( s )$ denote the probability that an episode begins in each state $s$, 
 and let $\eta ( s )$ denote the number of time steps spent, on average, in state $s$ in a single episode. Time is spent in a state $s$ if episodes start in $s$, or if transitions are made into $s$ from a preceding state $\overline { s }$ in which time is spent:
 
-$$
-\eta ( s ) = h ( s ) + \sum _ { \overline { s } } \eta ( \overline { s } ) \sum _ { a } \pi ( a | \overline { s } ) p ( s | \overline { s } , a ) , \text { for all } s \in \mathcal { S }
-$$
+\begin{equation*}
+\begin{split}
+\eta (s)
+& = E \left[ \sum _{t=0}^{\infty }1(S_{t}=s) \right] = \sum_{t=0}^{\infty} p(S_t = s) \\
+& = p(S_0 = s) + \sum_{t=1}^{\infty} p(S_t = s) \\
+& = h ( s ) + \sum _ { \overline { s } \in \mathcal { S } } \sum_{t=0}^{\infty} p(S_t = \overline { s }) p(S_{t + 1} = s | S_t = \overline { s }) \\
+& = h ( s ) + \sum _ { \overline { s } \in \mathcal { S } } \eta ( \overline { s } ) \sum _ { a } \pi ( a | \overline { s } ) p ( s | \overline { s } , a ) , \text { for all } s \in \mathcal { S }
+\end{split}
+\end{equation*}
 
 This system of equations can be solved for the expected number of visits $\eta ( s )$. The on-policy distribution is then the fraction of time spent in each state normalized to sum to one:
 
 $$
-\mu ( s ) = { \frac { \eta ( s ) } { \sum _ { s ^ { \prime } } \eta ( s ^ { \prime } ) } } , \quad { \text { for all } } s \in { \mathcal { S } }
+\mu ( s ) = { \frac { \eta ( s ) } { \sum _ { s ^ { \prime } \in \mathcal { S } } \eta ( s ^ { \prime } ) } } , \quad { \text { for all } } s \in { \mathcal { S } }
 $$
 
 This is the natural choice without discounting. If there is discounting $( \gamma < 1 )$ it should be treated as a form of termination, which can be done simply by including a factor of $\gamma$.
 
 $$
-\eta ( s ) = h ( s ) + \gamma \sum _ { \overline { s } } \eta ( \overline { s } ) \sum _ { a } \pi ( a | \overline { s } ) p ( s | \overline { s } , a ) , \text { for all } s \in \mathcal { S }
+\eta ( s ) = h ( s ) + \gamma \sum _ { \overline { s } \in \mathcal { S }} \eta ( \overline { s } ) \sum _ { a } \pi ( a | \overline { s } ) p ( s | \overline { s } , a ) , \text { for all } s \in \mathcal { S }
 $$
 
 The two cases, continuing and episodic, behave similarly, but with approximation they must be treated separately in formal analyses. This completes the specification of the learning objective.
@@ -2134,9 +2147,20 @@ Short of this, complex function approximators may seek to converge instead to a 
 for all $\mathbf { w }$ in some neighborhood of $\mathbf { w } ^ { * }$. Although this guarantee is only slightly reassuring, it is typically the best that can be said for nonlinear function approximators, and often it is enough. 
 Still, for many cases of interest in reinforcement learning there is no guarantee of convergence to an optimum, or even to within a bounded distance of an optimum. Some methods may in fact diverge, with their $\overline { { \mathrm { V E } } }$ approaching infinity in the limit.
 
-In the last two sections we outlined a framework for combining a wide range of reinforcement learning methods for value prediction with a wide range of function approximation methods, using the updates of the former to generate training examples for the latter. 
+We considered a framework for combining a wide range of reinforcement learning methods for value prediction with a wide range of function approximation methods, using the updates of the former to generate training examples for the latter. 
 We also described a $\overline { { \mathrm { V E } } }$ performance measure which these methods may aspire to minimize. The range of possible function approximation methods is far too large to cover all, 
 and anyway too little is known about most of them to make a reliable evaluation or recommendation. Of necessity, we consider only a few possibilities.
+
+\subsection{Stochastic-gradient and Semi-gradient Methods}
+
+Stochastic gradient descent (SGD) methods are among the most widely used of all function approximation methods and are particularly well suited to online reinforcement learning.
+
+In gradient-descent methods, the weight vector is a column vector with a fixed number of real valued components, $\mathbf { w } \doteq ( w _ { 1 } , w _ { 2 } , \ldots , w _ { d } ) ^ { \top }$, and the approximate value function $\hat { v } ( s , \mathbf { w } )$, 
+is a differentiable function of w for all $s \in \mathcal { S }$ . We will be updating w at each of a series of discrete time steps, $t = 0 , 1 , 2 , 3 , \ldots$, so we will need a notation $\mathbf { w } _ { t }$ for the weight vector at each step. For now, let us assume that, on each step, we observe a new example 
+$S _ { t } \mapsto v _ { \pi } ( S _ { t } )$ consisting of a (possibly randomly selected) state $S _ { t }$ and its true value under the policy. These states might be successive states from an interaction with the environment, but for now we do not assume so. Even though we are given the exact, correct values, 
+$v _ { \pi } ( S _ { t } )$ for each $S _ { t }$ , there is still a difficult problem because our function approximator has limited resources and thus limited resolution. In particular, there is generally no w that gets all the states, or even all the examples, exactly correct. In addition, we must generalize to 
+all the other states that have not appeared in examples.
+
 
 \section{Policy Gradient}
 
