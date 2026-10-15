@@ -2156,9 +2156,9 @@ and anyway too little is known about most of them to make a reliable evaluation 
 Stochastic gradient descent (SGD) methods are among the most widely used of all function approximation methods and are particularly well suited to online reinforcement learning.
 
 In gradient-descent methods, the weight vector is a column vector with a fixed number of real valued components, $\mathbf { w } \doteq ( w _ { 1 } , w _ { 2 } , \ldots , w _ { d } ) ^ { \top }$, and the approximate value function $\hat { v } ( s , \mathbf { w } )$, 
-is a differentiable function of w for all $s \in \mathcal { S }$ . We will be updating w at each of a series of discrete time steps, $t = 0 , 1 , 2 , 3 , \ldots$, so we will need a notation $\mathbf { w } _ { t }$ for the weight vector at each step. For now, let us assume that, on each step, we observe a new example 
+is a differentiable function of $\mathbf { w }$ for all $s \in \mathcal { S }$ . We will be updating $\mathbf { w }$ at each of a series of discrete time steps, $t = 0 , 1 , 2 , 3 , \ldots$, so we will need a notation $\mathbf { w } _ { t }$ for the weight vector at each step. For now, let us assume that, on each step, we observe a new example 
 $S _ { t } \mapsto v _ { \pi } ( S _ { t } )$ consisting of a (possibly randomly selected) state $S _ { t }$ and its true value under the policy. These states might be successive states from an interaction with the environment, but for now we do not assume so. Even though we are given the exact, correct values, 
-$v _ { \pi } ( S _ { t } )$ for each $S _ { t }$ , there is still a difficult problem because our function approximator has limited resources and thus limited resolution. In particular, there is generally no w that gets all the states, or even all the examples, exactly correct. In addition, we must generalize to 
+$v _ { \pi } ( S _ { t } )$ for each $S _ { t }$ , there is still a difficult problem because our function approximator has limited resources and thus limited resolution. In particular, there is generally no $\mathbf { w }$ that gets all the states, or even all the examples, exactly correct. In addition, we must generalize to 
 all the other states that have not appeared in examples.
 
 
