@@ -2102,6 +2102,19 @@ $$
 The square root of this measure, the root $\overline { { \operatorname { V E } } }$, gives a rough measure of how much the approximate values differ from the true values and is often used in plots. Often $\mu ( s )$ is chosen to be the fraction of time spent in $s$. 
 Under on-policy training this is called the on-policy distribution. In continuing tasks, the on-policy distribution is the stationary distribution under $\pi$.
 
+It is because: the agent is actively living inside the Markov Chain defined by the policy. When an agent follows a specific policy \(\pi \) for a long period of time, its choices dictate the state transitions. This creates a feedback loop where the agent's long-term presence 
+in any given state matches the exact equilibrium of that policy's transition matrix.
+
+\textbf{Stationary distribution}
+
+A stationary distribution ($\pmb { \mu }$) is a probability vector over the state space of a Markov Chain that remains unchanged after one step of the process, meaning the system stays in that same distribution indefinitely.
+
+For a transition matrix $\mathbf{P}$, the stationary distribution satisfies the linear vector equation:
+
+$$
+\pmb { \mu } = \mathbf { P } ^ { \top } \pmb { \mu }
+$$
+
 \textbf{The on-policy distribution in episodic tasks}
 
 Imagine you start an episode. You walk around the environment following your policy \(\pi \). Let's define a mathematical "clicker" (an indicator function) that clicks 1 every time you visit state \(s\) at time step \(t\), and 0 if you don't. 
@@ -2256,6 +2269,185 @@ Loop for each episode:
 State aggregation is a simple form of generalizing function approximation in which states are grouped together, with one estimated value (one component of the weight vector $\mathbf{w}$) for each group. 
 The value of a state is estimated as its group's component, and when the state is updated, that component alone is updated. State aggregation is a special case of SGD in which the gradient, 
 $\nabla \hat { v } ( S _ { t } ,   \mathbf { w } _ { t } )$ , is 1 for $S _ { t }$'s group's component and 0 for the other components.
+
+\subsection{Linear Methods}
+
+One of the most important special cases of function approximation is that in which the approximate function, $\hat { v } ( \cdot , \mathbf { w } )$ , is a linear function of the weight vector, $\mathbf{w}$. 
+Corresponding to every state $s$ there is a real-valued vector $\mathbf { x } ( s ) \doteq ( x _ { 1 } ( s ) , x _ { 2 } ( s ) , \ldots , x _ { d } ( s ) ) ^ { \top }$ , 
+with the same number of components as $\mathbf { w }$. Linear methods approximate state-value function by the inner product between $\mathbf { w }$ and $\mathbf { x } ( s )$ :
+
+$$
+\hat { v } ( s \mathbf { , } \mathbf { w } ) \doteq \mathbf { w } ^ { \top } \mathbf { x } ( s ) \doteq \sum _ { i = 1 } ^ { d } w _ { i } x _ { i } ( s )
+$$
+
+In this case the approximate value function is said to be linear in the weights, or simply linear.
+
+The vector $\mathbf { x } ( s )$ is called a feature vector representing state $s$. Each component $x _ { i } ( s )$ of $\mathbf { x } ( s )$ is the value of a function $x _ { i } : \mathcal { S } \rightarrow \mathbb { R }$ . 
+We think of a feature as the entirety of one of these functions, and we call its value for a state $s$ a feature of $s$ . For linear methods, features are basis functions because they form a linear basis for the set of approximate functions. 
+Constructing d-dimensional feature vectors to represent states is the same as selecting a set of d basis functions. Features may be defined in many different ways.
+
+It is natural to use SGD updates with linear function approximation. The gradient of the approximate value function with respect to $\mathbf { w }$ in this case is
+
+$$
+\nabla \hat { v } ( s \mathbf { , } \mathbf { w } ) = \mathbf { x } ( s )
+$$
+
+Thus, in the linear case the general SGD update reduces to a particularly simple form:
+
+$$
+\mathbf { w } _ { t + 1 } \doteq \mathbf { w } _ { t } + \alpha \Big [ U _ { t } - \hat { v } ( S _ { t } \mathbf { , } \mathbf { w } _ { t } ) \Big ] \mathbf { x } ( S _ { t } )
+$$
+
+Because it is so simple, the linear SGD case is one of the most favorable for mathematical analysis. Almost all useful convergence results for learning systems 
+of all kinds are for linear (or simpler) function approximation methods.
+
+In particular, in the linear case there is only one optimum (or, in degenerate cases, one set of equally good optima), and thus any method that is guaranteed to converge to or near a local optimum is automatically guaranteed to converge to or near the global optimum. 
+For example, the gradient Monte Carlo algorithm presented in the previous section converges to the global optimum of the $\overline { { \mathrm { V E } } }$ under linear function approximation if $\alpha$ is reduced over time according to the usual conditions.
+
+The semi-gradient TD(0) algorithm presented in the previous section also converges under linear function approximation, but this does not follow from general results on SGD; 
+a separate theorem is necessary. The weight vector converged to is also not the global optimum, but rather a point near the local optimum. It is useful to consider this important case in more detail, 
+specifically for the continuing case. The update at each time $t$ is
+
+$$
+\begin{aligned} { \mathbf { w } _ { t + 1 } } & { { } \doteq \mathbf { w } _ { t } + \alpha \Big ( R _ { t + 1 } + \gamma \mathbf { w } _ { t } ^ { \top } \mathbf { x } _ { t + 1 } - \mathbf { w } _ { t } ^ { \top } \mathbf { x } _ { t } \Big ) \mathbf { x } _ { t } } \\ { } & { { } = \mathbf { w } _ { t } + \alpha \Big ( R _ { t + 1 } \mathbf { x } _ { t } - \mathbf { x } _ { t } \big ( \mathbf { x } _ { t } - \gamma \mathbf { x } _ { t + 1 } \big ) ^ { \top } \mathbf { w } _ { t } \Big ) } \\ \end{aligned}
+$$
+
+where here we have used the notational shorthand $\mathbf { x } _ { t } = \mathbf { x } ( S _ { t } )$ . Once the system has reached steady state, for any given $\mathbf { w } _ { t }$, 
+the expected next weight vector can be written
+
+$$
+E [ \mathbf { w } _ { t + 1 } | \mathbf { w } _ { t } ] = \mathbf { w } _ { t } + \alpha ( \mathbf { b } - \mathbf { A } \mathbf { w } _ { t } )
+$$
+
+where
+
+$$
+\mathbf { b } \doteq E [ R _ { t + 1 } \mathbf { x } _ { t } ] \in \mathbb { R } ^ { d } \quad \operatorname { a n d } \quad \mathbf { A } \doteq E \Big [ \mathbf { x } _ { t } \big ( \mathbf { x } _ { t } - \gamma \mathbf { x } _ { t + 1 } \big ) ^ { \top } \Big ] \in \mathbb { R } ^ { d } \times \mathbb { R } ^ { d }
+$$
+
+It is clear that, if the system converges, it must converge to the weight vector $\mathbf { w } _ { \mathrm { T D } }$ at which
+
+$$
+\mathbf { b } - \mathbf { A } \mathbf { w } _ { \operatorname { T D } } = \mathbf { 0 }
+$$
+$$
+\mathbf { b } = \mathbf { A } \mathbf { w } _ { \operatorname { T D } }
+$$
+$$
+\mathbf { w } _ { \operatorname { T D } } \doteq \mathbf { A } ^ { - 1 } \mathbf { b }
+$$
+
+This quantity is called the TD fixed point. In fact linear semi-gradient TD(0) converges to this point. Some of the theory proving its convergence, and the existence of the inverse above, is given here:
+
+\textbf{Proof of Convergence of Linear TD(0)}
+
+What properties assure convergence of the linear TD(0) algorithm? Some insight can be gained by rewriting as
+
+$$
+E [ \mathbf { w } _ { t + 1 } | \mathbf { w } _ { t } ] = ( \mathbf { I } - \alpha \mathbf { A } ) \mathbf { w } _ { t } + \alpha \mathbf { b }
+$$
+
+Note that the matrix $\mathbf{A}$ multiplies the weight vector $\mathbf { w } _ { t }$ and not $\mathbf{b}$; only $\mathbf{A}$ is important to convergence. To develop intuition, consider the special case 
+in which $\mathbf{A}$ is a diagonal matrix. If any of the diagonal elements are negative, then the corresponding diagonal element of $\mathbf { I } \mathrm { ~ - ~ } \alpha \mathbf { A }$ will be greater than one, 
+and the corresponding component of $\mathbf { w } _ { t }$ will be amplified, which will lead to divergence if continued. On the other hand, if the diagonal elements of $\mathbf{A}$ are all positive, 
+then $\alpha$ can be chosen smaller than one over the largest of them, such that $\mathbf { I } - \alpha \mathbf { A }$ is diagonal with all diagonal elements between 0 and 1. In this case the first term of the update 
+tends to shrink $\mathbf { w } _ { t }$, and stability is assured. In general, $\mathbf { w } _ { t }$ will be reduced toward zero whenever $\mathbf{A}$ is positive definite, meaning $y ^ { \top } \mathbf { A } y > 0$ 
+for any real vector $y \neq 0$ . Positive definiteness also ensures that the inverse $\mathbf { A } ^ { - 1 }$ exists.
+
+For linear TD(0), in the continuing case with $\gamma < 1$ the $\mathbf{A}$ matrix can be written
+
+$$
+\begin{aligned} { \mathbf { A } } & { { } = \sum _ { s } \mu ( s ) \sum _ { a } \pi ( a | s ) \sum _ { r , s ^ { \prime } } p ( r , s ^ { \prime } \thinspace \vert \thinspace s , a ) \mathbf { x } ( s ) \big ( \mathbf { x } ( s ) - \gamma \mathbf { x } ( s ^ { \prime } ) \big ) ^ { \top } } \\ { } & { { } = \sum _ { s } \mu ( s ) \sum _ { s ^ { \prime } } p ( s ^ { \prime } \thinspace \vert \thinspace s ) \mathbf { x } ( s ) \big ( \mathbf { x } ( s ) - \gamma \mathbf { x } ( s ^ { \prime } ) \big ) ^ { \top } } \\ { } & { { } = \sum _ { s } \mu ( s ) \mathbf { x } ( s ) \bigg ( \mathbf { x } ( s ) - \gamma \sum _ { s ^ { \prime } } p ( s ^ { \prime } \thinspace \vert \thinspace s ) \mathbf { x } ( s ^ { \prime } ) \bigg ) ^ { \top } } \\ { } & { { } = \mathbf { X } ^ { \top } \mathbf { D } ( \mathbf { I } - \gamma \mathbf { P } ) \mathbf { X } } \\ \end{aligned}
+$$
+
+where $\mu ( s )$ is the stationary distribution under $\pi$, $p ( s ^ { \prime } | s )$ is the probability of transition from $s$ to $s ^ { \prime }$ under policy $\pi$, $\mathbf{P}$ is the $| \mathcal { S } | \times | \mathcal { S } |$ 
+matrix of these probabilities, $\mathbf{D}$ is the $| \mathcal { S } | \times | \mathcal { S } |$ diagonal matrix with the $\mu ( s )$ on its diagonal, and $\mathbf{X}$ is the $| \mathcal { S } | \times d$ matrix with $\mathbf { x } ( s )$ as its rows. 
+From here it is clear that the inner matrix $\mathbf { D } \big ( \mathbf { I } - \gamma \mathbf { P } \big )$ is key to determining the positive definiteness of $\mathbf{A}$.
+
+For a key matrix of this form, positive definiteness is assured if all of its columns sum to a nonnegative number. This was shown based on two previously established theorems. One theorem says that any matrix $\mathbf{M}$ is positive definite if and only if 
+the symmetric matrix $\mathbf { S } = \mathbf { M } + \mathbf { M } ^ { \top }$ is positive definite. The second theorem says that any symmetric real matrix $\mathbf{S}$ is positive definite if all of its diagonal entries are positive and greater than 
+the sum of the absolute values of the corresponding off-diagonal entries. For our key matrix, $\mathbf { D } ( \mathbf { I } - \gamma \mathbf { P } )$ , the diagonal entries are positive and the off-diagonal entries are negative, so all we have to show is that 
+each row sum plus the corresponding column sum is positive. The row sums are all positive because $\mathbf{P}$ is a stochastic matrix and $\gamma < 1$ . Thus it only remains to show that the column sums are nonnegative. Note that the row vector of the column sums 
+of any matrix $\mathbf{M}$ can be written as $\mathbf { 1 } ^ { \top } \mathbf { M }$ , where $\mathbf { 1 }$ is the column vector with all components equal to 1. Let $\pmb { \mu }$ denote the $|\mathcal{S}|$-vector of the $\mu ( s )$ , where $\pmb { \mu } = \mathbf { P } ^ { \top } \pmb { \mu }$ 
+by virtue of $\mu$ being the stationary distribution. The column sums of our key matrix, then, are:
+
+$$
+\begin{aligned} { \mathbf { 1 } ^ { \top } \mathbf { D } ( \mathbf { I } - \gamma \mathbf { P } ) } & { { } = \pmb { \mu } ^ { \top } ( \mathbf { I } - \gamma \mathbf { P } ) } \\ { } & { { } = \pmb { \mu } ^ { \top } - \gamma \pmb { \mu } ^ { \top } \mathbf { P } } \\ { } & { { } = \pmb { \mu } ^ { \top } - \gamma \pmb { \mu } ^ { \top } } \\ { } & { { } = ( 1 - \gamma ) \pmb { \mu } ^ { \top } } \\ \end{aligned}
+$$
+
+(because $\pmb { \mu }$ is the stationary distribution)
+
+all components of which are positive. Thus, the key matrix and its $\mathbf{A}$ matrix are positive definite, and on-policy TD(0) is stable. (Additional conditions and a schedule for reducing $\alpha$ over time are needed to prove convergence with probability one.)
+
+At the TD fixed point, it has also been proven (in the continuing case) that the $\overline { { \mathrm { V E } } }$ is within a bounded expansion of the lowest possible error:
+
+$$
+\overline { { \operatorname { V E } } } ( \mathbf { w } _ { \operatorname { T D } } ) \leq \frac { 1 } { 1 - \gamma } \operatorname* { m i n } _ { \mathbf { w } } \overline { { \operatorname { V E } } } ( \mathbf { w } )
+$$
+
+That is, the asymptotic error of the TD method is no more than $\frac { 1 } { 1   -   \gamma }$ times the smallest possible error, that attained in the limit by the Monte Carlo method. Because $\gamma$ is often near one, this expansion factor can be quite large, 
+so there is substantial potential loss in asymptotic performance with the TD method. On the other hand, recall that the TD methods are often of vastly reduced variance compared to Monte Carlo methods, and thus faster. Which method will be best depends on 
+the nature of the approximation and problem, and on how long learning continues.
+
+A bound analogous to applies to other on-policy bootstrapping methods as well. For example, linear semi-gradient DP ($U _ { t } \doteq \sum _ { a } \pi ( a | S _ { t } ) \sum _ { s ^ { \prime } , r } p ( s ^ { \prime } , r | S _ { t } , a ) [ r + \gamma \hat { v } ( s ^ { \prime } \mathbf { , } \mathbf { w } _ { t } ) ] )$ 
+with updates according to the on-policy distribution will also converge to the TD fixed point. One-step semi-gradient action-value methods, such as semi-gradient Sarsa(0) converge to an analogous fixed point and an analogous bound. For episodic tasks, there is a slightly different but related bound. There are also a few technical conditions on the rewards, features, and decrease in the step-size parameter, 
+which we have omitted here.
+
+Critical to the these convergence results is that states are updated according to the on-policy distribution. For other update distributions, bootstrapping methods using function approximation may actually diverge to infinity.
+
+The semi-gradient n-step TD algorithm is the natural extension of the tabular n-step TD algorithm to semi-gradient function approximation. It is given below:
+
+\textbf{n-step semi-gradient TD for estimating $\hat { v } \approx v _ { \pi }$}
+
+Input: the policy $\pi$ to be evaluated
+
+Input: a differentiable function $\hat { v } : \mathcal { S } ^ { + } \times \mathbb { R } ^ { d } \to \mathbb { R }$ such that $ \hat { v } ( \text{terminal}, \cdot ) = 0 $
+
+Algorithm parameters: step size $\alpha > 0$, a positive integer n
+
+Initialize value-function weights $\mathbf{w}$ arbitrarily ($\mathrm { e . g . , } \mathbf { w } = \mathbf { 0 }$)
+
+All store and access operations $( S _ { t }$ and $R _ { t } )$ can take their index mod $n + 1$
+
+Loop for each episode:
+
+\hspace{.5cm} Initialize and store $S _ { 0 } \neq \text{terminal}$
+
+\hspace{.5cm} $T \leftarrow \infty$
+
+\hspace{.5cm} Loop for $t = 0 , 1 , 2 , \ldots$ :
+
+\hspace{1cm} If $t < T$, then:
+
+\hspace{1.5cm} Take an action according to $\pi ( \cdot | S _ { t } )$
+
+\hspace{1.5cm} Observe and store the next reward as $R _ { t + 1 }$ and the next state as $S _ { t + 1 }$
+
+\hspace{1.5cm} If $S _ { t + 1 }$ is terminal, then $T \leftarrow t + 1$
+
+\hspace{1cm} $\tau \leftarrow t - n + 1 \quad ( \tau$ is the time whose state's estimate is being updated)
+
+\hspace{1cm} If $\tau \geq 0$:
+
+\hspace{1.5cm} $G \gets \sum _ { i = \tau + 1 } ^ { \operatorname* { m i n } ( \tau + n , T ) } \gamma ^ { i - \tau - 1 } R _ { i }$
+
+\hspace{1.5cm} If $\tau + n < T$, then: $G \gets G + \gamma ^ { n } \hat { v } ( S _ { \tau + n } \mathbf { , } \mathbf { w } )$, (representation of $G _ { \tau : \tau + n }$)
+
+\hspace{1.5cm} $\mathbf { w } \leftarrow \mathbf { w } + \alpha \left[ G - \hat { v } ( S _ { \tau } \mathbf { , } \mathbf { w } ) \right] \nabla \hat { v } ( S _ { \tau } \mathbf { , } \mathbf { w } )$
+
+\hspace{.5cm} Until $\tau = T - 1$
+
+The key equation of this algorithm is:
+
+$$
+\mathbf { w } _ { t + n } \doteq \mathbf { w } _ { t + n - 1 } + \alpha \left[ G _ { t : t + n } - \hat { v } ( S _ { t } \mathbf { , } \mathbf { w } _ { t + n - 1 } ) \right] \nabla \hat { v } ( S _ { t } \mathbf { , } \mathbf { w } _ { t + n - 1 } ) , \qquad 0 \leq t < T
+$$
+
+where the n-step return is generalized as:
+
+$$
+G _ { t : t + n } \doteq R _ { t + 1 } + \gamma R _ { t + 2 } + \cdots + \gamma ^ { n - 1 } R _ { t + n } + \gamma ^ { n } \hat { v } ( S _ { t + n } , \mathbf { w } _ { t + n - 1 } ) , \quad 0 \leq t \leq T - n
+$$
 
 \section{Policy Gradient}
 
