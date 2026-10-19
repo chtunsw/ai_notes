@@ -1811,6 +1811,82 @@ It is impossible to describe all the possible kinds of specialized problems and 
 For example, afterstate methods are still aptly described in terms of generalized policy iteration, with a policy and (afterstate) value function interacting in essentially the same way. 
 In many cases one will still face the choice between on-policy and off-policy methods for managing the need for persistent exploration.
 
+\section{n-step Bootstrapping}
+
+n-step TD methods generalize the Monte Carlo (MC) methods and the one-step TD so that one can shift from one to the other smoothly as needed to meet the demands of a particular task. n-step methods span a spectrum with 
+MC methods at one end and one-step TD methods at the other. The best methods are often intermediate between the two extremes. 
+n-step methods enable bootstrapping to occur over multiple steps, freeing us from the tyranny of the single time step.
+
+\subsection{n-step TD Prediction}
+
+Assume $V _ { t } : \mathcal { S } \rightarrow \mathbb { R }$ here is the estimate at time t of $v _ { \pi }$ . The target for an arbitrary n-step update is the n-step return:
+
+$$
+G _ { t : t + n } \doteq R _ { t + 1 } + \gamma R _ { t + 2 } + \cdots + \gamma ^ { n - 1 } R _ { t + n } + \gamma ^ { n } V _ { t + n - 1 } ( S _ { t + n } )
+$$
+
+for all $n , t$ such that $n \geq 1$ and $0 \leq t < T - n$ . All n-step returns can be considered approximations to the full return, truncated after $n$ steps and then corrected for the remaining 
+missing terms by $V _ { t + n - 1 } ( S _ { t + n } )$ . If $t + n \geq T$ (if the n-step return extends to or beyond termination), then all the missing terms are taken as zero, 
+and the n-step return defined to be equal to the ordinary full return $( G _ { t : t + n } \doteq G _ { t } { \mathrm { ~ i f ~ } } t + n \geq T )$ .
+
+Note that n-step returns for $n > 1$ involve future rewards and states that are not available at the time of transition from $t$ to $t + 1$ . No real algorithm can use the n-step return until 
+after it has seen $R _ { t + n }$ and computed $V _ { t + n - 1 }$ . The first time these are available is $t + n$ . The natural state-value learning algorithm for using n-step returns is thus
+
+$$
+V _ { t + n } ( S _ { t } ) \doteq V _ { t + n - 1 } ( S _ { t } ) + \alpha \big [ G _ { t : t + n } - V _ { t + n - 1 } ( S _ { t } ) \big ] , \qquad 0 \leq t < T
+$$
+
+while the values of all other states remain unchanged: $V _ { t + n } ( s ) = V _ { t + n - 1 } ( s )$ , for all $s   \neq   S _ { t }$ . Note that no changes at all are made during the first 
+$n-1$ steps of each episode. To make up for that, an equal number of additional updates are made at the end of the episode, after termination and before starting the next episode.
+
+\textbf{n-step TD for estimating $V \approx v _ { \pi }$}
+
+Input: a policy $\pi$
+
+Algorithm parameters: step size $\alpha \in ( 0 , 1 ]$ , a positive integer $n$
+
+Initialize $V ( s )$ arbitrarily, for all $s \in \mathcal { S }$
+
+All store and access operations (for $S _ { t }$ and $R _ { t } \Big )$ can take their index mod $n + 1$
+
+Loop for each episode:
+
+\hspace{.5cm} Initialize and store $S _ { 0 } \neq$ terminal
+
+\hspace{.5cm} $T \leftarrow \infty$
+
+\hspace{.5cm} Loop for $t = 0 , 1 , 2 , \ldots$:
+
+\hspace{1cm} If $t < T$ then:
+
+\hspace{1.5cm} Take an action according to $\pi ( \cdot | S _ { t } )$
+
+\hspace{1.5cm} Observe and store the next reward as $R _ { t + 1 }$ and the next state as $S _ { t + 1 }$
+
+\hspace{1.5cm} If $S _ { t + 1 }$ is terminal, then $T \leftarrow t + 1$
+
+\hspace{1cm} $\tau \gets t - n + 1$ ($\tau$ is the time whose state's estimate is being updated)
+
+\hspace{1cm} If $\tau \geq 0 { \mathrm { : } }$
+
+\hspace{1.5cm} $G \gets \sum _ { i = \tau + 1 } ^ { \operatorname* { m i n } ( \tau + n , T ) } \gamma ^ { i - \tau - 1 } R _ { i }$
+
+\hspace{1.5cm} If $\tau + n < T$, then: $G \gets G + \gamma ^ { n } V ( S _ { \tau + n } )$, (representation of $G _ { \tau : \tau + n }$)
+
+\hspace{1.5cm} $V ( S _ { \tau } ) \leftarrow V ( S _ { \tau } ) + \alpha \left[ G - V ( S _ { \tau } ) \right]$
+
+\hspace{.5cm} Until $\tau = T - 1$
+
+The n-step return uses the value function $V _ { t + n - 1 }$ to correct for the missing rewards beyond $R _ { t + n }$ . An important property of n-step returns is that their expectation is guaranteed to be a better estimate of $v _ { \pi }$ 
+than $V _ { t + n - 1 }$ is, in a worst-state sense. That is, the worst error of the expected n-step return is guaranteed to be less than or equal to $\gamma ^ { n }$ times the worst error under $V _ { t + n - 1 }$:
+
+$$
+\operatorname* { m a x } _ { s } \Bigl | E _ { \pi } [ G _ { t : t + n } | S _ { t } { = } s ] - v _ { \pi } ( s ) \Bigr | \leq \gamma ^ { n } \operatorname* { m a x } _ { s } \Bigl | V _ { t + n - 1 } ( s ) - v _ { \pi } ( s ) \Bigr |
+$$
+
+for all $n \geq 1$ . This is called the error reduction property of n-step returns. Because of the error reduction property, one can show formally that all n-step TD methods converge to the correct predictions under appropriate technical conditions. 
+The n-step TD methods thus form a family of sound methods, with one-step TD methods and Monte Carlo methods as extreme members.
+
 \section{Planning and Learning with Tabular Methods}
 
 Model-based methods rely on planning as their primary component, while model-free methods primarily rely on learning. Although there are real differences between 
