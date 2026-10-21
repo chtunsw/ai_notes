@@ -2525,6 +2525,28 @@ $$
 G _ { t : t + n } \doteq R _ { t + 1 } + \gamma R _ { t + 2 } + \cdots + \gamma ^ { n - 1 } R _ { t + n } + \gamma ^ { n } \hat { v } ( S _ { t + n } , \mathbf { w } _ { t + n - 1 } ) , \quad 0 \leq t \leq T - n
 $$
 
+\section{Eligibility Traces}
+
+Eligibility traces are one of the basic mechanisms of reinforcement learning. For example, in the popular $TD(\lambda)$ algorithm, the $\lambda$ refers to the use of an eligibility trace. Almost any temporal-difference (TD) method, such as Q-learning or Sarsa, 
+can be combined with eligibility traces to obtain a more general method that may learn more effciently.
+
+Eligibility traces unify and generalize TD and Monte Carlo methods. When TD methods are augmented with eligibility traces, they produce a family of methods spanning a spectrum that has Monte Carlo methods at one end ($\lambda = 1$) and one-step TD methods at the other ($\lambda = 0$). 
+In between are intermediate methods that are often better than either extreme method. Eligibility traces also provide a way of implementing Monte Carlo methods online and on continuing problems without episodes.
+
+Of course, we have already seen one way of unifying TD and Monte Carlo methods: the n-step TD methods. What eligibility traces offer beyond these is an elegant algorithmic mechanism with significant computational advantages. The mechanism is a short-term memory vector, 
+the eligibility trace $\mathbf { z } _ { t } \in \mathbb { R } ^ { d }$ , that parallels the long-term weight vector $\mathbf { w } _ { t } \in \mathbb { R } ^ { d }$ . The rough idea is that when a component of $\mathbf { w } _ { t }$ participates in producing an estimated value, 
+then the corresponding component of $\mathbf { z } _ { t }$ is bumped up and then begins to fade away. Learning will then occur in that component of $\mathbf { w } _ { t }$ if a nonzero TD error occurs before the trace falls back to zero. The trace-decay parameter $\lambda \in [ 0 , 1 ]$ determines 
+the rate at which the trace falls.
+
+The primary computational advantage of eligibility traces over n-step methods is that only a single trace vector is required rather than a store of the last $n$ feature vectors. Learning also occurs continually and uniformly in time rather than being delayed and then catching up at the end of the episode. 
+In addition learning can occur and affect behavior immediately after a state is encountered rather than being delayed $n$ steps.
+
+Eligibility traces illustrate that a learning algorithm can sometimes be implemented in a different way to obtain computational advantages. Many algorithms are most naturally formulated and understood as an update of a state's value based on events that follow that state over multiple future time steps. 
+For example, Monte Carlo methods update a state based on all the future rewards, and n-step TD methods update based on the next $n$ rewards and state $n$ steps in the future. Such formulations, based on looking forward from the updated state, are called forward views. Forward views are always somewhat complex 
+to implement because the update depends on later things that are not available at the time. However, it is often possible to achieve nearly the same updates—and sometimes exactly the same updates—with an algorithm that uses the current TD error, looking backward to recently visited states 
+using an eligibility trace. These alternate ways of looking at and implementing learning algorithms are called backward views. Backward views, transformations between forward views and backward views, and equivalences between them, date back to the introduction of temporal difference learning but have become much more powerful and sophisticated. 
+Here we present the basics of the modern view.
+
 \section{Policy Gradient}
 
 \textbf{On-policy vs Off-policy learning}:
