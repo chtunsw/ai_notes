@@ -1819,7 +1819,7 @@ n-step methods enable bootstrapping to occur over multiple steps, freeing us fro
 
 \subsection{n-step TD Prediction}
 
-Assume $V _ { t } : \mathcal { S } \rightarrow \mathbb { R }$ here is the estimate at time t of $v _ { \pi }$ . The target for an arbitrary n-step update is the n-step return:
+Assume $V _ { t } : \mathcal { S } \rightarrow \mathbb { R }$ here is the estimate at time $t$ of $v _ { \pi }$ . The target for an arbitrary n-step update is the n-step return:
 
 $$
 G _ { t : t + n } \doteq R _ { t + 1 } + \gamma R _ { t + 2 } + \cdots + \gamma ^ { n - 1 } R _ { t + n } + \gamma ^ { n } V _ { t + n - 1 } ( S _ { t + n } )
