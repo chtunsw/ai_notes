@@ -2549,17 +2549,37 @@ Here we present the basics of the modern view.
 
 \subsection{The \texorpdfstring{$\lambda$}{lambda}-return}
 
-The general form of the n-step return, for any parameterized function approximator, is
-
-$$
-G _ { t : t + n } \doteq R _ { t + 1 } { + } \gamma R _ { t + 2 } { + } \cdots { + } \gamma ^ { n - 1 } R _ { t + n } { + } \gamma ^ { n } \hat { v } ( S _ { t + n } { , } \mathbf { w } _ { t + n - 1 } ) , \quad 0 \leq t \leq T { - } n
-$$
-
-Now we note that a valid update can be done not just toward any n-step return, but toward any average of n-step returns for different $n$s. For example, an update can be done toward a target that is half of a two-step return and half of a four-step return: $\textstyle { \frac { 1 } { 2 } } G _ { t : t + 2 } + { \frac { 1 } { 2 } } G _ { t : t + 4 }$ . 
-Any set of n-step returns can be averaged in this way, even an infinite set, as long as the weights on the component returns are positive and sum to 1. The composite return possesses an error reduction property similar to that of individual n-step returns (7.3) and thus can be used to construct updates with guaranteed convergence properties. 
+Note that a valid update can be done not just toward any n-step return, but toward any average of n-step returns for different $n$s. For example, an update can be done toward a target that is half of a two-step return and half of a four-step return: $\textstyle { \frac { 1 } { 2 } } G _ { t : t + 2 } + { \frac { 1 } { 2 } } G _ { t : t + 4 }$ . 
+Any set of n-step returns can be averaged in this way, even an infinite set, as long as the weights on the component returns are positive and sum to 1. The composite return possesses an error reduction property similar to that of individual n-step returns and thus can be used to construct updates with guaranteed convergence properties. 
 Averaging produces a substantial new range of algorithms. For example, one could average one-step and infinite-step returns to obtain another way of interrelating TD and Monte Carlo methods. In principle, one could even average experience-based updates with DP updates to get a simple combination of experience-based and model-based methods.
 
-An update that averages simpler component updates is called a compound update. The backup diagram for a compound update consists of the backup diagrams for each of the component updates with a horizontal line above them and the weighting fractions below.
+An update that averages simpler component updates is called a compound update. A compound update can only be done when the longest of its component updates is complete. In general one would like to limit the length of the longest component update because of the corresponding delay in the updates.
+
+The $TD(\lambda)$ algorithm can be understood as one particular way of averaging n-step updates. This average contains all the n-step updates, each weighted proportionally to $\lambda ^ { n - 1 }$ (where $\lambda \in [0,1])$ , and is normalized by a factor of $1 - \lambda$ to ensure that the weights sum to 1. The resulting update is toward a return, called the $\lambda$-return, defined in its state-based form by
+
+$$
+G _ { t } ^ { \lambda } \doteq ( 1 - \lambda ) \sum _ { n = 1 } ^ { \infty } \lambda ^ { n - 1 } G _ { t : t + n }
+$$
+
+After a terminal state has been reached, all subsequent n-step returns are equal to the conventional return, $G _ { t }$ . If we want, we can separate these post-termination terms from the main sum, yielding
+
+$$
+G _ { t } ^ { \lambda } = ( 1 - \lambda ) \sum _ { n = 1 } ^ { T - t - 1 } \lambda ^ { n - 1 } G _ { t : t + n } + \lambda ^ { T - t - 1 } G _ { t }
+$$
+
+This equation makes it clearer what happens when $\lambda = 1$ . In this case the main sum goes to zero, and the remaining term reduces to the conventional return. Thus, for $\lambda = 1$ , updating according to the $\lambda$-return is a Monte Carlo algorithm. On the other hand, if $\lambda = 0$ , then the $\lambda$-return reduces to $G _ { t : t + 1 }$ , the one-step return. Thus, for $\lambda = 0$ , 
+updating according to the $\lambda$-return is a one-step TD method. (here assume $0 ^ {0} = 1$)
+
+We are now ready to define our first learning algorithm based on the $\lambda$-return: the offline $\lambda$-return algorithm. As an offline algorithm, it makes no changes to the weight vector during the episode. Then, at the end of the episode, a whole sequence of offline updates are made according to our usual semi-gradient rule, using the $\lambda$-return as the target:
+
+$$
+\mathbf { w } _ { t + 1 } \doteq \mathbf { w } _ { t } + \alpha \Big [ G _ { t } ^ { \lambda } - \hat { v } ( S _ { t } { , } \mathbf { w } _ { t } ) \Big ] \nabla \hat { v } ( S _ { t } { , } \mathbf { w } _ { t } ) , t = 0 , \ldots , T - 1
+$$
+
+The $\lambda$-return gives us an alternative way of moving smoothly between Monte Carlo and one-step TD methods that can be compared with the n-step bootstrapping way. Sometimes we get best performance with an intermediate value of the bootstrapping parameter, $n$ for n-step methods and $\lambda$ for the offline $\lambda$-return algorithm.
+
+The approach that we have been taking so far is what we call the theoretical, or forward, view of a learning algorithm. For each state visited, we look forward in time to all the future rewards and decide how best to combine them. We might imagine ourselves riding the stream of states, looking forward from each state to determine its update. 
+After looking forward from and updating one state, we move on to the next and never have to work with the preceding state again. Future states, on the other hand, are viewed and processed repeatedly, once from each vantage point preceding them.
 
 \section{Policy Gradient}
 
