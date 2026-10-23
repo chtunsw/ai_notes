@@ -1825,7 +1825,7 @@ $$
 G _ { t : t + n } \doteq R _ { t + 1 } + \gamma R _ { t + 2 } + \cdots + \gamma ^ { n - 1 } R _ { t + n } + \gamma ^ { n } V _ { t + n - 1 } ( S _ { t + n } )
 $$
 
-for all $n , t$ such that $n \geq 1$ and $0 \leq t < T - n$ . All n-step returns can be considered approximations to the full return, truncated after $n$ steps and then corrected for the remaining 
+for all $n , t$ such that $n \geq 1$ and $0 \leq t < T - n$ . All n-step returns can be considered approximations to the full return $G _ { t }$, truncated after $n$ steps and then corrected for the remaining 
 missing terms by $V _ { t + n - 1 } ( S _ { t + n } )$ . If $t + n \geq T$ (if the n-step return extends to or beyond termination), then all the missing terms are taken as zero, 
 and the n-step return defined to be equal to the ordinary full return $( G _ { t : t + n } \doteq G _ { t } { \mathrm { ~ i f ~ } } t + n \geq T )$ .
 
@@ -2546,6 +2546,20 @@ For example, Monte Carlo methods update a state based on all the future rewards,
 to implement because the update depends on later things that are not available at the time. However, it is often possible to achieve nearly the same updates—and sometimes exactly the same updates—with an algorithm that uses the current TD error, looking backward to recently visited states 
 using an eligibility trace. These alternate ways of looking at and implementing learning algorithms are called backward views. Backward views, transformations between forward views and backward views, and equivalences between them, date back to the introduction of temporal difference learning but have become much more powerful and sophisticated. 
 Here we present the basics of the modern view.
+
+\subsection{The \texorpdfstring{$\lambda$}{lambda}-return}
+
+The general form of the n-step return, for any parameterized function approximator, is
+
+$$
+G _ { t : t + n } \doteq R _ { t + 1 } { + } \gamma R _ { t + 2 } { + } \cdots { + } \gamma ^ { n - 1 } R _ { t + n } { + } \gamma ^ { n } \hat { v } ( S _ { t + n } { , } \mathbf { w } _ { t + n - 1 } ) , \quad 0 \leq t \leq T { - } n
+$$
+
+Now we note that a valid update can be done not just toward any n-step return, but toward any average of n-step returns for different $n$s. For example, an update can be done toward a target that is half of a two-step return and half of a four-step return: $\textstyle { \frac { 1 } { 2 } } G _ { t : t + 2 } + { \frac { 1 } { 2 } } G _ { t : t + 4 }$ . 
+Any set of n-step returns can be averaged in this way, even an infinite set, as long as the weights on the component returns are positive and sum to 1. The composite return possesses an error reduction property similar to that of individual n-step returns (7.3) and thus can be used to construct updates with guaranteed convergence properties. 
+Averaging produces a substantial new range of algorithms. For example, one could average one-step and infinite-step returns to obtain another way of interrelating TD and Monte Carlo methods. In principle, one could even average experience-based updates with DP updates to get a simple combination of experience-based and model-based methods.
+
+An update that averages simpler component updates is called a compound update. The backup diagram for a compound update consists of the backup diagrams for each of the component updates with a horizontal line above them and the weighting fractions below.
 
 \section{Policy Gradient}
 
