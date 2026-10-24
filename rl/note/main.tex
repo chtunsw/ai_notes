@@ -2658,7 +2658,7 @@ Thus the TD($\lambda$) update reduces to the one-step semi-gradient TD update. T
 For larger values of $\lambda$, but still $\lambda < 1$ , more of the preceding states are changed, but each more temporally distant state is changed less because the corresponding eligibility trace is smaller. 
 We say that the earlier states are given less credit for the TD error.
 
-If $\lambda$ = 1, then the credit given to earlier states falls only by $\lambda$ per step. This turns out to be just the right thing to do to achieve Monte Carlo behavior. For example, remember that the TD error, $\delta _ { t }$ , 
+If $\lambda$ = 1, then the credit given to earlier states falls only by $\gamma$ per step. This turns out to be just the right thing to do to achieve Monte Carlo behavior. For example, remember that the TD error, $\delta _ { t }$ , 
 includes an undiscounted term of $R _ { t + 1 }$ . In passing this back $k$ steps it needs to be discounted, like any reward in a return, by $\gamma ^ { k }$ , which is just what the falling eligibility trace achieves. 
 If $\lambda$ = 1 and $\gamma = 1$ , then the eligibility traces do not decay at all with time. In this case the method behaves like a Monte Carlo method for an undiscounted, episodic task. If $\lambda$ = 1, the algorithm is also known as TD(1).
 
