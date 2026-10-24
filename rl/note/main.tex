@@ -2668,10 +2668,6 @@ if a Monte Carlo control method takes an action that produces a very poor reward
 learns in an n-step TD way from the incomplete ongoing episode, where the $n$ steps are all the way up to the current step. If something unusually good or bad happens during an episode, control methods based on TD(1) can learn immediately 
 and alter their behavior on that same episode.
 
-It is revealing to see how well TD($\lambda$) does in approximating the offline $\lambda$-return algorithm. For each $\lambda$ value, if $\alpha$ is selected optimally for it (or smaller), then the two algorithms perform virtually identically. 
-If $\alpha$ is chosen larger than is optimal, however, then the $\lambda$-return algorithm is only a little worse whereas TD($\lambda$) is much worse and may even be unstable. This is not catastrophic for TD($\lambda$) on this problem, 
-as these higher parameter values are not what one would want to use anyway, but for other problems it can be a significant weakness.
-
 Linear TD($\lambda$) has been proved to converge in the on-policy case if the step-size parameter is reduced over time according to the usual conditions. Convergence is not to the minimum-error weight vector, 
 but to a nearby weight vector that depends on $\lambda$. The bound on solution quality can now be generalized to apply for any $\lambda$. For the continuing discounted case,
 
