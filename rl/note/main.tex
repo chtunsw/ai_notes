@@ -2581,6 +2581,107 @@ The $\lambda$-return gives us an alternative way of moving smoothly between Mont
 The approach that we have been taking so far is what we call the theoretical, or forward, view of a learning algorithm. For each state visited, we look forward in time to all the future rewards and decide how best to combine them. We might imagine ourselves riding the stream of states, looking forward from each state to determine its update. 
 After looking forward from and updating one state, we move on to the next and never have to work with the preceding state again. Future states, on the other hand, are viewed and processed repeatedly, once from each vantage point preceding them.
 
+\subsection{TD(\texorpdfstring{$\lambda$}{lambda})}
+
+TD($\lambda$) is one of the oldest and most widely used algorithms in reinforcement learning. It was the first algorithm for which a formal relationship was shown between a more theoretical forward view and a more computationally-congenial backward view using eligibility traces. 
+Here we will show empirically that it approximates the offline $\lambda$-return algorithm.
+
+TD($\lambda$) improves over the offline $\lambda$-return algorithm in three ways. First it updates the weight vector on every step of an episode rather than only at the end, and thus its estimates may be better sooner. Second, its computations are equally distributed in time 
+rather than all at the end of the episode. And third, it can be applied to continuing problems rather than just to episodic problems. In this section we present the semi-gradient version of TD($\lambda$) with function approximation.
+
+With function approximation, the eligibility trace is a vector $\mathbf { z } _ { t } \in \mathbb { R } ^ { d }$ with the same number of components as the weight vector $\mathbf { w } _ { t }$ . Whereas the weight vector is a long-term memory, accumulating over the lifetime of the system, 
+the eligibility trace is a short-term memory, typically lasting less time than the length of an episode. Eligibility traces assist in the learning process; their only consequence is that they affect the weight vector, and then the weight vector determines the estimated value.
+
+In TD($\lambda$), the eligibility trace vector is initialized to zero at the beginning of the episode, is incremented on each time step by the value gradient, and then fades away by $\gamma\lambda$:
+
+$$
+{ \bf z } _ { - 1 } \doteq { \bf 0 }
+$$
+
+$$
+{ \bf z } _ { t } \doteq \gamma \lambda { \bf z } _ { t - 1 } + \nabla \hat { v } ( S _ { t } { , } { \bf w } _ { t } ) , \quad 0 \leq t \leq T
+$$
+
+where $\gamma$ is the discount rate and $\lambda$ is the trace-decay parameter. The eligibility trace keeps track of which components of the weight vector have contributed, positively or negatively, 
+to recent state valuations, where “recent” is defined in terms of $\gamma \lambda$ . (Recall that in linear function approximation, $\nabla \hat { v } ( S _ { t } , \mathbf { w } _ { t } )$ is just the feature vector, $\mathbf { x } _ { t } ,$ in which case the eligibility trace vector 
+is just a sum of past, fading, input vectors.) The trace is said to indicate the eligibility of each component of the weight vector for undergoing learning changes should a reinforcing event occur. The reinforcing events we are concerned with are the moment-by-moment one-step TD errors. 
+The TD error for state-value prediction is
+
+$$
+\delta _ { t } \doteq R _ { t + 1 } + \gamma \hat { v } ( S _ { t + 1 } { , } \mathbf { w } _ { t } ) - \hat { v } ( S _ { t } { , } \mathbf { w } _ { t } )
+$$
+
+In TD($\lambda$), the weight vector is updated on each step proportional to the scalar TD error and the vector eligibility trace:
+
+$$
+\mathbf { w } _ { t + 1 } \doteq \mathbf { w } _ { t } + \alpha \delta _ { t } \mathbf { z } _ { t }
+$$
+
+\textbf{Semi-gradient TD($\lambda$) for estimating $\hat{v} \approx v_\pi$}
+
+Input: the policy $\pi$ to be evaluated
+
+Input: a differentiable function $\hat { v } : \mathcal { S } ^ { + } \times \mathbb { R } ^ { d } \rightarrow \mathbb { R }$ such that $\hat{v}(terminal,\cdot) = 0$
+
+Algorithm parameters: step size $\alpha > 0$ trace decay rate $\lambda \in [ 0 , 1 ]$
+
+Initialize value-function weights $\mathbf { w }$ arbitrarily (e.g., $\mathbf { w } = 0$)
+
+Loop for each episode:
+
+\hspace{.5cm} Initialize $S$
+
+\hspace{.5cm} $\mathbf { z } \leftarrow 0$ (a d-dimensional vector)
+
+\hspace{.5cm} Loop for each step of episode:
+
+\hspace{1cm} Choose $A \sim \pi ( \cdot | S )$
+
+\hspace{1cm} Take action $A$, observe $R , S ^ { \prime }$
+
+\hspace{1cm} $\mathbf { z } \gets \gamma \lambda \mathbf { z } + \nabla \hat { v } ( S \mathbf { , } \mathbf { w } )$
+
+\hspace{1cm} $\delta \gets R + \gamma \hat { v } ( S ^ { \prime } \mathbf { , } \mathbf { w } ) - \hat { v } ( S \mathbf { , } \mathbf { w } )$
+
+\hspace{1cm} $\mathbf { w } \gets \mathbf { w } + \alpha \delta \mathbf { z }$
+
+\hspace{1cm} $S \leftarrow S ^ { \prime }$
+
+\hspace{.5cm} until $S ^ { \prime }$ is terminal
+
+TD($\lambda$) is oriented backward in time. At each moment we look at the current TD error and assign it backward to each prior state according to how much that state contributed to the current eligibility trace at that time. 
+We might imagine ourselves riding along the stream of states, computing TD errors, and shouting them back to the previously visited states. Where the TD error and traces come together, we get the update, changing the values 
+of those past states for when they occur again in the future.
+
+To better understand the backward view of TD($\lambda$), consider what happens at various values of $\lambda$. If $\lambda   =   0$ , then the trace at $t$ is exactly the value gradient corresponding to $S _ { t }$ . 
+Thus the TD($\lambda$) update reduces to the one-step semi-gradient TD update. This is why that algorithm was called TD(0). TD(0) is the case in which only the one state preceding the current one is changed by the TD error. 
+For larger values of $\lambda$, but still $\lambda < 1$ , more of the preceding states are changed, but each more temporally distant state is changed less because the corresponding eligibility trace is smaller. 
+We say that the earlier states are given less credit for the TD error.
+
+If $\lambda$ = 1, then the credit given to earlier states falls only by $\lambda$ per step. This turns out to be just the right thing to do to achieve Monte Carlo behavior. For example, remember that the TD error, $\delta _ { t }$ , 
+includes an undiscounted term of $R _ { t + 1 }$ . In passing this back $k$ steps it needs to be discounted, like any reward in a return, by $\gamma ^ { k }$ , which is just what the falling eligibility trace achieves. 
+If $\lambda$ = 1 and $\gamma = 1$ , then the eligibility traces do not decay at all with time. In this case the method behaves like a Monte Carlo method for an undiscounted, episodic task. If $\lambda$ = 1, the algorithm is also known as TD(1).
+
+TD(1) is a way of implementing Monte Carlo algorithms that is more general than those presented earlier and that significantly increases their range of applicability. Whereas the earlier Monte Carlo methods were limited to episodic tasks, 
+TD(1) can be applied to discounted continuing tasks as well. Moreover, TD(1) can be performed incrementally and online. One disadvantage of Monte Carlo methods is that they learn nothing from an episode until it is over. For example, 
+if a Monte Carlo control method takes an action that produces a very poor reward but does not end the episode, then the agent's tendency to repeat the action will be undiminished during the episode. Online TD(1), on the other hand, 
+learns in an n-step TD way from the incomplete ongoing episode, where the $n$ steps are all the way up to the current step. If something unusually good or bad happens during an episode, control methods based on TD(1) can learn immediately 
+and alter their behavior on that same episode.
+
+It is revealing to see how well TD($\lambda$) does in approximating the offline $\lambda$-return algorithm. For each $\lambda$ value, if $\alpha$ is selected optimally for it (or smaller), then the two algorithms perform virtually identically. 
+If $\alpha$ is chosen larger than is optimal, however, then the $\lambda$-return algorithm is only a little worse whereas TD($\lambda$) is much worse and may even be unstable. This is not catastrophic for TD($\lambda$) on this problem, 
+as these higher parameter values are not what one would want to use anyway, but for other problems it can be a significant weakness.
+
+Linear TD($\lambda$) has been proved to converge in the on-policy case if the step-size parameter is reduced over time according to the usual conditions. Convergence is not to the minimum-error weight vector, 
+but to a nearby weight vector that depends on $\lambda$. The bound on solution quality can now be generalized to apply for any $\lambda$. For the continuing discounted case,
+
+$$
+\overline { { \operatorname { V E } } } ( \mathbf { w } _ { \infty } ) \quad \leq \quad \frac { 1 - \gamma \lambda } { 1 - \gamma } \operatorname* { m i n } _ { \mathbf { w } } \overline { { \operatorname { V E } } } ( \mathbf { w } )
+$$
+
+That is, the asymptotic error is no more than $\textstyle { \frac { 1 - \gamma \lambda } { 1 - \gamma } }$ times the smallest possible error. As $\lambda$ approaches 1, the bound approaches the minimum error (and it is loosest at $\lambda$ = 0). 
+In practice, however, $\lambda$ = 1 is often the poorest choice.
+
 \section{Policy Gradient}
 
 \textbf{On-policy vs Off-policy learning}:
