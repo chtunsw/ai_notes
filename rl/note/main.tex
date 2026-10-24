@@ -2682,6 +2682,41 @@ $$
 That is, the asymptotic error is no more than $\textstyle { \frac { 1 - \gamma \lambda } { 1 - \gamma } }$ times the smallest possible error. As $\lambda$ approaches 1, the bound approaches the minimum error (and it is loosest at $\lambda$ = 0). 
 In practice, however, $\lambda$ = 1 is often the poorest choice.
 
+\subsection{n-step Truncated \texorpdfstring{$\lambda$}{lambda}-return Methods}
+
+The offline $\lambda$-return algorithm is an important ideal, but it is of limited utility because it uses the $\lambda$-return, which is not known until the end of the episode. In the continuing case, the $\lambda$-return is technically never known, 
+as it depends on n-step returns for arbitrarily large $n$, and thus on rewards arbitrarily far in the future. However, the dependence becomes weaker for longer-delayed rewards, falling by $\gamma \lambda$ for each step of delay. A natural approximation, 
+then, would be to truncate the sequence after some number of steps. Our existing notion of n-step returns provides a natural way to do this in which the missing rewards are replaced with estimated values.
+
+$$
+G _ { t : h } ^ { \lambda } \quad \doteq \quad ( 1 - \lambda ) \sum _ { n = 1 } ^ { h - t - 1 } \lambda ^ { n - 1 } G _ { t : t + n } \quad + \quad \lambda ^ { h - t - 1 } G _ { t : h } , \qquad 0 \leq t < h \leq T
+$$
+
+If you compare this equation with the $\lambda$-return, it is clear that the horizon $h$ is playing the same role as was previously played by $T$, the time of termination. Whereas in the $\lambda$-return there is a residual weight given to the conventional return $G _ { t }$ , 
+here it is given to the longest available n-step return, $G _ { t : h }$ .
+
+The truncated $\lambda$-return immediately gives rise to a family of n-step $\lambda$-return algorithms similar to the n-step methods. In all of these algorithms, updates are delayed by $n$ steps and only take into account the first $n$ rewards, but now all the k-step returns are included for $1 \leq k \leq n$ 
+(whereas the earlier n-step algorithms used only the n-step return), weighted geometrically. In the state-value case, this family of algorithms is known as truncated TD($\lambda$), or TTD($\lambda$). The compound backup, is similar to that for TD($\lambda$) except that the longest component update is at most $n$ steps 
+rather than always going all the way to the end of the episode. TTD($\lambda$) is defined by:
+
+$$
+\mathbf { w } _ { t + n } \doteq \mathbf { w } _ { t + n - 1 } + \alpha \left[ G _ { t : t + n } ^ { \lambda } - \hat { v } ( S _ { t } \mathbf { , } \mathbf { w } _ { t + n - 1 } ) \right] \nabla \hat { v } ( S _ { t } \mathbf { , } \mathbf { w } _ { t + n - 1 } ) , \qquad 0 \leq t < T
+$$
+
+This algorithm can be implemented efficiently so that per-step computation does not scale with $n$ (though of course memory must). Much as in n-step TD methods, no updates are made on the first $n - 1$ time steps of each episode, and $n - 1$ additional updates are made upon termination. 
+Efficient implementation relies on the fact that the k-step $\lambda$-return can be written exactly as
+
+$$
+G _ { t : t + k } ^ { \lambda } = \hat { v } ( S _ { t } { , } \mathbf { w } _ { t - 1 } ) + \sum _ { i = t } ^ { t + k - 1 } ( \gamma \lambda ) ^ { i - t } \delta _ { i } ^ { \prime }
+$$
+
+where
+
+$$
+\delta _ { t } ^ { \prime } \doteq R _ { t + 1 } + \gamma \hat { v } ( S _ { t + 1 } \mathbf { , } \mathbf { w } _ { t } ) - \hat { v } ( S _ { t } \mathbf { , } \mathbf { w } _ { t - 1 } )
+$$
+
+
 \section{Policy Gradient}
 
 \textbf{On-policy vs Off-policy learning}:
