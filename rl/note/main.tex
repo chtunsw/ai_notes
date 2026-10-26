@@ -2712,6 +2712,129 @@ $$
 \delta _ { t } ^ { \prime } \doteq R _ { t + 1 } + \gamma \hat { v } ( S _ { t + 1 } \mathbf { , } \mathbf { w } _ { t } ) - \hat { v } ( S _ { t } \mathbf { , } \mathbf { w } _ { t - 1 } )
 $$
 
+\textbf{Full Derivation of the Efficient $k$-step $\lambda$-return Identity}
+
+\textbf{Step 1: Expressing $n$-step returns using TD errors ($\delta_i'$)}
+
+We begin by finding a relationship between the standard $n$-step return $G_{t:t+n}$ and the modified TD error $\delta_i'$. The modified TD error at step $i$ using the weight vectors $\mathbf{w}$ is defined as:
+\begin{equation}
+\delta_i' \doteq R_{i+1} + \gamma \hat{v}(S_{i+1}, \mathbf{w}_i) - \hat{v}(S_i, \mathbf{w}_{i-1})
+\end{equation}
+
+Let us look at a discounted sum of these TD errors from $i = t$ to $t+n-1$:
+\begin{equation}
+\sum_{i=t}^{t+n-1} \gamma^{i-t} \delta_i' = \delta_t' + \gamma \delta_{t+1}' + \gamma^2 \delta_{t+2}' + \dots + \gamma^{n-1} \delta_{t+n-1}'
+\end{equation}
+
+Expanding the terms explicitly:
+\begin{align*}
+\delta_t' &= R_{t+1} + \gamma \hat{v}(S_{t+1}, \mathbf{w}_t) - \hat{v}(S_t, \mathbf{w}_{t-1}) \\
+\gamma \delta_{t+1}' &= \gamma R_{t+2} + \gamma^2 \hat{v}(S_{t+2}, \mathbf{w}_{t+1}) - \gamma \hat{v}(S_{t+1}, \mathbf{w}_t) \\
+\gamma^2 \delta_{t+2}' &= \gamma^2 R_{t+3} + \gamma^3 \hat{v}(S_{t+3}, \mathbf{w}_{t+2}) - \gamma^2 \hat{v}(S_{t+2}, \mathbf{w}_{t+1}) \\
+\cdots \\
+\gamma^{n-1} \delta_{t+n-1}' &= \gamma^{n-1} R_{t+n} + \gamma^n \hat{v}(S_{t+n}, \mathbf{w}_{t+n-1}) - \gamma^{n-1} \hat{v}(S_{t+n-1}, \mathbf{w}_{t+n-2})
+\end{align*}
+
+Summing these up reveals a \textbf{telescoping series} where the estimated state-value terms cancel out diagonally:
+\begin{itemize}
+    \item $\gamma \hat{v}(S_{t+1}, \mathbf{w}_t)$ cancels with $-\gamma \hat{v}(S_{t+1}, \mathbf{w}_t)$
+    \item $\gamma^2 \hat{v}(S_{t+2}, \mathbf{w}_{t+1})$ cancels with $-\gamma^2 \hat{v}(S_{t+2}, \mathbf{w}_{t+1})$
+\end{itemize}
+
+Carrying this cancellation all the way to the $n$-th term yields:
+\begin{equation}
+\sum_{i=t}^{t+n-1} \gamma^{i-t} \delta_i' = \left( R_{t+1} + \gamma R_{t+2} + \dots + \gamma^{n-1} R_{t+n} + \gamma^n \hat{v}(S_{t+n}, \mathbf{w}_{t+n-1}) \right) - \hat{v}(S_t, \mathbf{w}_{t-1})
+\end{equation}
+
+Recognizing that the terms inside the parentheses exactly match the definition of the $n$-step bootstrapped return $G_{t:t+n}$:
+\begin{equation}
+\sum_{i=t}^{t+n-1} \gamma^{i-t} \delta_i' = G_{t:t+n} - \hat{v}(S_t, \mathbf{w}_{t-1})
+\end{equation}
+
+Rearranging for $G_{t:t+n}$ gives us our first key identity:
+\begin{equation}
+G_{t:t+n} = \hat{v}(S_t, \mathbf{w}_{t-1}) + \sum_{i=t}^{t+n-1} \gamma^{i-t} \delta_i' \quad \text{--- (Identity 1)}
+\end{equation}
+
+\textbf{Step 2: Substituting into the Truncated $\lambda$-Return}
+
+The $k$-step truncated $\lambda$-return weights the $n$-step returns geometrically up to horizon $k$, where $t + k = h$:
+\begin{equation}
+G_{t:t+k}^\lambda = (1-\lambda) \sum_{n=1}^{k-1} \lambda^{n-1} G_{t:t+n} + \lambda^{k-1} G_{t:t+k}
+\end{equation}
+
+Substituting \textbf{Identity 1} into both parts of this definition yields:
+\begin{equation}
+G_{t:t+k}^\lambda = (1-\lambda) \sum_{n=1}^{k-1} \lambda^{n-1} \left[ \hat{v}(S_t, \mathbf{w}_{t-1}) + \sum_{i=t}^{t+n-1} \gamma^{i-t} \delta_i' \right] + \lambda^{k-1} \left[ \hat{v}(S_t, \mathbf{w}_{t-1}) + \sum_{i=t}^{t+k-1} \gamma^{i-t} \delta_i' \right]
+\end{equation}
+
+\textbf{Step 3: Isolating the Baseline State-Value $\hat{v}(S_t, \mathbf{w}_{t-1})$}
+
+Let us group all coefficients belonging to the initial value estimate $\hat{v}(S_t, \mathbf{w}_{t-1})$:
+\begin{equation}
+\text{Coefficient} = (1-\lambda) \sum_{n=1}^{k-1} \lambda^{n-1} + \lambda^{k-1}
+\end{equation}
+
+Using the standard finite geometric series formula $\sum_{m=0}^{M-1} q^m = \frac{1-q^M}{1-q}$:
+\begin{equation}
+\sum_{n=1}^{k-1} \lambda^{n-1} = \sum_{m=0}^{k-2} \lambda^m = \frac{1-\lambda^{k-1}}{1-\lambda}
+\end{equation}
+
+Substituting this back into the coefficient expression:
+\begin{equation}
+\text{Coefficient} = (1-\lambda) \cdot \left( \frac{1-\lambda^{k-1}}{1-\lambda} \right) + \lambda^{k-1} = (1 - \lambda^{k-1}) + \lambda^{k-1} = 1
+\end{equation}
+The baseline value term simplifies cleanly to exactly $1 \cdot \hat{v}(S_t, \mathbf{w}_{t-1})$.
+
+\textbf{Step 4: Simplifying the Remaining TD-Error Sums}
+
+We are left with the remaining double-sum expression for the TD errors:
+\begin{equation}
+G_{t:t+k}^\lambda = \hat{v}(S_t, \mathbf{w}_{t-1}) + \underbrace{(1-\lambda) \sum_{n=1}^{k-1} \lambda^{n-1} \sum_{i=t}^{t+n-1} \gamma^{i-t} \delta_i'}_{\text{Term A}} + \underbrace{\lambda^{k-1} \sum_{i=t}^{t+k-1} \gamma^{i-t} \delta_i'}_{\text{Term B}}
+\end{equation}
+
+To simplify \textbf{Term A}, we swap the order of summation. The original boundaries dictate that for a chosen $n$ (from $1$ to $k-1$), the index $i$ ranges from $t$ to $t+n-1$. Flipped around, a specific index $i$ (ranging from $t$ up to $t+k-2$) will appear in all inner groups where $n \geq i - t + 1$:
+\begin{equation}
+\text{Term A} = \sum_{i=t}^{t+k-2} \gamma^{i-t} \delta_i' \sum_{n=i-t+1}^{k-1} (1-\lambda) \lambda^{n-1}
+\end{equation}
+
+Evaluating the new inner geometric sum over $n$:
+\begin{align*}
+\sum_{n=i-t+1}^{k-1} (1-\lambda) \lambda^{n-1} &= (1-\lambda) \left[ \lambda^{i-t} + \lambda^{i-t+1} + \dots + \lambda^{k-2} \right] \\
+&= (1-\lambda) \cdot \lambda^{i-t} \left( \frac{1-\lambda^{k-1-(i-t)}}{1-\lambda} \right) \\
+&= \lambda^{i-t} - \lambda^{k-1}
+\end{align*}
+
+Plugging this back into \textbf{Term A}:
+\begin{equation}
+\text{Term A} = \sum_{i=t}^{t+k-2} \gamma^{i-t} \delta_i' \left( \lambda^{i-t} - \lambda^{k-1} \right) = \sum_{i=t}^{t+k-2} (\gamma\lambda)^{i-t} \delta_i' - \lambda^{k-1} \sum_{i=t}^{t+k-2} \gamma^{i-t} \delta_i'
+\end{equation}
+
+\textbf{Step 5: Combining Terms A and B}
+
+Now we recombine \textbf{Term A} and \textbf{Term B}:
+\begin{equation}
+\text{Total Error Sum} = \sum_{i=t}^{t+k-2} (\gamma\lambda)^{i-t} \delta_i' - \lambda^{k-1} \sum_{i=t}^{t+k-2} \gamma^{i-t} \delta_i' + \lambda^{k-1} \sum_{i=t}^{t+k-1} \gamma^{i-t} \delta_i'
+\end{equation}
+
+Notice that the second and third pieces completely cancel each other out except for the very last term ($i = t+k-1$) of the right-most sum:
+\begin{align*}
+-\lambda^{k-1} \sum_{i=t}^{t+k-2} \gamma^{i-t} \delta_i' + \lambda^{k-1} \sum_{i=t}^{t+k-1} \gamma^{i-t} \delta_i' &= \lambda^{k-1} \cdot \left( \gamma^{(t+k-1)-t} \delta_{t+k-1}' \right) \\
+&= \lambda^{k-1} \gamma^{k-1} \delta_{t+k-1}' \\
+&= (\gamma\lambda)^{k-1} \delta_{t+k-1}'
+\end{align*}
+
+Absorbing this remaining boundary term back into our running $(\gamma\lambda)$ sum yields:
+\begin{equation}
+\text{Total Error Sum} = \sum_{i=t}^{t+k-2} (\gamma\lambda)^{i-t} \delta_i' + (\gamma\lambda)^{k-1} \delta_{t+k-1}' = \sum_{i=t}^{t+k-1} (\gamma\lambda)^{i-t} \delta_i'
+\end{equation}
+
+\textbf{Final Result}
+
+Putting everything back together, we achieve the efficient target form:
+\begin{equation}
+G_{t:t+k}^\lambda = \hat{v}(S_t, \mathbf{w}_{t-1}) + \sum_{i=t}^{t+k-1} (\gamma \lambda)^{i-t} \delta_i'
+\end{equation}
 
 \section{Policy Gradient}
 
