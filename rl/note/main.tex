@@ -2855,6 +2855,45 @@ where $\widehat { \nabla J ( \pmb { \theta } _ { t } ) } \in \mathbb { R } ^ { d
 All methods that follow this general schema we call policy gradient methods, whether or not they also learn an approximate value function. Methods that learn approximations to both policy and value functions are often called actor-critic methods, 
 where 'actor' is a reference to the learned policy, and 'critic' refers to the learned value function, usually a state-value function.
 
+\subsection{Policy Approximation and its Advantages}
+
+In policy gradient methods, the policy can be parameterized in any way, as long as $\pi ( a | s , \pmb { \theta } )$ is differentiable with respect to its parameters, that is, as long as $\nabla \pi ( a | s , \pmb { \theta } )$ 
+(the column vector of partial derivatives of $\pi ( a | s , \pmb { \theta } )$ with respect to the components of $\pmb { \theta }$) exists and is finite for all $s \in \mathcal { S } ,   a \in \mathcal { A } ( s )$ , and $\pmb { \theta } \in \mathbb { R } ^ { d ^ { \prime } }$ . 
+In practice, to ensure exploration we generally require that the policy never becomes deterministic (i.e., that $\pi ( a | s , \pmb { \theta } ) \in ( 0 , 1 )$ for all $s , a , \pmb { \theta } )$ .
+
+If the action space is discrete and not too large, then a natural and common kind of parameterization is to form parameterized numerical preferences $h ( s , a , \pmb { \theta } ) \in \mathbb { R }$ for each state-action pair. 
+The actions with the highest preferences in each state are given the highest probabilities of being selected, for example, according to an exponential soft-max distribution:
+
+$$
+\pi ( a | s , \pmb { \theta } ) \doteq \frac { e ^ { h ( s , a , \pmb { \theta } ) } } { \sum _ { b } e ^ { h ( s , b , \pmb { \theta } ) } }
+$$
+
+where $e \approx 2 . 7 1 8 2 8$ is the base of the natural logarithm. Note that the denominator here is just what is required so that the action probabilities in each state sum to one. 
+We call this kind of policy parameterization soft-max in action preferences.
+
+The action preferences themselves can be parameterized arbitrarily. For example, they might be computed by a deep artificial neural network (ANN), where $\pmb { \theta }$ is the vector of all the connection weights of the network. Or the preferences could simply be linear in features,
+
+$$
+h ( s , a , \pmb { \theta } ) = \pmb { \theta } ^ { \top } \mathbf { x } ( s , a )
+$$
+
+using feature vectors $\mathbf { x } ( s , a ) \in \mathbb { R } ^ { d ^ { \prime } }$ .
+
+One advantage of parameterizing policies according to the soft-max in action preferences is that the approximate policy can approach a deterministic policy, whereas with $\epsilon$-greedy action selection over action values there is always an 
+probability of selecting a random action. Of course, one could select according to a soft-max distribution based on action values, but this alone would not allow the policy to approach a deterministic policy. Instead, the action-value estimates 
+would converge to their corresponding true values, which would differ by a finite amount, translating to specific probabilities other than 0 and 1. If the soft-max distribution included a temperature parameter, then the temperature could be reduced over time to approach determinism, 
+but in practice it would be difficult to choose the reduction schedule, or even the initial temperature, without more prior knowledge of the true action values than we would like to assume. Action preferences are different because they do not approach specific values; 
+instead they are driven to produce the optimal stochastic policy. If the optimal policy is deterministic, then the preferences of the optimal actions will be driven infinitely higher than all suboptimal actions (if permitted by the parameterization).
+
+A second advantage of parameterizing policies according to the soft-max in action preferences is that it enables the selection of actions with arbitrary probabilities. In problems with significant function approximation, the best approximate policy may be stochastic. 
+For example, in card games with imperfect information the optimal play is often to do two different things with specific probabilities, such as when bluffing in Poker. Action-value methods have no natural way of finding stochastic optimal policies, 
+whereas policy approximating methods can.
+
+Perhaps the simplest advantage that policy parameterization may have over action-value parameterization is that the policy may be a simpler function to approximate. Problems vary in the complexity of their policies and action-value functions. 
+For some, the action-value function is simpler and thus easier to approximate. For others, the policy is simpler. In the latter case a policy-based method will typically learn faster and yield a superior asymptotic policy.
+
+Finally, we note that the choice of policy parameterization is sometimes a good way of injecting prior knowledge about the desired form of the policy into the reinforcement learning system. This is often the most important reason for using a policy-based learning method.
+
 \section{Policy Gradient}
 
 \textbf{On-policy vs Off-policy learning}:
