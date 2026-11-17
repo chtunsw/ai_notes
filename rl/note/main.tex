@@ -2894,6 +2894,156 @@ For some, the action-value function is simpler and thus easier to approximate. F
 
 Finally, we note that the choice of policy parameterization is sometimes a good way of injecting prior knowledge about the desired form of the policy into the reinforcement learning system. This is often the most important reason for using a policy-based learning method.
 
+\subsection{The Policy Gradient Theorem}
+
+In addition to the practical advantages of policy parameterization over $\epsilon$-greedy action selection, there is also an important theoretical advantage. With continuous policy parameterization the action probabilities change smoothly as a function of the learned parameter, 
+whereas in $\epsilon$-greedy selection the action probabilities may change dramatically for an arbitrarily small change in the estimated action values, if that change results in a different action having the maximal value. Largely because of this stronger convergence guarantees are available 
+for policy-gradient methods than for action-value methods. In particular, it is the continuity of the policy dependence on the parameters that enables policy-gradient methods to approximate gradient ascent.
+
+The episodic and continuing cases define the performance measure, $J ( \pmb { \theta } )$ , differently and thus have to be treated separately to some extent. Nevertheless, we will try to present both cases uniformly, and we develop a notation so that the major theoretical results can be described with a single set of equations.
+
+In this section we treat the episodic case, for which we define the performance measure as the value of the start state of the episode. We can simplify the notation without losing any meaningful generality by assuming that every episode starts in some particular (non-random) state $s _ { 0 }$ . 
+Then, in the episodic case we define performance as
+
+$$
+J ( \pmb { \theta } ) \doteq v _ { \pi _ { \pmb { \theta } } } ( s _ { 0 } )
+$$
+
+where $v _ { \pi _ { \pmb { \theta } } }$ is the true value function for $\pi _ { \pmb{\theta} }$ , the policy determined by $\pmb{\theta}$. From here on in our discussion we will assume no discounting $( \gamma = 1 )$ for the episodic case, although for completeness we do include the possibility of discounting in the boxed algorithms.
+
+With function approximation, it may seem challenging to change the policy parameter in a way that ensures improvement. The problem is that performance depends on both the action selections and the distribution of states in which those selections are made, and that both of these are affected by the policy parameter. Given a state, 
+the effect of the policy parameter on the actions, and thus on reward, can be computed in a relatively straightforward way from knowledge of the parameterization. But the effect of the policy on the state distribution is a function of the environment and is typically unknown. How can we estimate the performance gradient 
+with respect to the policy parameter when the gradient depends on the unknown effect of policy changes on the state distribution?
+
+Fortunately, there is an excellent theoretical answer to this challenge in the form of the policy gradient theorem, which provides an analytic expression for the gradient of performance with respect to the policy parameter (which is what we need to approximate for gradient ascent) that does not involve the derivative of the state distribution. 
+The policy gradient theorem for the episodic case establishes that
+
+$$
+\nabla J ( \pmb { \theta } ) \propto \sum _ { s } \mu ( s ) \sum _ { a } q _ { \pi } ( s , a ) \nabla \pi ( a | s , \pmb { \theta } )
+$$
+
+where the gradients are column vectors of partial derivatives with respect to the components of $\pmb { \theta }$, and $\pi$ denotes the policy corresponding to parameter vector $\pmb{\theta}$. The symbol $\propto$ here means "proportional to". In the episodic case, the constant of proportionality is the average length of an episode, 
+and in the continuing case it is 1, so that the relationship is actually an equality. The distribution $\mu$ here is the on-policy distribution under $\pi$.
+
+\textbf{Proof of the Policy Gradient Theorem (episodic case)}
+
+Assume no discounting ($\gamma = 1$). With just elementary calculus and re-arranging of terms, we can prove the policy gradient theorem from first principles. To keep the notation simple, we leave it implicit in all cases that $\pi$ is a function of $\pmb{\theta}$, and all gradients are also implicitly with respect to $\pmb{\theta}$ . 
+First note that the gradient of the state-value function can be written in terms of the action-value function as
+
+$$
+\begin{aligned} 
+{\nabla v_{\pi}(s)} & {= \nabla \left[ \sum_{a} \pi(a \mid s) q_{\pi}(s, a) \right], \quad \operatorname{for ~ all} s \in \mathcal{S}} \\ 
+& {= \sum_{a} \left[ \nabla \pi(a \mid s) q_{\pi}(s, a) + \pi(a \mid s) \nabla q_{\pi}(s, a) \right] \quad (\operatorname{product ~ rule ~ of ~ calculus})} \\ 
+& {= \sum_{a} \left[ \nabla \pi(a \mid s) q_{\pi}(s, a) + \pi(a \mid s) \nabla \sum_{s^{\prime}, r} p(s^{\prime}, r \mid s, a) \big( r + v_{\pi}(s^{\prime}) \big) \right]} \\ 
+& \quad \quad \text{\small \textit{($p(s^{\prime}, r \mid s, a)$ and $r$ are given by the environment, not depend on $\pmb{\theta}$)}} \\
+& {= \sum_{a} \left[ \nabla \pi(a \mid s) q_{\pi}(s, a) + \pi(a \mid s) \sum_{s^{\prime}} p(s^{\prime} \mid s, a) \nabla v_{\pi}(s^{\prime}) \right]} \\ 
+& {= \sum_{a} \left[ \nabla \pi(a \mid s) q_{\pi}(s, a) + \pi(a \mid s) \sum_{s^{\prime}} p(s^{\prime} \mid s, a) \right. \quad (\operatorname{unrolling})} \\ 
+& { \quad \quad \left. \sum_{a^{\prime}} \left[ \nabla \pi(a^{\prime} \mid s^{\prime}) q_{\pi}(s^{\prime}, a^{\prime}) + \pi(a^{\prime} \mid s^{\prime}) \sum_{s^{\prime\prime}} p(s^{\prime\prime} \mid s^{\prime}, a^{\prime}) \nabla v_{\pi}(s^{\prime\prime}) \right] \right]} \\ 
+& {= \sum_{x \in \mathcal{S}} \sum_{k=0}^{\infty} \operatorname{Pr}(s \to x, k, \pi) \sum_{a} \nabla \pi(a \mid x) q_{\pi}(x, a)} \\ 
+\end{aligned}
+$$
+
+\textbf{Unrolling Proof}
+
+\textbf{Step 1: Start with the 1-Step Equation}
+
+We begin with the single-step expansion of the state-value gradient:
+\begin{equation*}
+\nabla v_{\pi}(s) = \sum_{a} \left[ \nabla \pi(a \mid s) q_{\pi}(s, a) + \pi(a \mid s) \sum_{s'} p(s' \mid s, a) \nabla v_{\pi}(s') \right]
+\end{equation*}
+
+Distribute the outer summation $\sum_{a}$ across the addition inside the brackets:
+\begin{equation*}
+\nabla v_{\pi}(s) = \sum_{a} \nabla \pi(a \mid s) q_{\pi}(s, a) + \sum_{a} \pi(a \mid s) \sum_{s'} p(s' \mid s, a) \nabla v_{\pi}(s')
+\end{equation*}
+
+\textbf{Step 2: Substitute $\nabla v_{\pi}(s')$}
+
+Write the exact same 1-step equation for $s'$, $a'$ and $s''$:
+
+\begin{equation*}
+\nabla v_{\pi}(s') = \sum_{a'} \left[ \nabla \pi(a' \mid s') q_{\pi}(s', a') + \pi(a' \mid s') \sum_{s''} p(s'' \mid s', a') \nabla v_{\pi}(s'') \right]
+\end{equation*}
+
+Substitute this entire right-hand side into the end of Step 1:
+
+\begin{align*}
+\nabla v_{\pi}(s) &= \sum_{a} \nabla \pi(a \mid s) q_{\pi}(s, a) \\
+&\quad + \sum_{a} \pi(a \mid s) \sum_{s'} p(s' \mid s, a) \left( \sum_{a'} \left[ \nabla \pi(a' \mid s') q_{\pi}(s', a') + \pi(a' \mid s') \sum_{s''} p(s'' \mid s', a') \nabla v_{\pi}(s'') \right] \right)
+\end{align*}
+
+\textbf{Step 3: Multiply Out (Distribute) the Brackets}
+
+Distribute $\sum_{a} \pi(a \mid s) \sum_{s'} p(s' \mid s, a)$ across the two terms inside the large parentheses:
+
+\begin{align*}
+\nabla v_{\pi}(s) &= \sum_{a} \nabla \pi(a \mid s) q_{\pi}(s, a) \\
+&\quad + \sum_{a} \pi(a \mid s) \sum_{s'} p(s' \mid s, a) \sum_{a'} \nabla \pi(a' \mid s') q_{\pi}(s', a') \\
+&\quad + \sum_{a} \pi(a \mid s) \sum_{s'} p(s' \mid s, a) \sum_{a'} \pi(a' \mid s') \sum_{s''} p(s'' \mid s', a') \nabla v_{\pi}(s'')
+\end{align*}
+
+\textbf{Step 4: Rearrange the Summations}
+
+Because finite sums commute, pull the state sums $\sum_{s'}$ and $\sum_{s''}$ to the front of their respective terms:
+
+\begin{align*}
+\nabla v_{\pi}(s) &= \sum_{a} \nabla \pi(a \mid s) q_{\pi}(s, a) \\
+&\quad + \sum_{s'} \underbrace{\left( \sum_{a} \pi(a \mid s) p(s' \mid s, a) \right)}_{\operatorname{Pr}(s \to s', 1, \pi)} \sum_{a'} \nabla \pi(a' \mid s') q_{\pi}(s', a') \\
+&\quad + \sum_{s''} \underbrace{\left( \sum_{a} \pi(a \mid s) \sum_{s'} p(s' \mid s, a) \sum_{a'} \pi(a' \mid s') p(s'' \mid s', a') \right)}_{\operatorname{Pr}(s \to s'', 2, \pi)} \nabla v_{\pi}(s'')
+\end{align*}
+
+Replace the braced sums with their multi-step transition probability notation:
+
+\begin{align*}
+\nabla v_{\pi}(s) &= \sum_{a} \nabla \pi(a \mid s) q_{\pi}(s, a) \\
+&\quad + \sum_{s'} \operatorname{Pr}(s \to s', 1, \pi) \sum_{a'} \nabla \pi(a' \mid s') q_{\pi}(s', a') \\
+&\quad + \sum_{s''} \operatorname{Pr}(s \to s'', 2, \pi) \nabla v_{\pi}(s'')
+\end{align*}
+
+\textbf{Step 5: Unroll Infinitely}
+
+Repeat the exact same substitution and distribution for $\nabla v_{\pi}(s'')$, then $\nabla v_{\pi}(s''')$, and so on to infinity:
+
+\begin{align*}
+\nabla v_{\pi}(s) &= \sum_{a} \nabla \pi(a \mid s) q_{\pi}(s, a) \\
+&\quad + \sum_{s'} \operatorname{Pr}(s \to s', 1, \pi) \sum_{a'} \nabla \pi(a' \mid s') q_{\pi}(s', a') \\
+&\quad + \sum_{s''} \operatorname{Pr}(s \to s'', 2, \pi) \sum_{a''} \nabla \pi(a'' \mid s'') q_{\pi}(s'', a'') \\
+&\quad + \sum_{s'''} \operatorname{Pr}(s \to s''', 3, \pi) \sum_{a'''} \nabla \pi(a''' \mid s''') q_{\pi}(s''', a''') + \dots
+\end{align*}
+
+\textbf{Step 6: Unify Dummy Variables and Collapse}
+
+First, rewrite the $k=0$ term using $\operatorname{Pr}(s \to x, 0, \pi)$, which equals $1$ when $x = s$ and $0$ otherwise:
+
+\begin{equation*}
+\sum_{a} \nabla \pi(a \mid s) q_{\pi}(s, a) = \sum_{x \in \mathcal{S}} \operatorname{Pr}(s \to x, 0, \pi) \sum_{a} \nabla \pi(a \mid x) q_{\pi}(x, a)
+\end{equation*}
+
+Next, rename all dummy variables ($s', s'', s'''$ and $a', a'', a'''$) to $x \in \mathcal{S}$ and $a$:
+
+\begin{align*}
+\nabla v_{\pi}(s) &= \sum_{x \in \mathcal{S}} \operatorname{Pr}(s \to x, 0, \pi) \sum_{a} \nabla \pi(a \mid x) q_{\pi}(x, a) \\
+&\quad + \sum_{x \in \mathcal{S}} \operatorname{Pr}(s \to x, 1, \pi) \sum_{a} \nabla \pi(a \mid x) q_{\pi}(x, a) \\
+&\quad + \sum_{x \in \mathcal{S}} \operatorname{Pr}(s \to x, 2, \pi) \sum_{a} \nabla \pi(a \mid x) q_{\pi}(x, a) \\
+&\quad + \sum_{x \in \mathcal{S}} \operatorname{Pr}(s \to x, 3, \pi) \sum_{a} \nabla \pi(a \mid x) q_{\pi}(x, a) + \dots
+\end{align*}
+
+Finally, combine all vertical terms ($k = 0, 1, 2, 3, \dots, \infty$) into a single summation $\sum_{k=0}^{\infty}$:
+
+\begin{equation*}
+\nabla v_{\pi}(s) = \sum_{x \in \mathcal{S}} \sum_{k=0}^{\infty} \operatorname{Pr}(s \to x, k, \pi) \sum_{a} \nabla \pi(a \mid x) q_{\pi}(x, a)
+\end{equation*}
+
+after repeated unrolling, where $\operatorname* { P r } ( s   \rightarrow   x , k , \pi )$ is the probability of transitioning from state $s$ to state $x$ in $k$ steps under policy $\pi$. $\eta (s)$ can be seen as the sum of the probabilities of reaching state $s$ from the start state $s_0$, over all possible time steps. It is then immediate that:
+
+$$
+\eta (s)=\sum _{k=0}^{\infty }\>\mathrm{Pr}\>(s_{0}\rightarrow s,k,\pi)
+$$
+
+$$
+\begin{aligned} { \nabla J ( \pmb { \theta } ) } & { { } = \nabla v _ { \pi } ( s _ { 0 } ) } \\ { } & { { } = \sum _ { s } \left( \sum _ { k = 0 } ^ { \infty } \operatorname* { P r } ( s _ { 0 } { \to } s , k , \pi ) \right) \sum _ { a } \nabla \pi ( a | s ) q _ { \pi } ( s , a ) } \\ { } & { { } = \sum _ { s } \eta ( s ) \sum _ { a } \nabla \pi ( a | s ) q _ { \pi } ( s , a ) } \\ { } & { { } = \sum _ { s ^ { \prime } } \eta ( s ^ { \prime } ) \sum _ { s } \frac { \eta ( s ) } { \sum _ { s ^ { \prime } } \eta ( s ^ { \prime } ) } \sum _ { a } \nabla \pi ( a | s ) q _ { \pi } ( s , a ) } \\ { } & { { } = \sum _ { s ^ { \prime } } \eta ( s ^ { \prime } ) \sum _ { s } \mu ( s ) \sum _ { a } \nabla \pi ( a | s ) q _ { \pi } ( s , a ) } \\ { } & { { } \propto \sum _ { s } \mu ( s ) \sum _ { a } \nabla \pi ( a | s ) q _ { \pi } ( s , a ) } \\ \end{aligned}
+$$
+
 \section{Policy Gradient}
 
 \textbf{On-policy vs Off-policy learning}:
