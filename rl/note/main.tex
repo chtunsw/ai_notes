@@ -3099,7 +3099,7 @@ Loop forever (for each episode):
 
 \hspace{.5cm} Loop for each step of the episode $t = 0 , 1 , \ldots , T - 1$:
 
-\hspace{1cm} $G \gets \sum _ { k = t + 1 } ^ { T } \gamma ^ { k - t - 1 } R _ { k }$
+\hspace{1cm} $G \gets \sum _ { k = t + 1 } ^ { T } \gamma ^ { k - t - 1 } R _ { k }$, (represents $G_t$)
 
 \hspace{1cm} $\pmb { \theta } \leftarrow \pmb { \theta } + \alpha \gamma ^ { t } G \nabla \ln \pi ( A _ { t } | S _ { t } , \pmb { \theta } )$
 
@@ -3110,6 +3110,61 @@ go through in the discounted case with appropriate adjustments but involve addit
 As a stochastic gradient method, REINFORCE has good theoretical convergence properties. By construction, the expected update over an episode is in the same direction as the performance gradient. 
 This assures an improvement in expected performance for sufficiently small $\alpha$, and convergence to a local optimum under standard stochastic approximation conditions for decreasing $\alpha$. 
 However, as a Monte Carlo method REINFORCE may be of high variance and thus produce slow learning.
+
+\subsection{REINFORCE with Baseline}
+
+The policy gradient theorem can be generalized to include a comparison of the action value to an arbitrary baseline $b ( s )$:
+
+$$
+\nabla J ( \pmb { \theta } ) \propto \sum _ { s } \mu ( s ) \sum _ { a } \Bigl ( q _ { \pi } ( s , a ) - b ( s ) \Bigr ) \nabla \pi ( a | s , \pmb { \theta } )
+$$
+
+The baseline can be any function, even a random variable, as long as it does not vary with $a$; the equation remains valid because the subtracted quantity is zero:
+
+$$
+\sum _ { a } b ( s ) \nabla \pi ( a | s , \pmb { \theta } ) = b ( s ) \nabla \sum _ { a } \pi ( a | s , \pmb { \theta } ) = b ( s ) \nabla 1 = 0
+$$
+
+The policy gradient theorem with baseline can be used to derive an update rule. The update rule that we end up with is a new version of REINFORCE that includes a general baseline:
+
+$$
+\pmb { \theta } _ { t + 1 } \doteq \pmb { \theta } _ { t } + \alpha \Big ( G _ { t } - b ( S _ { t } ) \Big ) \frac { \nabla \pi ( A _ { t } | S _ { t } , \pmb { \theta } _ { t } ) } { \pi ( A _ { t } | S _ { t } , \pmb { \theta } _ { t } ) }
+$$
+
+Because the baseline could be uniformly zero, this update is a strict generalization of REINFORCE. In general, the baseline leaves the expected value of the update unchanged, but it can have a large effect on its variance. 
+For MDPs the baseline should vary with state. In some states all actions have high values and we need a high baseline to differentiate the higher valued actions from the less highly valued ones; in other states all actions will have low values and a low baseline is appropriate.
+
+One natural choice for the baseline is an estimate of the state value, $\hat { v } ( S _ { t } \mathbf { , } \mathbf { w } )$ , where $\mathbf { w } \in \mathbb { R } ^ { m }$ is a weight vector learned. 
+Because REINFORCE is a Monte Carlo method for learning the policy parameter, $\pmb{ \theta }$, it seems natural to also use a Monte Carlo method to learn the state-value weights, $\mathbf { w }$. A complete pseudocode algorithm for REINFORCE with baseline 
+using such a learned state-value function as the baseline is given below.
+
+\textbf{REINFORCE with Baseline (episodic), for estimating $\pi_{\pmb{\theta}} \approx \pi_*$}
+
+Input: a differentiable policy parameterization $\pi ( a | s , \pmb { \theta } )$
+
+Input: a differentiable state-value function parameterization $\hat { v } ( s , \mathbf { w } )$
+
+Algorithm parameters: step sizes $\alpha ^ { \pmb { \theta } } > 0 ,   \alpha ^ { \mathbf { w } } > 0$
+
+Initialize policy parameter $\pmb { \theta } \in \mathbb { R } ^ { d ^ { \prime } }$ and state-value weights $\mathbf { w } \in \mathbb { R } ^ { d }$ (e.g., to 0)
+
+Loop forever (for each episode):
+
+\hspace{.5cm} Generate an episode $S _ { 0 } , A _ { 0 } , R _ { 1 } , \ldots , S _ { T - 1 } , A _ { T - 1 } , R _ { T }$ , following $\pi ( \cdot | \cdot , \pmb{\theta} )$
+
+\hspace{.5cm} Loop for each step of the episode $t = 0 , 1 , \ldots , T - 1$;
+
+\hspace{1cm} $G \gets \sum _ { k = t + 1 } ^ { T } \gamma ^ { k - t - 1 } R _ { k }$, (represents $G_t$)
+
+\hspace{1cm} $\delta \leftarrow G - \hat { v } ( S _ { t } \mathbf { , } \mathbf { w } )$
+
+\hspace{1cm} $\mathbf { w } \leftarrow \mathbf { w } + \alpha ^ { \mathbf { w } }   \delta   \nabla \hat { v } ( S _ { t } \mathbf { , } \mathbf { w } )$
+
+\hspace{1cm} $\pmb { \theta } \leftarrow \pmb { \theta } + \alpha ^ { \pmb { \theta } } \gamma ^ { t } \delta \nabla \ln \pi ( A _ { t } | S _ { t } , \pmb { \theta } )$
+
+This algorithm has two step sizes, denoted $\alpha ^ { \pmb{\theta} }$ and $\alpha ^ { \mathbf { w } }$. Choosing the step size for values (here $\alpha ^ { \mathbf { w } } )$ is relatively easy; in the linear case we have rules of thumb for setting it, 
+such as $\alpha ^ { \mathbf { w } } \stackrel { \cdot } { = } 0 . 1 / E \big [ \| \nabla \hat { v } ( S _ { t } , \mathbf { w } ) \| _ { \mu } ^ { 2 } \big ]$. It is much less clear how to set the step size for the policy parameters, 
+$\alpha ^ { \pmb{\theta} }$ , whose best value depends on the range of variation of the rewards and on the policy parameterization.
 
 \section{Policy Gradient}
 
