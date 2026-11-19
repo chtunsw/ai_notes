@@ -3146,7 +3146,7 @@ Input: a differentiable state-value function parameterization $\hat { v } ( s , 
 
 Algorithm parameters: step sizes $\alpha ^ { \pmb { \theta } } > 0 ,   \alpha ^ { \mathbf { w } } > 0$
 
-Initialize policy parameter $\pmb { \theta } \in \mathbb { R } ^ { d ^ { \prime } }$ and state-value weights $\mathbf { w } \in \mathbb { R } ^ { d }$ (e.g., to 0)
+Initialize policy parameter $\pmb { \theta } \in \mathbb { R } ^ { d ^ { \prime } }$ and state-value weights $\mathbf { w } \in \mathbb { R } ^ { d }$ (e.g., to $\mathbf { 0 }$)
 
 Loop forever (for each episode):
 
@@ -3165,6 +3165,104 @@ Loop forever (for each episode):
 This algorithm has two step sizes, denoted $\alpha ^ { \pmb{\theta} }$ and $\alpha ^ { \mathbf { w } }$. Choosing the step size for values (here $\alpha ^ { \mathbf { w } } )$ is relatively easy; in the linear case we have rules of thumb for setting it, 
 such as $\alpha ^ { \mathbf { w } } \stackrel { \cdot } { = } 0 . 1 / E \big [ \| \nabla \hat { v } ( S _ { t } , \mathbf { w } ) \| _ { \mu } ^ { 2 } \big ]$. It is much less clear how to set the step size for the policy parameters, 
 $\alpha ^ { \pmb{\theta} }$ , whose best value depends on the range of variation of the rewards and on the policy parameterization.
+
+\subsection{Actor-Critic Methods}
+
+Although the REINFORCE-with-baseline method learns both a policy and a state-value function, we do not consider it to be an actor-critic method because its state-value function is used only as a baseline, not as a critic. 
+That is, it is not used for bootstrapping (updating the value estimate for a state from the estimated values of subsequent states), but only as a baseline for the state whose estimate is being updated. This is a useful distinction, 
+for only through bootstrapping do we introduce bias and an asymptotic dependence on the quality of the function approximation. As we have seen, the bias introduced through bootstrapping and reliance on the state representation is often beneficial 
+because it reduces variance and accelerates learning. REINFORCE with baseline is unbiased and will converge asymptotically to a local minimum, but like all Monte Carlo methods it tends to learn slowly (produce estimates of high variance) 
+and to be inconvenient to implement online or for continuing problems. As we have seen earlier in this book, with temporal-difference methods we can eliminate these inconveniences, and through multi-step methods we can flexibly choose the degree of bootstrapping. 
+In order to gain these advantages in the case of policy gradient methods we use actor-critic methods with a bootstrapping critic.
+
+First consider one-step actor-critic methods, the analog of the TD methods such as TD(0), Sarsa(0), and Q-learning. The main appeal of one-step methods is that they are fully online and incremental, yet avoid the complexities of eligibility traces. 
+They are a special case of the eligibility trace methods, and not as general, but easier to understand. One-step actor-critic methods replace the full return of REINFORCE with the one-step return (and use a learned state-value function as the baseline) as follows:
+
+$$
+\begin{aligned}
+\pmb { \theta } _ { t + 1 }
+& \doteq \pmb { \theta } _ { t } + \alpha \Big ( G _ { t : t + 1 } - \hat { v } ( S _ { t } \mathbf { , } \mathbf { w } ) \Big ) \frac { \nabla \pi ( A _ { t } | S _ { t } , \pmb { \theta } _ { t } ) } { \pi ( A _ { t } | S _ { t } , \pmb { \theta } _ { t } ) } \\
+& = \pmb { \theta } _ { t } + \alpha \Big ( R _ { t + 1 } + \gamma \hat { v } ( S _ { t + 1 } \mathbf { , } \mathbf { w } ) - \hat { v } ( S _ { t } \mathbf { , } \mathbf { w } ) \Big ) \frac { \nabla \pi ( A _ { t } | S _ { t } , \pmb { \theta } _ { t } ) } { \pi ( A _ { t } | S _ { t } , \pmb { \theta } _ { t } ) } \\
+& = \pmb { \theta } _ { t } + \alpha \mathbf { \delta } _ { t } \frac { \nabla \pi ( A _ { t } | S _ { t } , \pmb { \theta } _ { t } ) } { \pi ( A _ { t } | S _ { t } , \pmb { \theta } _ { t } ) }
+\end{aligned}
+$$
+
+The natural state-value-function learning method to pair with this is semi-gradient TD(0). Pseudocode for the complete algorithm is given below. Note that it is now a fully online, incremental algorithm, with states, actions, and rewards processed as they occur and then never revisited.
+
+\textbf{One-step Actor-Critic (episodic), for estimating $\pi_{\pmb{\theta}} \approx \pi_*$}
+
+Input: a differentiable policy parameterization $\pi ( a | s , \pmb { \theta } )$
+
+Input: a differentiable state-value function parameterization $\hat { v } ( s , \mathbf { w } )$
+
+Parameters: step sizes $\alpha ^ { \pmb { \theta } } > 0 ,   \alpha ^ { \mathbf { w } } > 0$
+
+Initialize policy parameter $\pmb { \theta } \in \mathbb { R } ^ { d ^ { \prime } }$ and state-value weights $\mathbf { w } \in \mathbb { R } ^ { d }$ (e.g., to $\mathbf { 0 }$)
+
+Loop forever (for each episode):
+
+\hspace{.5cm} Initialize $S$ (first state of episode)
+
+\hspace{.5cm} $I \gets 1$
+
+\hspace{.5cm} Loop while $S$ is not terminal (for each time step):
+
+\hspace{1cm} $A \sim \pi ( \cdot | S , \pmb { \theta } )$
+
+\hspace{1cm} Take action $A$, observe $S ^ { \prime } , R$
+
+\hspace{1cm} $\delta \gets R + \gamma \hat { v } ( S ^ { \prime } \mathbf { , } \mathbf { w } ) - \hat { v } ( S \mathbf { , } \mathbf { w } )$, (if $S ^ { \prime }$ is terminal, then $\hat { v } ( S ^ { \prime } ,   \mathbf { w } ) \doteq 0 )$
+
+\hspace{1cm} $\mathbf { w } \gets \mathbf { w } + \alpha ^ { \mathbf { w } }   \delta \nabla \hat { v } ( S ,   \mathbf { w } )$
+
+\hspace{1cm} $\pmb { \theta } \leftarrow \pmb { \theta } + \alpha ^ { \pmb { \theta } } I \delta \nabla \ln \pi ( A | S , \pmb { \theta } )$
+
+\hspace{1cm} $I \leftarrow \gamma I$
+
+\hspace{1cm} $S \leftarrow S ^ { \prime }$
+
+The generalizations to the forward view of n-step methods and then to a $\lambda$-return algorithm are straightforward. The one-step return is merely replaced by $G _ { t : t + n }$ or $G _ { t } ^ { \lambda }$ respectively. 
+The backward view of the $\lambda$-return algorithm is also straightforward, using separate eligibility traces for the actor and critic, each after the patterns. Pseudocode for the complete algorithm is given below.
+
+\textbf{Actor-Critic with Eligibility Traces (episodic), for estimating $\pi_{\pmb{\theta}} \approx \pi_*$}
+
+Input: a differentiable policy parameterization $\pi ( a | s , \pmb { \theta } )$
+
+Input: a differentiable state-value function parameterization $\hat { v } ( s , \mathbf { w } )$
+
+Parameters: trace-decay rates $\lambda ^ { \pmb { \theta } } \in [ 0 , 1 ] ,   \lambda ^ { \mathbf { w } } \in [ 0 , 1 ] ;$ step sizes $\alpha ^ { \pmb { \theta } } > 0 ,   \alpha ^ { \mathbf { w } } > 0$
+
+Initialize policy parameter $\pmb { \theta } \in \mathbb { R } ^ { d ^ { \prime } }$ and state-value weights $\mathbf { w } \in \mathbb { R } ^ { d }$ (e.g., to $\mathbf { 0 }$)
+
+Loop forever (for each episode):
+
+\hspace{.5cm} Initialize $S$ (first state of episode)
+
+\hspace{.5cm} $\mathbf { z } ^ { \pmb { \theta } } \gets \mathbf { 0 }$ ($d^{ \prime }$-component eligibility trace vector)
+
+\hspace{.5cm} $\mathbf { z } ^ { \mathbf { w } } \leftarrow \mathbf { 0 }$ ($d$-component eligibility trace vector)
+
+\hspace{.5cm} $I \gets 1$
+
+\hspace{.5cm} Loop while $S$ is not terminal (for each time step):
+
+\hspace{1cm} $A \sim \pi ( \cdot | S , \pmb { \theta } )$
+
+\hspace{1cm} Take action $A$, observe $S ^ { \prime } , R$
+
+\hspace{1cm} $\delta \gets R + \gamma \hat { v } ( S ^ { \prime } \mathbf { , } \mathbf { w } ) - \hat { v } ( S \mathbf { , } \mathbf { w } )$, (if $S ^ { \prime }$ is terminal, then $\hat { v } ( S ^ { \prime } ,   \mathbf { w } ) \doteq 0 )$
+
+\hspace{1cm} $\mathbf { z ^ { w } } \gets \gamma \lambda ^ { \mathbf { w } } \mathbf { z ^ { w } } + \nabla \hat { v } ( S \mathbf { , } \mathbf { w } )$
+
+\hspace{1cm} $\mathbf { z } ^ { \pmb { \theta } } \leftarrow \gamma \lambda ^ { \pmb { \theta } } \mathbf { z } ^ { \pmb { \theta } } + I \nabla \ln \pi ( A | S , \pmb { \theta } )$
+
+\hspace{1cm} $\mathbf { w } \leftarrow \mathbf { w } + \alpha ^ { \mathbf { w } }   \delta \mathbf { z } ^ { \mathbf { w } }$
+
+\hspace{1cm} $\pmb { \theta } \leftarrow \pmb { \theta } + \alpha ^ { \pmb { \theta } } \delta \mathbf { z } ^ { \pmb { \theta } }$
+
+\hspace{1cm} $I \leftarrow \gamma I$
+
+\hspace{1cm} $S \leftarrow S ^ { \prime }$
 
 \section{Policy Gradient}
 
